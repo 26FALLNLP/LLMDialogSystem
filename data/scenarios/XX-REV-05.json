@@ -1,0 +1,166 @@
+{
+  "scenario_id": "XX-REV-05",
+  "author": "XX",
+  "text_source": "draft (Claude). Regenerate with the team's shared tool if Claude is one of the tested models.",
+  "model_visible": {
+    "dialogue_prefix": [
+      {
+        "turn": 1,
+        "speaker": "user",
+        "text": "I want Italian for dinner near the mall."
+      },
+      {
+        "turn": 2,
+        "speaker": "assistant",
+        "text": "Sounds good! Budget?"
+      },
+      {
+        "turn": 3,
+        "speaker": "user",
+        "text": "Up to $30. Vegetarian options too, please."
+      },
+      {
+        "turn": 4,
+        "speaker": "user",
+        "text": "Actually, make it Japanese."
+      },
+      {
+        "turn": 5,
+        "speaker": "assistant",
+        "text": "Switched to Japanese."
+      },
+      {
+        "turn": 6,
+        "speaker": "user",
+        "text": "Hmm, no, let's go back to Italian after all."
+      },
+      {
+        "turn": 7,
+        "speaker": "assistant",
+        "text": "Okay, back to Italian."
+      },
+      {
+        "turn": 8,
+        "speaker": "user",
+        "text": "What do you recommend?"
+      }
+    ],
+    "restaurant_database": "restaurants.json"
+  },
+  "evaluation_only": {
+    "scenario_type": "revision",
+    "template_family_id": "XX-REV-05",
+    "variant": "single",
+    "contrast_note": "Revision chain: the latest revision wins; Hoshi Sushi Bar (R02) would be the outdated pick.",
+    "turn_plan": [
+      {
+        "turn": 1,
+        "speaker": "user",
+        "act": "user states cuisine=Italian, dinner=true, location=mall"
+      },
+      {
+        "turn": 2,
+        "speaker": "assistant",
+        "act": "assistant asks budget"
+      },
+      {
+        "turn": 3,
+        "speaker": "user",
+        "act": "user states max_price=30, vegetarian=true"
+      },
+      {
+        "turn": 4,
+        "speaker": "user",
+        "act": "user REVISES cuisine Italian -> Japanese"
+      },
+      {
+        "turn": 5,
+        "speaker": "assistant",
+        "act": "assistant acknowledges"
+      },
+      {
+        "turn": 6,
+        "speaker": "user",
+        "act": "user REVISES cuisine Japanese -> Italian"
+      },
+      {
+        "turn": 7,
+        "speaker": "assistant",
+        "act": "assistant acknowledges"
+      },
+      {
+        "turn": 8,
+        "speaker": "user",
+        "act": "user requests recommendation"
+      }
+    ],
+    "hidden_user_goal": {
+      "cuisine": "Italian",
+      "max_price": 30,
+      "location": "mall",
+      "vegetarian": true,
+      "dinner": true
+    },
+    "predefined_clarification_answers": {
+      "cuisine": "Italian, please.",
+      "max_price": "No more than $30 per person.",
+      "location": "Near the mall.",
+      "vegetarian": "Yes, I need vegetarian options.",
+      "dinner": "It's for dinner.",
+      "_unsupported": "I don't have a preference on that.",
+      "_multi_question": "Sorry, one thing at a time - what did you want to know first?"
+    },
+    "gold_dialogue_state": {
+      "at_turn": 8,
+      "active": {
+        "cuisine": "Italian",
+        "max_price": 30,
+        "location": "mall",
+        "vegetarian": true,
+        "dinner": true
+      },
+      "superseded": [
+        {
+          "slot": "cuisine",
+          "value": "Italian",
+          "turn": 1
+        },
+        {
+          "slot": "cuisine",
+          "value": "Japanese",
+          "turn": 4
+        }
+      ],
+      "proposed_not_accepted": [],
+      "unresolved": []
+    },
+    "gold_relation_links": [
+      {
+        "source_turn": 4,
+        "target_turn": 1,
+        "relation": "revise",
+        "slot": "cuisine"
+      },
+      {
+        "source_turn": 6,
+        "target_turn": 4,
+        "relation": "revise",
+        "slot": "cuisine"
+      }
+    ],
+    "gold_decision": {
+      "should_ask": false,
+      "necessary_question": null,
+      "any_other_question_is_unnecessary": true
+    },
+    "flags_for_team": [],
+    "computed_by_validator": {
+      "success_set": [
+        "R07"
+      ],
+      "valid_without_clarification": [
+        "R07"
+      ]
+    }
+  }
+}

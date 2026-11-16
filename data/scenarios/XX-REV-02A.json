@@ -1,0 +1,143 @@
+{
+  "scenario_id": "XX-REV-02A",
+  "author": "XX",
+  "text_source": "draft (Claude). Regenerate with the team's shared tool if Claude is one of the tested models.",
+  "model_visible": {
+    "dialogue_prefix": [
+      {
+        "turn": 1,
+        "speaker": "user",
+        "text": "I want Thai food near the mall."
+      },
+      {
+        "turn": 2,
+        "speaker": "assistant",
+        "text": "Great choice! Any dietary needs?"
+      },
+      {
+        "turn": 3,
+        "speaker": "user",
+        "text": "Vegetarian options, please. And I can spend up to $35."
+      },
+      {
+        "turn": 4,
+        "speaker": "assistant",
+        "text": "Okay: Thai, near the mall, vegetarian-friendly, $35 max."
+      },
+      {
+        "turn": 5,
+        "speaker": "user",
+        "text": "Actually, let's lower it to $25."
+      },
+      {
+        "turn": 6,
+        "speaker": "assistant",
+        "text": "Got it."
+      },
+      {
+        "turn": 7,
+        "speaker": "user",
+        "text": "Which place do you recommend?"
+      }
+    ],
+    "restaurant_database": "restaurants.json"
+  },
+  "evaluation_only": {
+    "scenario_type": "revision",
+    "template_family_id": "XX-REV-02",
+    "variant": "A",
+    "contrast_note": "Real revision vs a mentioned-but-rejected number. Siam Garden (R18, $31) is wrong in A, valid in B.",
+    "turn_plan": [
+      {
+        "turn": 1,
+        "speaker": "user",
+        "act": "user states cuisine=Thai, location=mall"
+      },
+      {
+        "turn": 2,
+        "speaker": "assistant",
+        "act": "assistant asks diet"
+      },
+      {
+        "turn": 3,
+        "speaker": "user",
+        "act": "user states vegetarian=true, max_price=35"
+      },
+      {
+        "turn": 4,
+        "speaker": "assistant",
+        "act": "assistant summarises"
+      },
+      {
+        "turn": 5,
+        "speaker": "user",
+        "act": "user REVISES max_price 35 -> 25"
+      },
+      {
+        "turn": 6,
+        "speaker": "assistant",
+        "act": "assistant acknowledges"
+      },
+      {
+        "turn": 7,
+        "speaker": "user",
+        "act": "user requests recommendation"
+      }
+    ],
+    "hidden_user_goal": {
+      "cuisine": "Thai",
+      "max_price": 25,
+      "location": "mall",
+      "vegetarian": true
+    },
+    "predefined_clarification_answers": {
+      "cuisine": "Thai, please.",
+      "max_price": "No more than $25 per person.",
+      "location": "Near the mall.",
+      "vegetarian": "Yes, I need vegetarian options.",
+      "dinner": "It doesn't need to be open for dinner.",
+      "_unsupported": "I don't have a preference on that.",
+      "_multi_question": "Sorry, one thing at a time - what did you want to know first?"
+    },
+    "gold_dialogue_state": {
+      "at_turn": 7,
+      "active": {
+        "cuisine": "Thai",
+        "max_price": 25,
+        "location": "mall",
+        "vegetarian": true
+      },
+      "superseded": [
+        {
+          "slot": "max_price",
+          "value": 35,
+          "turn": 3
+        }
+      ],
+      "proposed_not_accepted": [],
+      "unresolved": []
+    },
+    "gold_relation_links": [
+      {
+        "source_turn": 5,
+        "target_turn": 3,
+        "relation": "revise",
+        "slot": "max_price"
+      }
+    ],
+    "gold_decision": {
+      "should_ask": false,
+      "necessary_question": null,
+      "any_other_question_is_unnecessary": true
+    },
+    "flags_for_team": [],
+    "computed_by_validator": {
+      "success_set": [
+        "R17"
+      ],
+      "valid_without_clarification": [
+        "R17"
+      ]
+    }
+  }
+}
