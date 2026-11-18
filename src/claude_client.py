@@ -59,7 +59,8 @@ class ClaudeClient:
         connection = http.client.HTTPSConnection(_HOST, timeout=self.timeout)
         try:
             connection.request("POST", _MESSAGES_PATH, body=body, headers={
-                "Authorization": f"Bearer {self._api_key}",
+                # Anthropic API keys go in x-api-key; "Authorization: Bearer" is for OAuth tokens.
+                "x-api-key": self._api_key,
                 "anthropic-version": API_VERSION,
                 "Content-Type": "application/json",
             })
