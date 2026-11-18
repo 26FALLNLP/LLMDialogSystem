@@ -1,0 +1,37 @@
+scenario_id,scenario_type,reviewer,date,status,method,note
+XX-AMB-01A,ambiguous_reference,XX,2026-10-10,ACCEPTED,Read-through by reviewer,Reviewer read the scenario and accepted the key; no issues noted.
+XX-AMB-01B,ambiguous_reference,XX,2026-10-10,ACCEPTED,Read-through by reviewer,Reviewer read the scenario and accepted the key; no issues noted.
+XX-AMB-02A,ambiguous_reference,XX,2026-10-10,ACCEPTED,Read-through by reviewer,Reviewer read the scenario and accepted the key; no issues noted.
+XX-AMB-02B,ambiguous_reference,XX,2026-10-10,ACCEPTED,Read-through by reviewer,Reviewer read the scenario and accepted the key; no issues noted.
+XX-AMB-03A,ambiguous_reference,XX,2026-10-10,ACCEPTED,Read-through by reviewer,Pre-identified as possibly uncertain wording/label; reviewer read it and accepted the key.
+XX-AMB-03B,ambiguous_reference,XX,2026-10-10,ACCEPTED,Read-through by reviewer,Reviewer read the scenario and accepted the key; no issues noted.
+XX-AMB-04A,ambiguous_reference,XX,2026-10-10,ACCEPTED,Read-through by reviewer,Pre-identified as possibly uncertain wording/label; reviewer read it and accepted the key.
+XX-AMB-04B,ambiguous_reference,XX,2026-10-10,ACCEPTED,Read-through by reviewer,Pre-identified as possibly uncertain wording/label; reviewer read it and accepted the key.
+XX-AMB-05,ambiguous_reference,XX,2026-10-10,FLAG,Full review (quiz),Reviewer finds 'that budget' unclear and DISAGREES with not asking. Wording suggested two separate restaurants. Suggested fix: turn 3 add 'We're eating together.' Team decision needed.
+XX-CLR-01A,clear,XX,2026-10-10,PASS,Full review (quiz),"Text matches plan, no extras, key agreed, natural."
+XX-CLR-01B,clear,XX,2026-10-10,PASS,Full review (quiz),"Text matches plan, no extras, key agreed, natural."
+XX-CLR-02A,clear,XX,2026-10-10,PASS,Full review (quiz),"Text matches plan, no extras, key agreed, natural."
+XX-CLR-02B,clear,XX,2026-10-10,PASS,Full review (quiz),"Text matches plan, no extras, key agreed, natural."
+XX-CLR-03A,clear,XX,2026-10-10,PASS,Full review (quiz),"Text matches plan, no extras, key agreed, natural."
+XX-CLR-03B,clear,XX,2026-10-10,ACCEPTED,Read-through by reviewer,Reviewer read the scenario and accepted the key; no issues noted.
+XX-CLR-04A,clear,XX,2026-10-10,ACCEPTED,Read-through by reviewer,Reviewer read the scenario and accepted the key; no issues noted.
+XX-CLR-04B,clear,XX,2026-10-10,ACCEPTED,Read-through by reviewer,Reviewer read the scenario and accepted the key; no issues noted.
+XX-CLR-05,clear,XX,2026-10-10,ACCEPTED,Read-through by reviewer,Reviewer read the scenario and accepted the key; no issues noted.
+XX-REV-01A,revision,XX,2026-10-10,ACCEPTED,Read-through by reviewer,Reviewer read the scenario and accepted the key; no issues noted.
+XX-REV-01B,revision,XX,2026-10-10,ACCEPTED,Read-through by reviewer,Pre-identified as possibly uncertain wording/label; reviewer read it and accepted the key.
+XX-REV-02A,revision,XX,2026-10-10,ACCEPTED,Read-through by reviewer,Reviewer read the scenario and accepted the key; no issues noted.
+XX-REV-02B,revision,XX,2026-10-10,ACCEPTED,Read-through by reviewer,Pre-identified as possibly uncertain wording/label; reviewer read it and accepted the key.
+XX-REV-03A,revision,XX,2026-10-10,ACCEPTED,Read-through by reviewer,Reviewer read the scenario and accepted the key; no issues noted.
+XX-REV-03B,revision,XX,2026-10-10,ACCEPTED,Read-through by reviewer,Reviewer read the scenario and accepted the key; no issues noted.
+XX-REV-04A,revision,XX,2026-10-10,ACCEPTED,Read-through by reviewer,Reviewer read the scenario and accepted the key; no issues noted.
+XX-REV-04B,revision,XX,2026-10-10,ACCEPTED,Read-through by reviewer,Pre-identified as possibly uncertain wording/label; reviewer read it and accepted the key.
+XX-REV-05,revision,XX,2026-10-10,ACCEPTED,Read-through by reviewer,Reviewer read the scenario and accepted the key; no issues noted.
+XX-SUG-01A,suggestion_acceptance,XX,2026-10-10,ACCEPTED,Read-through by reviewer,Reviewer read the scenario and accepted the key; no issues noted.
+XX-SUG-01B,suggestion_acceptance,XX,2026-10-10,ACCEPTED,Read-through by reviewer,Reviewer read the scenario and accepted the key; no issues noted.
+XX-SUG-02A,suggestion_acceptance,XX,2026-10-10,ACCEPTED,Read-through by reviewer,Reviewer read the scenario and accepted the key; no issues noted.
+XX-SUG-02B,suggestion_acceptance,XX,2026-10-10,ACCEPTED,Read-through by reviewer,Reviewer read the scenario and accepted the key; no issues noted.
+XX-SUG-03A,suggestion_acceptance,XX,2026-10-10,PASS,Full review (quiz),"Reviewer reads 'Maybe, I'm not sure yet' as undecided, matching the key. Agrees no question needed."
+XX-SUG-03B,suggestion_acceptance,XX,2026-10-10,ACCEPTED,Read-through by reviewer,Reviewer read the scenario and accepted the key; no issues noted.
+XX-SUG-04A,suggestion_acceptance,XX,2026-10-10,ACCEPTED,Read-through by reviewer,Reviewer read the scenario and accepted the key; no issues noted.
+XX-SUG-04B,suggestion_acceptance,XX,2026-10-10,ACCEPTED,Read-through by reviewer,Pre-identified as possibly uncertain wording/label; reviewer read it and accepted the key.
+XX-SUG-05,suggestion_acceptance,XX,2026-10-10,PASS,Full review (quiz),Clear that mall accepted and Indian rejected; key agreed. Schema question (exclude_cuisine) left to team.
