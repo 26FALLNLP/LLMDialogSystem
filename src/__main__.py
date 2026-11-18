@@ -6,7 +6,7 @@ import os
 from pathlib import Path
 
 from .claude_client import API_VERSION, DEFAULT_MODEL, EFFORT, ClaudeClient
-from .claude_strategy import PROMPT_VERSION, ClaudeStrategy
+from .claude_strategy import PROMPT_VARIANTS, ClaudeStrategy
 from .data import load_dataset
 from .demo_strategy import DemoStrategy
 from .dialogue_pipeline import run_dialogue
@@ -28,11 +28,16 @@ def main() -> int:
     parser.add_argument("--budget", type=int, choices=(0, 1, 2), default=1)
     parser.add_argument("--strategy", choices=("demo", "claude"), default="demo")
     parser.add_argument("--model", help="Override the Claude model ID.")
+    parser.add_argument("--prompt-variant", choices=sorted(PROMPT_VARIANTS), default="rule_given",
+                        help="rule_given: prompt spells out when to ask (original). "
+                             "plain: same task and format, without the ask/suggestion rules.")
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
 
     if args.strategy == "demo" and args.model is not None:
         parser.error("--model requires --strategy claude.")
+    if args.strategy == "demo" and args.prompt_variant != "rule_given":
+        parser.error("--prompt-variant requires --strategy claude.")
 
     client = None
     strategy_config = None
@@ -52,7 +57,8 @@ def main() -> int:
             "provider": "anthropic",
             "model": client.model,
             "api_version": API_VERSION,
-            "prompt_version": PROMPT_VERSION,
+            "prompt_version": PROMPT_VARIANTS[args.prompt_variant][0],
+            "prompt_variant": args.prompt_variant,
             "max_output_tokens": client.max_tokens,
             "effort": EFFORT,
         }
@@ -77,7 +83,7 @@ def main() -> int:
     records = [
         run_dialogue(
             dataset.scenarios[scenario_id],
-            ClaudeStrategy(client) if client is not None else DemoStrategy(),
+            ClaudeStrategy(client, args.prompt_variant) if client is not None else DemoStrategy(),
             dataset.answer_service,
             args.budget,
             strategy_config=strategy_config,
