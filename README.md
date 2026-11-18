@@ -40,19 +40,19 @@ Run this block in Bash or Zsh. Paste your Anthropic API key at the prompt and pr
 
 ```sh
 python3 -m src --strategy claude --model claude-opus-5-5 \
-  --scenario XX-AMB-02A --budget 1 \
-  --output runs/claude-amb-02a-b1.jsonl
+  --scenario XX-AMB-04A --budget 1 \
+  --output runs/claude-amb-04a-b1.jsonl
 
-python3 -m src.score_runs --input runs/claude-amb-02a-b1.jsonl \
-  --output runs/claude-amb-02a-b1-scores.jsonl \
-  --summary runs/claude-amb-02a-b1-summary.json
+python3 -m src.score_runs --input runs/claude-amb-04a-b1.jsonl \
+  --output runs/claude-amb-04a-b1-scores.jsonl \
+  --summary runs/claude-amb-04a-b1-summary.json
 ```
 
-Use a filename stem from [data/scenarios](data/scenarios) as the scenario ID. The question budget is the maximum number of clarification questions the model can ask. If Claude asks, the scripted user replies from the scenario's fixed answer table. The runner prints the transcript and final recommendation and saves the detailed record to the output path. Running the example again replaces its previous output files.
+Use a filename stem from [data/scenarios](data/scenarios) as the scenario ID. **Runs use the dev split only** ([data/splits/split.json](data/splits/split.json)); a scenario in the test split is refused unless you add `--final-test`, which is meant for the final evaluation only. BB- draft scenarios in `data/drafts/` can be run by ID too (dev ones only, per the proposed draft split). The question budget is the maximum number of clarification questions the model can ask. If Claude asks, the scripted user replies from the scenario's fixed answer table. The runner prints the transcript and final recommendation and saves the detailed record to the output path. Running the example again replaces its previous output files.
 
 ### Compare question budgets of 0, 1, and 2
 
-Run all 36 scenarios once at each budget with the same Claude model. Each comparison gets its own output directory under `runs/`.
+Run every dev scenario once at each budget with the same Claude model (`--all` means the dev split; add `--drafts` to include dev drafts, and `--final-test` only for the final test-split run). Each comparison gets its own output directory under `runs/`.
 
 ```sh
 mkdir -p runs
@@ -88,6 +88,6 @@ for group in summary["groups"]:
 PY
 ```
 
-`scores.jsonl` contains one score per run. In `summary.json`, each entry under `groups` reports recommendation success and the number of questions actually asked for one budget. If a batch exits with errors, check its `termination_counts` in the summary. The scorer counts failed runs in the denominator, so keep all 36 records from each batch.
+`scores.jsonl` contains one score per run. In `summary.json`, each entry under `groups` reports recommendation success and the number of questions actually asked for one budget. If a batch exits with errors, check its `termination_counts` in the summary. The scorer counts failed runs in the denominator, so keep every record from each batch.
 
 See the design docs for the [Dialogue Pipeline](docs/dialogue-pipeline.md), [Answer Service](docs/answer-service.md), and [Scoring Service](docs/scoring-service.md).

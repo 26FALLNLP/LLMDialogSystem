@@ -25,6 +25,19 @@ RESTAURANT_FIELDS = {
 }
 
 
+def scenario_path(scenario_id: str, data_dir: Path = DATA_DIR) -> Path:
+    """Where a scenario file lives: data/scenarios/<id>.json, or else exactly one
+    match under data/drafts/ (draft scenarios are only loaded when asked for by ID)."""
+    data_dir = Path(data_dir)
+    main = data_dir / "scenarios" / f"{scenario_id}.json"
+    if main.exists():
+        return main
+    drafts = sorted((data_dir / "drafts").rglob(f"{scenario_id}.json")) if (data_dir / "drafts").is_dir() else []
+    if len(drafts) > 1:
+        raise ValueError(f"Scenario ID {scenario_id!r} appears more than once under drafts/")
+    return drafts[0] if drafts else main
+
+
 @dataclass(frozen=True, slots=True)
 class Scenario:
     scenario_id: str
@@ -58,7 +71,7 @@ def load_dataset(scenario_ids: Sequence[str], data_dir: Path = DATA_DIR) -> Data
     for scenario_id in sorted(scenario_ids):
         if not re.fullmatch(r"[A-Za-z0-9_-]+", scenario_id):
             raise ValueError(f"Invalid scenario ID: {scenario_id!r}")
-        path = data_dir / "scenarios" / f"{scenario_id}.json"
+        path = scenario_path(scenario_id, data_dir)
         raw = path.read_bytes()
         data_hash.update(raw)
         data_hash.update(b"\0")

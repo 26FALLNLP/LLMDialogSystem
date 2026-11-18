@@ -7,16 +7,24 @@ from pathlib import Path
 
 from .claude_client import API_VERSION, DEFAULT_MODEL, EFFORT, ClaudeClient
 from .claude_strategy import PROMPT_VERSION, ClaudeStrategy
-from .data import DATA_DIR, load_dataset
+from .data import load_dataset
 from .demo_strategy import DemoStrategy
 from .dialogue_pipeline import run_dialogue
+from .splits import SplitError, select_scenarios
+
+DEMO_SCENARIOS = ("XX-AMB-01A", "XX-AMB-01B")
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     scenarios = parser.add_mutually_exclusive_group()
     scenarios.add_argument("--scenario", action="append", help="Scenario ID. May be supplied more than once.")
-    scenarios.add_argument("--all", action="store_true", help="Run every local scenario.")
+    scenarios.add_argument("--all", action="store_true",
+                           help="Run every DEV scenario (every TEST scenario with --final-test).")
+    parser.add_argument("--drafts", action="store_true",
+                        help="With --all, also include the BB- draft scenarios from the proposed draft split.")
+    parser.add_argument("--final-test", action="store_true",
+                        help="Allow TEST-split scenarios. Use only for the final evaluation.")
     parser.add_argument("--budget", type=int, choices=(0, 1, 2), default=1)
     parser.add_argument("--strategy", choices=("demo", "claude"), default="demo")
     parser.add_argument("--model", help="Override the Claude model ID.")
@@ -49,10 +57,18 @@ def main() -> int:
             "effort": EFFORT,
         }
 
-    if args.all:
-        scenario_ids = sorted(path.stem for path in (DATA_DIR / "scenarios").glob("*.json"))
+    if args.all or args.scenario:
+        try:
+            scenario_ids = select_scenarios(args.scenario, run_all=args.all, final_test=args.final_test,
+                                            include_drafts=args.drafts)
+        except SplitError as exc:
+            parser.exit(2, f"{exc}\n")
+    elif args.strategy == "demo":
+        # Smoke test of the rule-based demo on the two sample dialogues it was written for.
+        # The demo is not a system under evaluation, so this default is allowed without --final-test.
+        scenario_ids = list(DEMO_SCENARIOS)
     else:
-        scenario_ids = list(dict.fromkeys(args.scenario or ["XX-AMB-01A", "XX-AMB-01B"]))
+        parser.error("Choose --scenario ID (dev split) or --all.")
     try:
         dataset = load_dataset(scenario_ids)
     except (OSError, ValueError, KeyError) as exc:
