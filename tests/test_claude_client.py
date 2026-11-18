@@ -39,7 +39,7 @@ class ClaudeClientTests(unittest.TestCase):
         args, kwargs = connection.request.call_args
         self.assertEqual(args, ("POST", "/v1/messages"))
         self.assertEqual(kwargs["headers"], {
-            "Authorization": "Bearer test-key",
+            "x-api-key": "test-key",
             "anthropic-version": API_VERSION,
             "Content-Type": "application/json",
         })
