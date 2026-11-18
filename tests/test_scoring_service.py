@@ -70,12 +70,16 @@ class ScoringTest(unittest.TestCase):
         )
         self.assertFalse(result["task_success"])
 
-    def test_new_target_after_initial_checkpoint_is_unjudged(self):
+    def test_question_after_the_ambiguity_is_resolved_is_wasted(self):
+        # Scorer v2 (right-question metric): later steps are judged too. Once the
+        # location is answered a safe restaurant exists, so a budget question is wasted.
+        # (Scorer v1 left this second question "unjudged".)
         question = Ask((Question("Station or mall?", "location", "t07"),))
         second_question = Ask((Question("What budget?", "max_price"),))
         result = self.score_actions("XX-AMB-01A", 2, question, second_question, Recommend("R01"))
-        self.assertEqual([q["judgment"] for q in result["question_scores"]], ["useful", "unjudged"])
-        self.assertEqual(result["question_counts"]["judged"], 1)
+        self.assertEqual([q["judgment"] for q in result["question_scores"]], ["useful", "unnecessary"])
+        self.assertEqual(result["question_scores"][1]["reason"], "shared_candidate_exists")
+        self.assertEqual(result["question_counts"]["judged"], 2)
 
     def test_recommendation_uses_all_hard_constraints(self):
         excluded = next(

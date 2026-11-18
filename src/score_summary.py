@@ -50,6 +50,12 @@ def _summarize(scores: Sequence[dict]) -> dict:
         "missed_useful_clarification": _binary_rate(
             row["missed_useful_clarification"] for row in scores
         ),
+        "right_question_rate": _rate(
+            sum(row.get("useful_questions", 0) for row in scores), questions["judged"]
+        ),
+        "all_needed_slots_clarified": _binary_rate(
+            row.get("all_needed_slots_clarified") for row in scores
+        ),
         "question_counts": dict(questions),
         "mean_questions_per_run": _rate(questions["delivered"], n_runs),
         "question_judgment_coverage": _rate(questions["judged"], questions["delivered"]),
