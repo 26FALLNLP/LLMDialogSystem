@@ -1,0 +1,166 @@
+{
+  "scenario_id": "BB-LONG-03",
+  "author": "BB",
+  "text_source": "draft by Claude; wording to be regenerated with Qwen before testing",
+  "model_visible": {
+    "dialogue_prefix": [
+      {
+        "turn": 1,
+        "speaker": "assistant",
+        "text": "Hi! What can I help you with today?"
+      },
+      {
+        "turn": 2,
+        "speaker": "user",
+        "text": "I need a place that's open for dinner."
+      },
+      {
+        "turn": 3,
+        "speaker": "assistant",
+        "text": "Sure. Is this for a special occasion?"
+      },
+      {
+        "turn": 4,
+        "speaker": "user",
+        "text": "Yes, it's my sister's birthday. She just got a new job too."
+      },
+      {
+        "turn": 5,
+        "speaker": "assistant",
+        "text": "Congratulations to her! What food does she like?"
+      },
+      {
+        "turn": 6,
+        "speaker": "user",
+        "text": "She loves Italian food."
+      },
+      {
+        "turn": 7,
+        "speaker": "assistant",
+        "text": "Great choice. Any area in mind?"
+      },
+      {
+        "turn": 8,
+        "speaker": "user",
+        "text": "Near the station, and let's keep it under $25 a person."
+      },
+      {
+        "turn": 9,
+        "speaker": "assistant",
+        "text": "Okay: Italian, near the station, under $25."
+      },
+      {
+        "turn": 10,
+        "speaker": "user",
+        "text": "Perfect. What would you recommend?"
+      }
+    ],
+    "restaurant_database": "restaurants.json"
+  },
+  "evaluation_only": {
+    "scenario_type": "clear",
+    "template_family_id": "BB-LONG-03",
+    "variant": "single",
+    "contrast_note": "Correct: R06 Trattoria Lucca ($22). Forgetting the turn-2 detail (dinner) would also allow R08 Forno Pizza ($16), which is wrong.",
+    "turn_plan": [
+      {
+        "turn": 1,
+        "speaker": "assistant",
+        "act": "assistant greets"
+      },
+      {
+        "turn": 2,
+        "speaker": "user",
+        "act": "KEY DETAIL in first user message: dinner"
+      },
+      {
+        "turn": 3,
+        "speaker": "assistant",
+        "act": "assistant asks occasion"
+      },
+      {
+        "turn": 4,
+        "speaker": "user",
+        "act": "user: off-topic detail (no constraint)"
+      },
+      {
+        "turn": 5,
+        "speaker": "assistant",
+        "act": "assistant asks cuisine"
+      },
+      {
+        "turn": 6,
+        "speaker": "user",
+        "act": "user states cuisine=Italian"
+      },
+      {
+        "turn": 7,
+        "speaker": "assistant",
+        "act": "assistant asks area"
+      },
+      {
+        "turn": 8,
+        "speaker": "user",
+        "act": "user states location=station, max_price=25"
+      },
+      {
+        "turn": 9,
+        "speaker": "assistant",
+        "act": "assistant summary that LEAVES OUT the turn-2 detail (not a revision)"
+      },
+      {
+        "turn": 10,
+        "speaker": "user",
+        "act": "user requests recommendation"
+      }
+    ],
+    "hidden_user_goal": {
+      "cuisine": "Italian",
+      "max_price": 25,
+      "location": "station",
+      "dinner": true
+    },
+    "predefined_clarification_answers": {
+      "cuisine": "Italian, please.",
+      "max_price": "No more than $25 per person.",
+      "location": "Near the station.",
+      "vegetarian": "No dietary restrictions.",
+      "dinner": "Yes, it needs to be open for dinner.",
+      "_unsupported": "I don't have a preference on that.",
+      "_multi_question": "Sorry, one thing at a time - what did you want to know first?"
+    },
+    "gold_dialogue_state": {
+      "at_turn": 10,
+      "active": {
+        "cuisine": "Italian",
+        "max_price": 25,
+        "location": "station",
+        "dinner": true
+      },
+      "superseded": [],
+      "proposed_not_accepted": [],
+      "unresolved": []
+    },
+    "gold_relation_links": [],
+    "gold_decision": {
+      "should_ask": false,
+      "necessary_question": null,
+      "any_other_question_is_unnecessary": true
+    },
+    "flags_for_team": [],
+    "draft_part": "4f",
+    "key_detail_turn": 2,
+    "forgetting_trap": [
+      "R08"
+    ],
+    "computed_by_validator": {
+      "success_set": [
+        "R06"
+      ],
+      "valid_without_clarification": [
+        "R06"
+      ],
+      "questions_needed": 0
+    }
+  }
+}

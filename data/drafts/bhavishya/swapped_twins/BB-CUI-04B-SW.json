@@ -1,0 +1,144 @@
+{
+  "scenario_id": "BB-CUI-04B-SW",
+  "author": "BB",
+  "text_source": "draft by Claude; wording to be regenerated with Qwen before testing",
+  "model_visible": {
+    "dialogue_prefix": [
+      {
+        "turn": 1,
+        "speaker": "user",
+        "text": "Two of my friends each recommended a place around here: one Chinese, one Italian."
+      },
+      {
+        "turn": 2,
+        "speaker": "assistant",
+        "text": "Both sound like good options! Want me to look into them?"
+      },
+      {
+        "turn": 3,
+        "speaker": "user",
+        "text": "The area doesn't matter to me."
+      },
+      {
+        "turn": 4,
+        "speaker": "assistant",
+        "text": "Okay, anywhere works."
+      },
+      {
+        "turn": 5,
+        "speaker": "user",
+        "text": "No more than $16 a person. It's for lunch."
+      },
+      {
+        "turn": 6,
+        "speaker": "assistant",
+        "text": "Noted."
+      },
+      {
+        "turn": 7,
+        "speaker": "user",
+        "text": "Either of those cuisines is fine with me."
+      }
+    ],
+    "restaurant_database": "restaurants.json"
+  },
+  "evaluation_only": {
+    "scenario_type": "ambiguous_reference",
+    "template_family_id": "BB-CUI-04",
+    "variant": "B_swap",
+    "contrast_note": "A: Chinese -> R32 Dumpling King ($13), R35 Noodle Bar 88 ($16); Italian -> R08 Forno Pizza ($16); no restaurant serves both -> ask. B: user accepts either cuisine (one turn changed; a single restaurant cannot serve two cuisines, so this is the only one-change way to remove the need to ask).",
+    "turn_plan": [
+      {
+        "turn": 1,
+        "speaker": "user",
+        "act": "user mentions two cuisines (Chinese first, Italian second); neither chosen; no link to who said which"
+      },
+      {
+        "turn": 2,
+        "speaker": "assistant",
+        "act": "assistant offers"
+      },
+      {
+        "turn": 3,
+        "speaker": "user",
+        "act": "user: no location constraint"
+      },
+      {
+        "turn": 4,
+        "speaker": "assistant",
+        "act": "assistant acknowledges"
+      },
+      {
+        "turn": 5,
+        "speaker": "user",
+        "act": "user states max_price=16, meal=lunch"
+      },
+      {
+        "turn": 6,
+        "speaker": "assistant",
+        "act": "assistant acknowledges"
+      },
+      {
+        "turn": 7,
+        "speaker": "user",
+        "act": "user: cuisine in {Chinese, Italian}; disjunction, not ambiguity"
+      }
+    ],
+    "hidden_user_goal": {
+      "max_price": 16,
+      "cuisine": [
+        "Chinese",
+        "Italian"
+      ]
+    },
+    "predefined_clarification_answers": {
+      "cuisine": "Either Chinese or Italian is fine.",
+      "max_price": "No more than $16 per person.",
+      "location": "I don't mind which area.",
+      "vegetarian": "No dietary restrictions.",
+      "dinner": "It doesn't need to be open for dinner.",
+      "_unsupported": "I don't have a preference on that.",
+      "_multi_question": "Sorry, one thing at a time - what did you want to know first?"
+    },
+    "gold_dialogue_state": {
+      "at_turn": 7,
+      "active": {
+        "max_price": 16,
+        "cuisine": [
+          "Chinese",
+          "Italian"
+        ]
+      },
+      "superseded": [],
+      "proposed_not_accepted": [],
+      "unresolved": []
+    },
+    "gold_relation_links": [],
+    "gold_decision": {
+      "should_ask": false,
+      "necessary_question": null,
+      "any_other_question_is_unnecessary": true
+    },
+    "flags_for_team": [],
+    "draft_part": "4c",
+    "ambiguity_kind": "cuisine_reference",
+    "mention_order": [
+      "Chinese",
+      "Italian"
+    ],
+    "single_change": "accept_either",
+    "computed_by_validator": {
+      "success_set": [
+        "R08",
+        "R32",
+        "R35"
+      ],
+      "valid_without_clarification": [
+        "R08",
+        "R32",
+        "R35"
+      ],
+      "questions_needed": 0
+    }
+  }
+}

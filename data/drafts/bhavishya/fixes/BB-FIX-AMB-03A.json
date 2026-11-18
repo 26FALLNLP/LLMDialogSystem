@@ -1,0 +1,170 @@
+{
+  "scenario_id": "BB-FIX-AMB-03A",
+  "author": "BB",
+  "text_source": "draft by Claude; wording to be regenerated with Qwen before testing",
+  "model_visible": {
+    "dialogue_prefix": [
+      {
+        "turn": 1,
+        "speaker": "user",
+        "text": "Two of my friends each recommended a place around here: one Mexican, one Thai."
+      },
+      {
+        "turn": 2,
+        "speaker": "assistant",
+        "text": "Both sound like good options! Want me to look into them?"
+      },
+      {
+        "turn": 3,
+        "speaker": "user",
+        "text": "The area doesn't matter to me."
+      },
+      {
+        "turn": 4,
+        "speaker": "assistant",
+        "text": "Okay, anywhere works."
+      },
+      {
+        "turn": 5,
+        "speaker": "user",
+        "text": "No more than $17 a person. It's for dinner. I also need vegetarian options."
+      },
+      {
+        "turn": 6,
+        "speaker": "assistant",
+        "text": "Noted."
+      },
+      {
+        "turn": 7,
+        "speaker": "user",
+        "text": "Let's go with Maya's recommendation."
+      }
+    ],
+    "restaurant_database": "restaurants.json"
+  },
+  "evaluation_only": {
+    "scenario_type": "ambiguous_reference",
+    "template_family_id": "BB-FIX-AMB-03",
+    "variant": "A",
+    "contrast_note": "A: Mexican -> R11 Taco Loco ($12); Thai -> R16 Bangkok Street ($17); no restaurant serves both -> ask. B: user accepts either cuisine (one turn changed; a single restaurant cannot serve two cuisines, so this is the only one-change way to remove the need to ask).",
+    "turn_plan": [
+      {
+        "turn": 1,
+        "speaker": "user",
+        "act": "user mentions two cuisines (Mexican first, Thai second); neither chosen; no link to who said which"
+      },
+      {
+        "turn": 2,
+        "speaker": "assistant",
+        "act": "assistant offers"
+      },
+      {
+        "turn": 3,
+        "speaker": "user",
+        "act": "user: no location constraint"
+      },
+      {
+        "turn": 4,
+        "speaker": "assistant",
+        "act": "assistant acknowledges"
+      },
+      {
+        "turn": 5,
+        "speaker": "user",
+        "act": "user states max_price=17, meal=dinner, vegetarian=true"
+      },
+      {
+        "turn": 6,
+        "speaker": "assistant",
+        "act": "assistant acknowledges"
+      },
+      {
+        "turn": 7,
+        "speaker": "user",
+        "act": "user: 'Maya's recommendation' = Mexican or Thai (UNRESOLVED; hidden: Mexican)"
+      }
+    ],
+    "hidden_user_goal": {
+      "max_price": 17,
+      "vegetarian": true,
+      "dinner": true,
+      "cuisine": "Mexican"
+    },
+    "predefined_clarification_answers": {
+      "cuisine": "Mexican, please.",
+      "max_price": "No more than $17 per person.",
+      "location": "I don't mind which area.",
+      "vegetarian": "Yes, I need vegetarian options.",
+      "dinner": "Yes, it needs to be open for dinner.",
+      "_unsupported": "I don't have a preference on that.",
+      "_multi_question": "Sorry, one thing at a time - what did you want to know first?"
+    },
+    "gold_dialogue_state": {
+      "at_turn": 7,
+      "active": {
+        "max_price": 17,
+        "vegetarian": true,
+        "dinner": true
+      },
+      "superseded": [],
+      "proposed_not_accepted": [],
+      "unresolved": [
+        {
+          "slot": "cuisine",
+          "turn": 7,
+          "expression": "Maya's recommendation",
+          "interpretations": [
+            {
+              "cuisine": "Mexican"
+            },
+            {
+              "cuisine": "Thai"
+            }
+          ]
+        }
+      ]
+    },
+    "gold_relation_links": [],
+    "gold_decision": {
+      "should_ask": true,
+      "necessary_question": "cuisine@t7",
+      "any_other_question_is_unnecessary": true
+    },
+    "flags_for_team": [],
+    "draft_part": "4g",
+    "ambiguity_kind": "cuisine_reference",
+    "mention_order": [
+      "Mexican",
+      "Thai"
+    ],
+    "single_change": "accept_either",
+    "computed_by_validator": {
+      "success_set": [
+        "R11"
+      ],
+      "interpretation_sets": [
+        {
+          "interpretation": {
+            "cuisine": "Mexican"
+          },
+          "candidates": [
+            "R11"
+          ]
+        },
+        {
+          "interpretation": {
+            "cuisine": "Thai"
+          },
+          "candidates": [
+            "R16"
+          ]
+        }
+      ],
+      "shared_candidates": [],
+      "valid_without_clarification": [],
+      "questions_needed": 1
+    },
+    "fix_of": "XX-AMB-03A",
+    "fix_note": "Removed hints: (1) the hidden cuisine (Mexican) was mentioned last; now it is mentioned first, which balances the original. (2) El Comal (R13) was cheaper, near both areas and open for dinner, so it beat Lotus Thai (R17) on every count. With this database Mexican always has a clearly better option against Thai near the mall, so: constraints are now location=None, max_price=17, vegetarian=True, meal=dinner. Candidates are now Mexican -> R11 Taco Loco ($12), Thai -> R16 Bangkok Street ($17), with neither clearly better. 'The cuisine they mentioned' became \"Maya's recommendation\" because both cuisines were mentioned by 'they'. Hidden answer stays Mexican."
+  }
+}

@@ -1,0 +1,140 @@
+{
+  "scenario_id": "BB-SUG-06A",
+  "author": "BB",
+  "text_source": "draft by Claude; wording to be regenerated with Qwen before testing",
+  "model_visible": {
+    "dialogue_prefix": [
+      {
+        "turn": 1,
+        "speaker": "user",
+        "text": "I'm looking for Italian food near the mall."
+      },
+      {
+        "turn": 2,
+        "speaker": "assistant",
+        "text": "Sounds good! Any budget?"
+      },
+      {
+        "turn": 3,
+        "speaker": "user",
+        "text": "No more than $30 per person. It's for dinner."
+      },
+      {
+        "turn": 4,
+        "speaker": "assistant",
+        "text": "The station area also has Italian food in that range. Want me to look there instead?"
+      },
+      {
+        "turn": 5,
+        "speaker": "user",
+        "text": "Hmm, maybe another time."
+      },
+      {
+        "turn": 6,
+        "speaker": "assistant",
+        "text": "Okay!"
+      },
+      {
+        "turn": 7,
+        "speaker": "user",
+        "text": "What do you recommend?"
+      }
+    ],
+    "restaurant_database": "restaurants.json"
+  },
+  "evaluation_only": {
+    "scenario_type": "suggestion_acceptance",
+    "template_family_id": "BB-SUG-06",
+    "variant": "A",
+    "contrast_note": "A: suggestion not accepted -> location=mall: R07 Nonna's Kitchen ($27). Treating the suggestion as accepted picks R06 Trattoria Lucca ($22), which is WRONG. B (control): explicit acceptance -> R06 Trattoria Lucca ($22) correct.",
+    "turn_plan": [
+      {
+        "turn": 1,
+        "speaker": "user",
+        "act": "user states location=mall, cuisine=Italian"
+      },
+      {
+        "turn": 2,
+        "speaker": "assistant",
+        "act": "assistant asks budget"
+      },
+      {
+        "turn": 3,
+        "speaker": "user",
+        "act": "user states max_price=30, dinner=true"
+      },
+      {
+        "turn": 4,
+        "speaker": "assistant",
+        "act": "assistant PROPOSES location=station"
+      },
+      {
+        "turn": 5,
+        "speaker": "user",
+        "act": "user does NOT accept (hedges); location stays mall"
+      },
+      {
+        "turn": 6,
+        "speaker": "assistant",
+        "act": "assistant acknowledges"
+      },
+      {
+        "turn": 7,
+        "speaker": "user",
+        "act": "user requests recommendation"
+      }
+    ],
+    "hidden_user_goal": {
+      "cuisine": "Italian",
+      "max_price": 30,
+      "dinner": true,
+      "location": "mall"
+    },
+    "predefined_clarification_answers": {
+      "cuisine": "Italian, please.",
+      "max_price": "No more than $30 per person.",
+      "location": "Near the mall.",
+      "vegetarian": "No dietary restrictions.",
+      "dinner": "Yes, it needs to be open for dinner.",
+      "_unsupported": "I don't have a preference on that.",
+      "_multi_question": "Sorry, one thing at a time - what did you want to know first?"
+    },
+    "gold_dialogue_state": {
+      "at_turn": 7,
+      "active": {
+        "cuisine": "Italian",
+        "max_price": 30,
+        "dinner": true,
+        "location": "mall"
+      },
+      "superseded": [],
+      "proposed_not_accepted": [
+        {
+          "slot": "location",
+          "value": "station",
+          "turn": 4,
+          "status": "not accepted"
+        }
+      ],
+      "unresolved": []
+    },
+    "gold_relation_links": [],
+    "gold_decision": {
+      "should_ask": false,
+      "necessary_question": null,
+      "any_other_question_is_unnecessary": true
+    },
+    "flags_for_team": [],
+    "draft_part": "4d",
+    "suggestion_trap": true,
+    "computed_by_validator": {
+      "success_set": [
+        "R07"
+      ],
+      "valid_without_clarification": [
+        "R07"
+      ],
+      "questions_needed": 0
+    }
+  }
+}

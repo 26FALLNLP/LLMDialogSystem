@@ -1,0 +1,168 @@
+{
+  "scenario_id": "BB-LOC-03A-P1",
+  "author": "BB",
+  "text_source": "draft by Claude; wording to be regenerated with Qwen before testing",
+  "model_visible": {
+    "dialogue_prefix": [
+      {
+        "turn": 1,
+        "speaker": "user",
+        "text": "Can you help me find a place to eat? "
+      },
+      {
+        "turn": 2,
+        "speaker": "assistant",
+        "text": "Happy to help. I can see places by the mall and by the station."
+      },
+      {
+        "turn": 3,
+        "speaker": "user",
+        "text": "My budget is $16 per person."
+      },
+      {
+        "turn": 4,
+        "speaker": "assistant",
+        "text": "Thanks, that helps."
+      },
+      {
+        "turn": 5,
+        "speaker": "user",
+        "text": "It's for dinner."
+      },
+      {
+        "turn": 6,
+        "speaker": "assistant",
+        "text": "Understood."
+      },
+      {
+        "turn": 7,
+        "speaker": "user",
+        "text": "Can you find something near there?"
+      }
+    ],
+    "restaurant_database": "restaurants.json"
+  },
+  "evaluation_only": {
+    "scenario_type": "ambiguous_reference",
+    "template_family_id": "BB-LOC-03",
+    "variant": "A_para1",
+    "contrast_note": "A: station -> R11 Taco Loco ($12); mall -> R35 Noodle Bar 88 ($16), R37 Pita Port ($14); nothing near both -> ask. B: lunch instead of dinner makes R08 Forno Pizza ($16), R39 Falafel Stop ($11) valid for both -> recommend it.",
+    "turn_plan": [
+      {
+        "turn": 1,
+        "speaker": "user",
+        "act": "user states no cuisine preference"
+      },
+      {
+        "turn": 2,
+        "speaker": "assistant",
+        "act": "assistant mentions both areas (mall first, station second); not a user choice"
+      },
+      {
+        "turn": 3,
+        "speaker": "user",
+        "act": "user states max_price=16"
+      },
+      {
+        "turn": 4,
+        "speaker": "assistant",
+        "act": "assistant acknowledges"
+      },
+      {
+        "turn": 5,
+        "speaker": "user",
+        "act": "user states meal=dinner (dinner=true)"
+      },
+      {
+        "turn": 6,
+        "speaker": "assistant",
+        "act": "assistant acknowledges"
+      },
+      {
+        "turn": 7,
+        "speaker": "user",
+        "act": "user: 'Can you find something near there?' = station or mall (UNRESOLVED; hidden: mall)"
+      }
+    ],
+    "hidden_user_goal": {
+      "max_price": 16,
+      "dinner": true,
+      "location": "mall"
+    },
+    "predefined_clarification_answers": {
+      "cuisine": "I'm open to any cuisine.",
+      "max_price": "No more than $16 per person.",
+      "location": "Near the mall.",
+      "vegetarian": "No dietary restrictions.",
+      "dinner": "Yes, it needs to be open for dinner.",
+      "_unsupported": "I don't have a preference on that.",
+      "_multi_question": "Sorry, one thing at a time - what did you want to know first?"
+    },
+    "gold_dialogue_state": {
+      "at_turn": 7,
+      "active": {
+        "max_price": 16,
+        "dinner": true
+      },
+      "superseded": [],
+      "proposed_not_accepted": [],
+      "unresolved": [
+        {
+          "slot": "location",
+          "turn": 7,
+          "expression": "Can you find something near there?",
+          "interpretations": [
+            {
+              "location": "mall"
+            },
+            {
+              "location": "station"
+            }
+          ]
+        }
+      ]
+    },
+    "gold_relation_links": [],
+    "gold_decision": {
+      "should_ask": true,
+      "necessary_question": "location@t7",
+      "any_other_question_is_unnecessary": true
+    },
+    "flags_for_team": [],
+    "draft_part": "4e",
+    "ambiguity_kind": "location_deixis",
+    "mention_order": [
+      "mall",
+      "station"
+    ],
+    "single_change": "lunch",
+    "computed_by_validator": {
+      "success_set": [
+        "R35",
+        "R37"
+      ],
+      "interpretation_sets": [
+        {
+          "interpretation": {
+            "location": "mall"
+          },
+          "candidates": [
+            "R35",
+            "R37"
+          ]
+        },
+        {
+          "interpretation": {
+            "location": "station"
+          },
+          "candidates": [
+            "R11"
+          ]
+        }
+      ],
+      "shared_candidates": [],
+      "valid_without_clarification": [],
+      "questions_needed": 1
+    }
+  }
+}

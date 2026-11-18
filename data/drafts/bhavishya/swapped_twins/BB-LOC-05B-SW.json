@@ -1,0 +1,182 @@
+{
+  "scenario_id": "BB-LOC-05B-SW",
+  "author": "BB",
+  "text_source": "draft by Claude; wording to be regenerated with Qwen before testing",
+  "model_visible": {
+    "dialogue_prefix": [
+      {
+        "turn": 1,
+        "speaker": "user",
+        "text": "I'm up for Chinese or Korean food, either is fine."
+      },
+      {
+        "turn": 2,
+        "speaker": "assistant",
+        "text": "Sure! There are good options near the mall and near the station."
+      },
+      {
+        "turn": 3,
+        "speaker": "user",
+        "text": "My budget is $25 per person."
+      },
+      {
+        "turn": 4,
+        "speaker": "assistant",
+        "text": "Got it, I'll keep the budget in mind."
+      },
+      {
+        "turn": 5,
+        "speaker": "user",
+        "text": "It's for lunch."
+      },
+      {
+        "turn": 6,
+        "speaker": "assistant",
+        "text": "Okay, noted."
+      },
+      {
+        "turn": 7,
+        "speaker": "user",
+        "text": "Find me a spot over there."
+      }
+    ],
+    "restaurant_database": "restaurants.json"
+  },
+  "evaluation_only": {
+    "scenario_type": "ambiguous_reference",
+    "template_family_id": "BB-LOC-05",
+    "variant": "B_swap",
+    "contrast_note": "A: station -> R32 Dumpling King ($13); mall -> R27 Bibim Bowl ($15); nothing near both -> ask. B: budget $25 makes R31 Golden Dragon ($24) valid for both -> recommend it.",
+    "turn_plan": [
+      {
+        "turn": 1,
+        "speaker": "user",
+        "act": "user states cuisine=['Chinese', 'Korean']"
+      },
+      {
+        "turn": 2,
+        "speaker": "assistant",
+        "act": "assistant mentions both areas (mall first, station second); not a user choice"
+      },
+      {
+        "turn": 3,
+        "speaker": "user",
+        "act": "user states max_price=25"
+      },
+      {
+        "turn": 4,
+        "speaker": "assistant",
+        "act": "assistant acknowledges"
+      },
+      {
+        "turn": 5,
+        "speaker": "user",
+        "act": "user states meal=lunch (no dinner constraint)"
+      },
+      {
+        "turn": 6,
+        "speaker": "assistant",
+        "act": "assistant acknowledges"
+      },
+      {
+        "turn": 7,
+        "speaker": "user",
+        "act": "user: 'Find me a spot over there.' = station or mall (UNRESOLVED; hidden: mall)"
+      }
+    ],
+    "hidden_user_goal": {
+      "cuisine": [
+        "Chinese",
+        "Korean"
+      ],
+      "max_price": 25,
+      "location": "mall"
+    },
+    "predefined_clarification_answers": {
+      "cuisine": "Either Chinese or Korean is fine.",
+      "max_price": "No more than $25 per person.",
+      "location": "Near the mall.",
+      "vegetarian": "No dietary restrictions.",
+      "dinner": "It doesn't need to be open for dinner.",
+      "_unsupported": "I don't have a preference on that.",
+      "_multi_question": "Sorry, one thing at a time - what did you want to know first?"
+    },
+    "gold_dialogue_state": {
+      "at_turn": 7,
+      "active": {
+        "cuisine": [
+          "Chinese",
+          "Korean"
+        ],
+        "max_price": 25
+      },
+      "superseded": [],
+      "proposed_not_accepted": [],
+      "unresolved": [
+        {
+          "slot": "location",
+          "turn": 7,
+          "expression": "Find me a spot over there.",
+          "interpretations": [
+            {
+              "location": "mall"
+            },
+            {
+              "location": "station"
+            }
+          ]
+        }
+      ]
+    },
+    "gold_relation_links": [],
+    "gold_decision": {
+      "should_ask": false,
+      "necessary_question": null,
+      "any_other_question_is_unnecessary": true
+    },
+    "flags_for_team": [],
+    "draft_part": "4c",
+    "ambiguity_kind": "location_deixis",
+    "mention_order": [
+      "mall",
+      "station"
+    ],
+    "single_change": "budget",
+    "computed_by_validator": {
+      "success_set": [
+        "R27",
+        "R31",
+        "R35"
+      ],
+      "interpretation_sets": [
+        {
+          "interpretation": {
+            "location": "mall"
+          },
+          "candidates": [
+            "R27",
+            "R31",
+            "R35"
+          ]
+        },
+        {
+          "interpretation": {
+            "location": "station"
+          },
+          "candidates": [
+            "R28",
+            "R31",
+            "R32"
+          ]
+        }
+      ],
+      "shared_candidates": [
+        "R31"
+      ],
+      "valid_without_clarification": [
+        "R31"
+      ],
+      "questions_needed": 0
+    }
+  }
+}

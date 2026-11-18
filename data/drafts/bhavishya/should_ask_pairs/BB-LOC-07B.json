@@ -1,0 +1,181 @@
+{
+  "scenario_id": "BB-LOC-07B",
+  "author": "BB",
+  "text_source": "draft by Claude; wording to be regenerated with Qwen before testing",
+  "model_visible": {
+    "dialogue_prefix": [
+      {
+        "turn": 1,
+        "speaker": "user",
+        "text": "I'm up for Italian or Japanese food, either is fine."
+      },
+      {
+        "turn": 2,
+        "speaker": "assistant",
+        "text": "Sure! There are good options near the station and near the mall."
+      },
+      {
+        "turn": 3,
+        "speaker": "user",
+        "text": "My budget is $25 per person."
+      },
+      {
+        "turn": 4,
+        "speaker": "assistant",
+        "text": "Got it, I'll keep the budget in mind."
+      },
+      {
+        "turn": 5,
+        "speaker": "user",
+        "text": "It's for lunch. I also need vegetarian options."
+      },
+      {
+        "turn": 6,
+        "speaker": "assistant",
+        "text": "Okay, noted."
+      },
+      {
+        "turn": 7,
+        "speaker": "user",
+        "text": "Somewhere near there works for me."
+      }
+    ],
+    "restaurant_database": "restaurants.json"
+  },
+  "evaluation_only": {
+    "scenario_type": "ambiguous_reference",
+    "template_family_id": "BB-LOC-07",
+    "variant": "B",
+    "contrast_note": "A: station -> R06 Trattoria Lucca ($22); mall -> R02 Hoshi Sushi Bar ($24); nothing near both -> ask. B: lunch instead of dinner makes R08 Forno Pizza ($16) valid for both -> recommend it.",
+    "turn_plan": [
+      {
+        "turn": 1,
+        "speaker": "user",
+        "act": "user states cuisine=['Italian', 'Japanese']"
+      },
+      {
+        "turn": 2,
+        "speaker": "assistant",
+        "act": "assistant mentions both areas (station first, mall second); not a user choice"
+      },
+      {
+        "turn": 3,
+        "speaker": "user",
+        "act": "user states max_price=25"
+      },
+      {
+        "turn": 4,
+        "speaker": "assistant",
+        "act": "assistant acknowledges"
+      },
+      {
+        "turn": 5,
+        "speaker": "user",
+        "act": "user states meal=lunch (no dinner constraint), vegetarian=true"
+      },
+      {
+        "turn": 6,
+        "speaker": "assistant",
+        "act": "assistant acknowledges"
+      },
+      {
+        "turn": 7,
+        "speaker": "user",
+        "act": "user: 'Somewhere near there works for me.' = station or mall (UNRESOLVED; hidden: mall)"
+      }
+    ],
+    "hidden_user_goal": {
+      "cuisine": [
+        "Italian",
+        "Japanese"
+      ],
+      "max_price": 25,
+      "vegetarian": true,
+      "location": "mall"
+    },
+    "predefined_clarification_answers": {
+      "cuisine": "Either Italian or Japanese is fine.",
+      "max_price": "No more than $25 per person.",
+      "location": "Near the mall.",
+      "vegetarian": "Yes, I need vegetarian options.",
+      "dinner": "It doesn't need to be open for dinner.",
+      "_unsupported": "I don't have a preference on that.",
+      "_multi_question": "Sorry, one thing at a time - what did you want to know first?"
+    },
+    "gold_dialogue_state": {
+      "at_turn": 7,
+      "active": {
+        "cuisine": [
+          "Italian",
+          "Japanese"
+        ],
+        "max_price": 25,
+        "vegetarian": true
+      },
+      "superseded": [],
+      "proposed_not_accepted": [],
+      "unresolved": [
+        {
+          "slot": "location",
+          "turn": 7,
+          "expression": "Somewhere near there works for me.",
+          "interpretations": [
+            {
+              "location": "station"
+            },
+            {
+              "location": "mall"
+            }
+          ]
+        }
+      ]
+    },
+    "gold_relation_links": [],
+    "gold_decision": {
+      "should_ask": false,
+      "necessary_question": null,
+      "any_other_question_is_unnecessary": true
+    },
+    "flags_for_team": [],
+    "draft_part": "4a",
+    "ambiguity_kind": "location_deixis",
+    "mention_order": [
+      "station",
+      "mall"
+    ],
+    "single_change": "lunch",
+    "computed_by_validator": {
+      "success_set": [
+        "R02",
+        "R08"
+      ],
+      "interpretation_sets": [
+        {
+          "interpretation": {
+            "location": "station"
+          },
+          "candidates": [
+            "R06",
+            "R08"
+          ]
+        },
+        {
+          "interpretation": {
+            "location": "mall"
+          },
+          "candidates": [
+            "R02",
+            "R08"
+          ]
+        }
+      ],
+      "shared_candidates": [
+        "R08"
+      ],
+      "valid_without_clarification": [
+        "R08"
+      ],
+      "questions_needed": 0
+    }
+  }
+}

@@ -1,0 +1,144 @@
+{
+  "scenario_id": "BB-CUI-01B",
+  "author": "BB",
+  "text_source": "draft by Claude; wording to be regenerated with Qwen before testing",
+  "model_visible": {
+    "dialogue_prefix": [
+      {
+        "turn": 1,
+        "speaker": "user",
+        "text": "Two of my friends each recommended a place around here: one Japanese, one Mediterranean."
+      },
+      {
+        "turn": 2,
+        "speaker": "assistant",
+        "text": "Both sound like good options! Want me to look into them?"
+      },
+      {
+        "turn": 3,
+        "speaker": "user",
+        "text": "I'd like somewhere near the station."
+      },
+      {
+        "turn": 4,
+        "speaker": "assistant",
+        "text": "Got it, near the station."
+      },
+      {
+        "turn": 5,
+        "speaker": "user",
+        "text": "No more than $18 a person. It's for lunch."
+      },
+      {
+        "turn": 6,
+        "speaker": "assistant",
+        "text": "Noted."
+      },
+      {
+        "turn": 7,
+        "speaker": "user",
+        "text": "Either of those cuisines is fine with me."
+      }
+    ],
+    "restaurant_database": "restaurants.json"
+  },
+  "evaluation_only": {
+    "scenario_type": "ambiguous_reference",
+    "template_family_id": "BB-CUI-01",
+    "variant": "B",
+    "contrast_note": "A: Japanese -> R01 Sakura Ramen ($18); Mediterranean -> R39 Falafel Stop ($11); no restaurant serves both -> ask. B: user accepts either cuisine (one turn changed; a single restaurant cannot serve two cuisines, so this is the only one-change way to remove the need to ask).",
+    "turn_plan": [
+      {
+        "turn": 1,
+        "speaker": "user",
+        "act": "user mentions two cuisines (Japanese first, Mediterranean second); neither chosen; no link to who said which"
+      },
+      {
+        "turn": 2,
+        "speaker": "assistant",
+        "act": "assistant offers"
+      },
+      {
+        "turn": 3,
+        "speaker": "user",
+        "act": "user states location=station"
+      },
+      {
+        "turn": 4,
+        "speaker": "assistant",
+        "act": "assistant acknowledges"
+      },
+      {
+        "turn": 5,
+        "speaker": "user",
+        "act": "user states max_price=18, meal=lunch"
+      },
+      {
+        "turn": 6,
+        "speaker": "assistant",
+        "act": "assistant acknowledges"
+      },
+      {
+        "turn": 7,
+        "speaker": "user",
+        "act": "user: cuisine in {Japanese, Mediterranean}; disjunction, not ambiguity"
+      }
+    ],
+    "hidden_user_goal": {
+      "max_price": 18,
+      "location": "station",
+      "cuisine": [
+        "Japanese",
+        "Mediterranean"
+      ]
+    },
+    "predefined_clarification_answers": {
+      "cuisine": "Either Japanese or Mediterranean is fine.",
+      "max_price": "No more than $18 per person.",
+      "location": "Near the station.",
+      "vegetarian": "No dietary restrictions.",
+      "dinner": "It doesn't need to be open for dinner.",
+      "_unsupported": "I don't have a preference on that.",
+      "_multi_question": "Sorry, one thing at a time - what did you want to know first?"
+    },
+    "gold_dialogue_state": {
+      "at_turn": 7,
+      "active": {
+        "max_price": 18,
+        "location": "station",
+        "cuisine": [
+          "Japanese",
+          "Mediterranean"
+        ]
+      },
+      "superseded": [],
+      "proposed_not_accepted": [],
+      "unresolved": []
+    },
+    "gold_relation_links": [],
+    "gold_decision": {
+      "should_ask": false,
+      "necessary_question": null,
+      "any_other_question_is_unnecessary": true
+    },
+    "flags_for_team": [],
+    "draft_part": "4a",
+    "ambiguity_kind": "cuisine_reference",
+    "mention_order": [
+      "Japanese",
+      "Mediterranean"
+    ],
+    "single_change": "accept_either",
+    "computed_by_validator": {
+      "success_set": [
+        "R01",
+        "R39"
+      ],
+      "valid_without_clarification": [
+        "R01",
+        "R39"
+      ],
+      "questions_needed": 0
+    }
+  }
+}

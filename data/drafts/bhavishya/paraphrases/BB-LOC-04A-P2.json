@@ -1,0 +1,175 @@
+{
+  "scenario_id": "BB-LOC-04A-P2",
+  "author": "BB",
+  "text_source": "draft by Claude; wording to be regenerated with Qwen before testing",
+  "model_visible": {
+    "dialogue_prefix": [
+      {
+        "turn": 1,
+        "speaker": "user",
+        "text": "I need ideas for a meal. Maybe Indian, maybe Japanese, I'm easy."
+      },
+      {
+        "turn": 2,
+        "speaker": "assistant",
+        "text": "Of course. A couple of spots are close to the station, and a couple are close to the mall."
+      },
+      {
+        "turn": 3,
+        "speaker": "user",
+        "text": "My budget is $24 per person."
+      },
+      {
+        "turn": 4,
+        "speaker": "assistant",
+        "text": "Okay, budget noted."
+      },
+      {
+        "turn": 5,
+        "speaker": "user",
+        "text": "It's for dinner."
+      },
+      {
+        "turn": 6,
+        "speaker": "assistant",
+        "text": "Sounds good."
+      },
+      {
+        "turn": 7,
+        "speaker": "user",
+        "text": "Find me something near there."
+      }
+    ],
+    "restaurant_database": "restaurants.json"
+  },
+  "evaluation_only": {
+    "scenario_type": "ambiguous_reference",
+    "template_family_id": "BB-LOC-04",
+    "variant": "A_para2",
+    "contrast_note": "A: station -> R01 Sakura Ramen ($18), R21 Masala House ($20); mall -> R02 Hoshi Sushi Bar ($24); nothing near both -> ask. B: budget $25 makes R23 Saffron Leaf ($25) valid for both -> recommend it.",
+    "turn_plan": [
+      {
+        "turn": 1,
+        "speaker": "user",
+        "act": "user states cuisine=['Indian', 'Japanese']"
+      },
+      {
+        "turn": 2,
+        "speaker": "assistant",
+        "act": "assistant mentions both areas (station first, mall second); not a user choice"
+      },
+      {
+        "turn": 3,
+        "speaker": "user",
+        "act": "user states max_price=24"
+      },
+      {
+        "turn": 4,
+        "speaker": "assistant",
+        "act": "assistant acknowledges"
+      },
+      {
+        "turn": 5,
+        "speaker": "user",
+        "act": "user states meal=dinner (dinner=true)"
+      },
+      {
+        "turn": 6,
+        "speaker": "assistant",
+        "act": "assistant acknowledges"
+      },
+      {
+        "turn": 7,
+        "speaker": "user",
+        "act": "user: 'Find me something near there.' = station or mall (UNRESOLVED; hidden: mall)"
+      }
+    ],
+    "hidden_user_goal": {
+      "cuisine": [
+        "Indian",
+        "Japanese"
+      ],
+      "max_price": 24,
+      "dinner": true,
+      "location": "mall"
+    },
+    "predefined_clarification_answers": {
+      "cuisine": "Either Indian or Japanese is fine.",
+      "max_price": "No more than $24 per person.",
+      "location": "Near the mall.",
+      "vegetarian": "No dietary restrictions.",
+      "dinner": "Yes, it needs to be open for dinner.",
+      "_unsupported": "I don't have a preference on that.",
+      "_multi_question": "Sorry, one thing at a time - what did you want to know first?"
+    },
+    "gold_dialogue_state": {
+      "at_turn": 7,
+      "active": {
+        "cuisine": [
+          "Indian",
+          "Japanese"
+        ],
+        "max_price": 24,
+        "dinner": true
+      },
+      "superseded": [],
+      "proposed_not_accepted": [],
+      "unresolved": [
+        {
+          "slot": "location",
+          "turn": 7,
+          "expression": "Find me something near there.",
+          "interpretations": [
+            {
+              "location": "station"
+            },
+            {
+              "location": "mall"
+            }
+          ]
+        }
+      ]
+    },
+    "gold_relation_links": [],
+    "gold_decision": {
+      "should_ask": true,
+      "necessary_question": "location@t7",
+      "any_other_question_is_unnecessary": true
+    },
+    "flags_for_team": [],
+    "draft_part": "4e",
+    "ambiguity_kind": "location_deixis",
+    "mention_order": [
+      "station",
+      "mall"
+    ],
+    "single_change": "budget",
+    "computed_by_validator": {
+      "success_set": [
+        "R02"
+      ],
+      "interpretation_sets": [
+        {
+          "interpretation": {
+            "location": "station"
+          },
+          "candidates": [
+            "R01",
+            "R21"
+          ]
+        },
+        {
+          "interpretation": {
+            "location": "mall"
+          },
+          "candidates": [
+            "R02"
+          ]
+        }
+      ],
+      "shared_candidates": [],
+      "valid_without_clarification": [],
+      "questions_needed": 1
+    }
+  }
+}

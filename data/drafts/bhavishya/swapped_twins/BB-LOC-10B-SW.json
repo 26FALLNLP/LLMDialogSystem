@@ -1,0 +1,187 @@
+{
+  "scenario_id": "BB-LOC-10B-SW",
+  "author": "BB",
+  "text_source": "draft by Claude; wording to be regenerated with Qwen before testing",
+  "model_visible": {
+    "dialogue_prefix": [
+      {
+        "turn": 1,
+        "speaker": "user",
+        "text": "I'm up for Mediterranean or Thai food, either is fine."
+      },
+      {
+        "turn": 2,
+        "speaker": "assistant",
+        "text": "Sure! There are good options near the mall and near the station."
+      },
+      {
+        "turn": 3,
+        "speaker": "user",
+        "text": "My budget is $50 per person."
+      },
+      {
+        "turn": 4,
+        "speaker": "assistant",
+        "text": "Got it, I'll keep the budget in mind."
+      },
+      {
+        "turn": 5,
+        "speaker": "user",
+        "text": "It's for dinner."
+      },
+      {
+        "turn": 6,
+        "speaker": "assistant",
+        "text": "Okay, noted."
+      },
+      {
+        "turn": 7,
+        "speaker": "user",
+        "text": "Can you look in that area?"
+      }
+    ],
+    "restaurant_database": "restaurants.json"
+  },
+  "evaluation_only": {
+    "scenario_type": "ambiguous_reference",
+    "template_family_id": "BB-LOC-10",
+    "variant": "B_swap",
+    "contrast_note": "A: station -> R16 Bangkok Street ($17), R36 Olive & Thyme ($23), R38 Aegean Table ($33); mall -> R18 Siam Garden ($31), R37 Pita Port ($14), R40 Santorini Grill ($47); nothing near both -> ask. B: budget $50 makes R20 Royal Orchid ($48) valid for both -> recommend it.",
+    "turn_plan": [
+      {
+        "turn": 1,
+        "speaker": "user",
+        "act": "user states cuisine=['Mediterranean', 'Thai']"
+      },
+      {
+        "turn": 2,
+        "speaker": "assistant",
+        "act": "assistant mentions both areas (mall first, station second); not a user choice"
+      },
+      {
+        "turn": 3,
+        "speaker": "user",
+        "act": "user states max_price=50"
+      },
+      {
+        "turn": 4,
+        "speaker": "assistant",
+        "act": "assistant acknowledges"
+      },
+      {
+        "turn": 5,
+        "speaker": "user",
+        "act": "user states meal=dinner (dinner=true)"
+      },
+      {
+        "turn": 6,
+        "speaker": "assistant",
+        "act": "assistant acknowledges"
+      },
+      {
+        "turn": 7,
+        "speaker": "user",
+        "act": "user: 'Can you look in that area?' = station or mall (UNRESOLVED; hidden: station)"
+      }
+    ],
+    "hidden_user_goal": {
+      "cuisine": [
+        "Mediterranean",
+        "Thai"
+      ],
+      "max_price": 50,
+      "dinner": true,
+      "location": "station"
+    },
+    "predefined_clarification_answers": {
+      "cuisine": "Either Mediterranean or Thai is fine.",
+      "max_price": "No more than $50 per person.",
+      "location": "Near the station.",
+      "vegetarian": "No dietary restrictions.",
+      "dinner": "Yes, it needs to be open for dinner.",
+      "_unsupported": "I don't have a preference on that.",
+      "_multi_question": "Sorry, one thing at a time - what did you want to know first?"
+    },
+    "gold_dialogue_state": {
+      "at_turn": 7,
+      "active": {
+        "cuisine": [
+          "Mediterranean",
+          "Thai"
+        ],
+        "max_price": 50,
+        "dinner": true
+      },
+      "superseded": [],
+      "proposed_not_accepted": [],
+      "unresolved": [
+        {
+          "slot": "location",
+          "turn": 7,
+          "expression": "Can you look in that area?",
+          "interpretations": [
+            {
+              "location": "mall"
+            },
+            {
+              "location": "station"
+            }
+          ]
+        }
+      ]
+    },
+    "gold_relation_links": [],
+    "gold_decision": {
+      "should_ask": false,
+      "necessary_question": null,
+      "any_other_question_is_unnecessary": true
+    },
+    "flags_for_team": [],
+    "draft_part": "4c",
+    "ambiguity_kind": "location_deixis",
+    "mention_order": [
+      "mall",
+      "station"
+    ],
+    "single_change": "budget",
+    "computed_by_validator": {
+      "success_set": [
+        "R16",
+        "R20",
+        "R36",
+        "R38"
+      ],
+      "interpretation_sets": [
+        {
+          "interpretation": {
+            "location": "mall"
+          },
+          "candidates": [
+            "R18",
+            "R20",
+            "R37",
+            "R40"
+          ]
+        },
+        {
+          "interpretation": {
+            "location": "station"
+          },
+          "candidates": [
+            "R16",
+            "R20",
+            "R36",
+            "R38"
+          ]
+        }
+      ],
+      "shared_candidates": [
+        "R20"
+      ],
+      "valid_without_clarification": [
+        "R20"
+      ],
+      "questions_needed": 0
+    }
+  }
+}

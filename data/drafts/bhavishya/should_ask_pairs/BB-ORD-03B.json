@@ -1,0 +1,181 @@
+{
+  "scenario_id": "BB-ORD-03B",
+  "author": "BB",
+  "text_source": "draft by Claude; wording to be regenerated with Qwen before testing",
+  "model_visible": {
+    "dialogue_prefix": [
+      {
+        "turn": 1,
+        "speaker": "user",
+        "text": "I'm up for Indian or Korean food, either is fine."
+      },
+      {
+        "turn": 2,
+        "speaker": "assistant",
+        "text": "Sure! There are good options near the station and near the mall."
+      },
+      {
+        "turn": 3,
+        "speaker": "user",
+        "text": "My budget is $25 per person."
+      },
+      {
+        "turn": 4,
+        "speaker": "assistant",
+        "text": "Okay. With that budget, the mall side and the station side both still have choices."
+      },
+      {
+        "turn": 5,
+        "speaker": "user",
+        "text": "It's for lunch."
+      },
+      {
+        "turn": 6,
+        "speaker": "assistant",
+        "text": "Okay, noted."
+      },
+      {
+        "turn": 7,
+        "speaker": "user",
+        "text": "Let's go with the second place you mentioned."
+      }
+    ],
+    "restaurant_database": "restaurants.json"
+  },
+  "evaluation_only": {
+    "scenario_type": "ambiguous_reference",
+    "template_family_id": "BB-ORD-03",
+    "variant": "B",
+    "contrast_note": "A: station -> R21 Masala House ($20); mall -> R27 Bibim Bowl ($15); nothing near both -> ask. B: budget $25 makes R23 Saffron Leaf ($25) valid for both -> recommend it.",
+    "turn_plan": [
+      {
+        "turn": 1,
+        "speaker": "user",
+        "act": "user states cuisine=['Indian', 'Korean']"
+      },
+      {
+        "turn": 2,
+        "speaker": "assistant",
+        "act": "assistant mentions both areas (station first, mall second); not a user choice"
+      },
+      {
+        "turn": 3,
+        "speaker": "user",
+        "act": "user states max_price=25"
+      },
+      {
+        "turn": 4,
+        "speaker": "assistant",
+        "act": "assistant re-lists the areas in the opposite order (mall first, station second)"
+      },
+      {
+        "turn": 5,
+        "speaker": "user",
+        "act": "user states meal=lunch (no dinner constraint)"
+      },
+      {
+        "turn": 6,
+        "speaker": "assistant",
+        "act": "assistant acknowledges"
+      },
+      {
+        "turn": 7,
+        "speaker": "user",
+        "act": "user: 'second place' = mall (second in turn 2) or station (second in turn 4) (UNRESOLVED; hidden: station)"
+      }
+    ],
+    "hidden_user_goal": {
+      "cuisine": [
+        "Indian",
+        "Korean"
+      ],
+      "max_price": 25,
+      "location": "station"
+    },
+    "predefined_clarification_answers": {
+      "cuisine": "Either Indian or Korean is fine.",
+      "max_price": "No more than $25 per person.",
+      "location": "Near the station.",
+      "vegetarian": "No dietary restrictions.",
+      "dinner": "It doesn't need to be open for dinner.",
+      "_unsupported": "I don't have a preference on that.",
+      "_multi_question": "Sorry, one thing at a time - what did you want to know first?"
+    },
+    "gold_dialogue_state": {
+      "at_turn": 7,
+      "active": {
+        "cuisine": [
+          "Indian",
+          "Korean"
+        ],
+        "max_price": 25
+      },
+      "superseded": [],
+      "proposed_not_accepted": [],
+      "unresolved": [
+        {
+          "slot": "location",
+          "turn": 7,
+          "expression": "Let's go with the second place you mentioned.",
+          "interpretations": [
+            {
+              "location": "station"
+            },
+            {
+              "location": "mall"
+            }
+          ]
+        }
+      ]
+    },
+    "gold_relation_links": [],
+    "gold_decision": {
+      "should_ask": false,
+      "necessary_question": null,
+      "any_other_question_is_unnecessary": true
+    },
+    "flags_for_team": [],
+    "draft_part": "4a",
+    "ambiguity_kind": "ordinal_reference",
+    "mention_order": [
+      "station",
+      "mall"
+    ],
+    "single_change": "budget",
+    "computed_by_validator": {
+      "success_set": [
+        "R21",
+        "R23",
+        "R28"
+      ],
+      "interpretation_sets": [
+        {
+          "interpretation": {
+            "location": "station"
+          },
+          "candidates": [
+            "R21",
+            "R23",
+            "R28"
+          ]
+        },
+        {
+          "interpretation": {
+            "location": "mall"
+          },
+          "candidates": [
+            "R23",
+            "R27"
+          ]
+        }
+      ],
+      "shared_candidates": [
+        "R23"
+      ],
+      "valid_without_clarification": [
+        "R23"
+      ],
+      "questions_needed": 0
+    }
+  }
+}

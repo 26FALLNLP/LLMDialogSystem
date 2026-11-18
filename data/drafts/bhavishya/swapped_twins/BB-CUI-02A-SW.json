@@ -1,0 +1,164 @@
+{
+  "scenario_id": "BB-CUI-02A-SW",
+  "author": "BB",
+  "text_source": "draft by Claude; wording to be regenerated with Qwen before testing",
+  "model_visible": {
+    "dialogue_prefix": [
+      {
+        "turn": 1,
+        "speaker": "user",
+        "text": "Two of my friends each recommended a place around here: one Italian, one Thai."
+      },
+      {
+        "turn": 2,
+        "speaker": "assistant",
+        "text": "Both sound like good options! Want me to look into them?"
+      },
+      {
+        "turn": 3,
+        "speaker": "user",
+        "text": "The area doesn't matter to me."
+      },
+      {
+        "turn": 4,
+        "speaker": "assistant",
+        "text": "Okay, anywhere works."
+      },
+      {
+        "turn": 5,
+        "speaker": "user",
+        "text": "No more than $17 a person. It's for lunch."
+      },
+      {
+        "turn": 6,
+        "speaker": "assistant",
+        "text": "Noted."
+      },
+      {
+        "turn": 7,
+        "speaker": "user",
+        "text": "Let's go with Sam's recommendation."
+      }
+    ],
+    "restaurant_database": "restaurants.json"
+  },
+  "evaluation_only": {
+    "scenario_type": "ambiguous_reference",
+    "template_family_id": "BB-CUI-02",
+    "variant": "A_swap",
+    "contrast_note": "A: Italian -> R08 Forno Pizza ($16); Thai -> R16 Bangkok Street ($17); no restaurant serves both -> ask. B: user accepts either cuisine (one turn changed; a single restaurant cannot serve two cuisines, so this is the only one-change way to remove the need to ask).",
+    "turn_plan": [
+      {
+        "turn": 1,
+        "speaker": "user",
+        "act": "user mentions two cuisines (Italian first, Thai second); neither chosen; no link to who said which"
+      },
+      {
+        "turn": 2,
+        "speaker": "assistant",
+        "act": "assistant offers"
+      },
+      {
+        "turn": 3,
+        "speaker": "user",
+        "act": "user: no location constraint"
+      },
+      {
+        "turn": 4,
+        "speaker": "assistant",
+        "act": "assistant acknowledges"
+      },
+      {
+        "turn": 5,
+        "speaker": "user",
+        "act": "user states max_price=17, meal=lunch"
+      },
+      {
+        "turn": 6,
+        "speaker": "assistant",
+        "act": "assistant acknowledges"
+      },
+      {
+        "turn": 7,
+        "speaker": "user",
+        "act": "user: 'Sam's recommendation' = Italian or Thai (UNRESOLVED; hidden: Thai)"
+      }
+    ],
+    "hidden_user_goal": {
+      "max_price": 17,
+      "cuisine": "Thai"
+    },
+    "predefined_clarification_answers": {
+      "cuisine": "Thai, please.",
+      "max_price": "No more than $17 per person.",
+      "location": "I don't mind which area.",
+      "vegetarian": "No dietary restrictions.",
+      "dinner": "It doesn't need to be open for dinner.",
+      "_unsupported": "I don't have a preference on that.",
+      "_multi_question": "Sorry, one thing at a time - what did you want to know first?"
+    },
+    "gold_dialogue_state": {
+      "at_turn": 7,
+      "active": {
+        "max_price": 17
+      },
+      "superseded": [],
+      "proposed_not_accepted": [],
+      "unresolved": [
+        {
+          "slot": "cuisine",
+          "turn": 7,
+          "expression": "Sam's recommendation",
+          "interpretations": [
+            {
+              "cuisine": "Italian"
+            },
+            {
+              "cuisine": "Thai"
+            }
+          ]
+        }
+      ]
+    },
+    "gold_relation_links": [],
+    "gold_decision": {
+      "should_ask": true,
+      "necessary_question": "cuisine@t7",
+      "any_other_question_is_unnecessary": true
+    },
+    "flags_for_team": [],
+    "draft_part": "4c",
+    "ambiguity_kind": "cuisine_reference",
+    "mention_order": [
+      "Italian",
+      "Thai"
+    ],
+    "single_change": "accept_either",
+    "computed_by_validator": {
+      "success_set": [
+        "R16"
+      ],
+      "interpretation_sets": [
+        {
+          "interpretation": {
+            "cuisine": "Italian"
+          },
+          "candidates": [
+            "R08"
+          ]
+        },
+        {
+          "interpretation": {
+            "cuisine": "Thai"
+          },
+          "candidates": [
+            "R16"
+          ]
+        }
+      ],
+      "shared_candidates": [],
+      "valid_without_clarification": [],
+      "questions_needed": 1
+    }
+  }
+}
