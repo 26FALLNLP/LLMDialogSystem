@@ -809,21 +809,28 @@ def main():
     save("4g", f3)
     save("4g", fix_04([c for c in locs if c not in loc_cfgs]))
 
-    # --- proposed dev/test split for the drafts (family level, stratified by part; NOT frozen)
+    # --- proposed dev/test split for the drafts. Family level: an original, its swapped twin and
+    # its paraphrases share a family and always land on the same side. Stratified by family type
+    # (LOC, ORD, CUI, TWOQ, SUG, LONG, FIX). NOT frozen.
     rng = random.Random(6120)
     split = {"status": "PROPOSAL for the drafts only - not frozen. The frozen split for the original 36 "
                        "is data/splits/split.json and is not changed.",
-             "seed": 6120, "dev_fraction": 0.25, "dev": [], "test": []}
-    for part in sorted(written):
-        fams = sorted({json.loads((OUT / FOLDERS[part] / f"{s}.json").read_text())["evaluation_only"]["template_family_id"]
-                       for s in written[part]})
+             "seed": 6120, "dev_fraction": 0.25, "unit": "template_family", "dev": [], "test": []}
+    members = {}
+    for part, ids in written.items():
+        for s in ids:
+            fam = json.loads((OUT / FOLDERS[part] / f"{s}.json").read_text())["evaluation_only"]["template_family_id"]
+            members.setdefault(fam, []).append(s)
+    strata = {}
+    for fam in sorted(members):
+        strata.setdefault(fam.rsplit("-", 1)[0], []).append(fam)
+    for stratum, fams in sorted(strata.items()):
         rng.shuffle(fams)
         k = max(1, round(len(fams) * split["dev_fraction"]))
-        for p_ids, fam_list in ((split["dev"], fams[:k]), (split["test"], fams[k:])):
-            for s in written[part]:
-                sc = json.loads((OUT / FOLDERS[part] / f"{s}.json").read_text())
-                if sc["evaluation_only"]["template_family_id"] in fam_list:
-                    p_ids.append(s)
+        for fam in fams[:k]:
+            split["dev"] += members[fam]
+        for fam in fams[k:]:
+            split["test"] += members[fam]
     split["dev"].sort()
     split["test"].sort()
     (OUT / "draft_split_proposal.json").write_text(json.dumps(split, indent=2) + "\n")
