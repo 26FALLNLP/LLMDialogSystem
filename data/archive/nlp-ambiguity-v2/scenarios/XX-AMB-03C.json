@@ -1,0 +1,161 @@
+{
+  "scenario_id": "XX-AMB-03C",
+  "author": "XX",
+  "text_source": "draft (Claude). Regenerate with the team's shared tool if Claude is one of the tested models. Ambiguity wording revised for nlp-ambiguity-v2.",
+  "model_visible": {
+    "dialogue_prefix": [
+      {
+        "turn": 1,
+        "speaker": "user",
+        "text": "My coworkers mentioned Thai and Mexican when we were talking about lunch."
+      },
+      {
+        "turn": 2,
+        "speaker": "assistant",
+        "text": "Okay."
+      },
+      {
+        "turn": 3,
+        "speaker": "user",
+        "text": "I want somewhere near the mall with vegetarian options."
+      },
+      {
+        "turn": 4,
+        "speaker": "assistant",
+        "text": "All right."
+      },
+      {
+        "turn": 5,
+        "speaker": "user",
+        "text": "And no more than $30 a person."
+      },
+      {
+        "turn": 6,
+        "speaker": "assistant",
+        "text": "Okay."
+      },
+      {
+        "turn": 7,
+        "speaker": "user",
+        "text": "Let's do the cuisine they mentioned."
+      }
+    ],
+    "restaurant_database": "restaurants.json"
+  },
+  "evaluation_only": {
+    "scenario_type": "ambiguous_reference",
+    "template_family_id": "XX-AMB-03",
+    "variant": "C",
+    "contrast_note": "A: a singular reference to one of two cuisines (no restaurant serves both) -> ask. B: user accepts either -> no question needed. A and C have identical model-visible history and catalog, with opposite hidden targets and disjoint success sets.",
+    "turn_plan": [
+      {
+        "turn": 1,
+        "speaker": "user",
+        "act": "user mentions two cuisines for lunch; neither selected"
+      },
+      {
+        "turn": 2,
+        "speaker": "assistant",
+        "act": "assistant acknowledges without choosing a cuisine"
+      },
+      {
+        "turn": 3,
+        "speaker": "user",
+        "act": "user states location=mall, vegetarian=true"
+      },
+      {
+        "turn": 4,
+        "speaker": "assistant",
+        "act": "assistant acknowledges without restating constraints"
+      },
+      {
+        "turn": 5,
+        "speaker": "user",
+        "act": "user states max_price=30"
+      },
+      {
+        "turn": 6,
+        "speaker": "assistant",
+        "act": "assistant acknowledges"
+      },
+      {
+        "turn": 7,
+        "speaker": "user",
+        "act": "user leaves cuisine unresolved between the listed interpretations (UNRESOLVED; hidden: Thai)"
+      }
+    ],
+    "hidden_user_goal": {
+      "cuisine": "Thai",
+      "max_price": 30,
+      "location": "mall",
+      "vegetarian": true
+    },
+    "predefined_clarification_answers": {
+      "cuisine": "Thai.",
+      "max_price": "No more than $30 per person.",
+      "location": "Near the mall.",
+      "vegetarian": "Yes, I need vegetarian options.",
+      "dinner": "It doesn't need to be open for dinner.",
+      "_unsupported": "I don't have a preference on that.",
+      "_multi_question": "Sorry, one thing at a time - what did you want to know first?"
+    },
+    "gold_dialogue_state": {
+      "at_turn": 7,
+      "active": {
+        "max_price": 30,
+        "location": "mall",
+        "vegetarian": true
+      },
+      "superseded": [],
+      "proposed_not_accepted": [],
+      "unresolved": [
+        {
+          "slot": "cuisine",
+          "turn": 7,
+          "expression": "the cuisine they mentioned",
+          "interpretations": [
+            {
+              "cuisine": "Thai"
+            },
+            {
+              "cuisine": "Mexican"
+            }
+          ]
+        }
+      ]
+    },
+    "gold_relation_links": [],
+    "gold_decision": {
+      "should_ask": true,
+      "necessary_question": "cuisine@t7",
+      "any_other_question_is_unnecessary": true
+    },
+    "flags_for_team": [],
+    "computed_by_validator": {
+      "success_set": [
+        "R17"
+      ],
+      "interpretation_sets": [
+        {
+          "interpretation": {
+            "cuisine": "Thai"
+          },
+          "candidates": [
+            "R17"
+          ]
+        },
+        {
+          "interpretation": {
+            "cuisine": "Mexican"
+          },
+          "candidates": [
+            "R13"
+          ]
+        }
+      ],
+      "shared_candidates": [],
+      "valid_without_clarification": []
+    },
+    "ambiguity_pair_id": "XX-AMB-03-hidden-target"
+  }
+}

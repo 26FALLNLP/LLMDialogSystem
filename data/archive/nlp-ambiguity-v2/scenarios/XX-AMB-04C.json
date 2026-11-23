@@ -1,0 +1,165 @@
+{
+  "scenario_id": "XX-AMB-04C",
+  "author": "XX",
+  "text_source": "draft (Claude). Regenerate with the team's shared tool if Claude is one of the tested models. Ambiguity wording revised for nlp-ambiguity-v2.",
+  "model_visible": {
+    "dialogue_prefix": [
+      {
+        "turn": 1,
+        "speaker": "user",
+        "text": "I've been looking at places near the train station and near the mall."
+      },
+      {
+        "turn": 2,
+        "speaker": "assistant",
+        "text": "What kind of food would you like?"
+      },
+      {
+        "turn": 3,
+        "speaker": "user",
+        "text": "I want Mediterranean food with vegetarian options."
+      },
+      {
+        "turn": 4,
+        "speaker": "assistant",
+        "text": "How much would you like to spend?"
+      },
+      {
+        "turn": 5,
+        "speaker": "user",
+        "text": "Up to $35. It's for dinner tonight."
+      },
+      {
+        "turn": 6,
+        "speaker": "assistant",
+        "text": "Okay."
+      },
+      {
+        "turn": 7,
+        "speaker": "user",
+        "text": "Find something close to where I'll be."
+      }
+    ],
+    "restaurant_database": "restaurants.json"
+  },
+  "evaluation_only": {
+    "scenario_type": "ambiguous_reference",
+    "template_family_id": "XX-AMB-04",
+    "variant": "C",
+    "contrast_note": "Dinner vs lunch. At dinner nothing is near both areas -> ask. At lunch Falafel Stop (R39) is near both -> recommend directly. A and C have identical model-visible history and catalog, with opposite hidden targets and disjoint success sets.",
+    "turn_plan": [
+      {
+        "turn": 1,
+        "speaker": "user",
+        "act": "user mentions two areas without choosing one"
+      },
+      {
+        "turn": 2,
+        "speaker": "assistant",
+        "act": "assistant asks cuisine"
+      },
+      {
+        "turn": 3,
+        "speaker": "user",
+        "act": "user states cuisine=Mediterranean, vegetarian=true"
+      },
+      {
+        "turn": 4,
+        "speaker": "assistant",
+        "act": "assistant asks budget"
+      },
+      {
+        "turn": 5,
+        "speaker": "user",
+        "act": "user states max_price=35, dinner=true"
+      },
+      {
+        "turn": 6,
+        "speaker": "assistant",
+        "act": "assistant acknowledges"
+      },
+      {
+        "turn": 7,
+        "speaker": "user",
+        "act": "user: 'close to where I'll be' = station or mall (UNRESOLVED; hidden: station)"
+      }
+    ],
+    "hidden_user_goal": {
+      "cuisine": "Mediterranean",
+      "max_price": 35,
+      "location": "station",
+      "vegetarian": true,
+      "dinner": true
+    },
+    "predefined_clarification_answers": {
+      "cuisine": "Mediterranean, please.",
+      "max_price": "No more than $35 per person.",
+      "location": "Near the station.",
+      "vegetarian": "Yes, I need vegetarian options.",
+      "dinner": "It's for dinner.",
+      "_unsupported": "I don't have a preference on that.",
+      "_multi_question": "Sorry, one thing at a time - what did you want to know first?"
+    },
+    "gold_dialogue_state": {
+      "at_turn": 7,
+      "active": {
+        "cuisine": "Mediterranean",
+        "max_price": 35,
+        "vegetarian": true,
+        "dinner": true
+      },
+      "superseded": [],
+      "proposed_not_accepted": [],
+      "unresolved": [
+        {
+          "slot": "location",
+          "turn": 7,
+          "expression": "close to where I'll be",
+          "interpretations": [
+            {
+              "location": "station"
+            },
+            {
+              "location": "mall"
+            }
+          ]
+        }
+      ]
+    },
+    "gold_relation_links": [],
+    "gold_decision": {
+      "should_ask": true,
+      "necessary_question": "location@t7",
+      "any_other_question_is_unnecessary": true
+    },
+    "flags_for_team": [],
+    "computed_by_validator": {
+      "success_set": [
+        "R36",
+        "R38"
+      ],
+      "interpretation_sets": [
+        {
+          "interpretation": {
+            "location": "station"
+          },
+          "candidates": [
+            "R36",
+            "R38"
+          ]
+        },
+        {
+          "interpretation": {
+            "location": "mall"
+          },
+          "candidates": [
+            "R37"
+          ]
+        }
+      ],
+      "shared_candidates": [],
+      "valid_without_clarification": []
+    },
+    "ambiguity_pair_id": "XX-AMB-04-hidden-target"
+  }
+}

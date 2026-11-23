@@ -1,0 +1,138 @@
+{
+  "scenario_id": "XX-AMB-03B",
+  "author": "XX",
+  "text_source": "draft (Claude). Regenerate with the team's shared tool if Claude is one of the tested models. Ambiguity wording revised for nlp-ambiguity-v2.",
+  "model_visible": {
+    "dialogue_prefix": [
+      {
+        "turn": 1,
+        "speaker": "user",
+        "text": "My coworkers mentioned Thai and Mexican when we were talking about lunch."
+      },
+      {
+        "turn": 2,
+        "speaker": "assistant",
+        "text": "Okay."
+      },
+      {
+        "turn": 3,
+        "speaker": "user",
+        "text": "I want somewhere near the mall with vegetarian options."
+      },
+      {
+        "turn": 4,
+        "speaker": "assistant",
+        "text": "All right."
+      },
+      {
+        "turn": 5,
+        "speaker": "user",
+        "text": "And no more than $30 a person."
+      },
+      {
+        "turn": 6,
+        "speaker": "assistant",
+        "text": "Okay."
+      },
+      {
+        "turn": 7,
+        "speaker": "user",
+        "text": "Either of those cuisines is fine with me."
+      }
+    ],
+    "restaurant_database": "restaurants.json"
+  },
+  "evaluation_only": {
+    "scenario_type": "ambiguous_reference",
+    "template_family_id": "XX-AMB-03",
+    "variant": "B",
+    "contrast_note": "A: a singular reference to one of two cuisines (no restaurant serves both) -> ask. B: user accepts either -> no question needed.",
+    "turn_plan": [
+      {
+        "turn": 1,
+        "speaker": "user",
+        "act": "user mentions two cuisines for lunch; neither selected"
+      },
+      {
+        "turn": 2,
+        "speaker": "assistant",
+        "act": "assistant acknowledges without choosing a cuisine"
+      },
+      {
+        "turn": 3,
+        "speaker": "user",
+        "act": "user states location=mall, vegetarian=true"
+      },
+      {
+        "turn": 4,
+        "speaker": "assistant",
+        "act": "assistant acknowledges without restating constraints"
+      },
+      {
+        "turn": 5,
+        "speaker": "user",
+        "act": "user states max_price=30"
+      },
+      {
+        "turn": 6,
+        "speaker": "assistant",
+        "act": "assistant acknowledges"
+      },
+      {
+        "turn": 7,
+        "speaker": "user",
+        "act": "user: cuisine in {Thai, Mexican}; disjunction, not ambiguity"
+      }
+    ],
+    "hidden_user_goal": {
+      "cuisine": [
+        "Thai",
+        "Mexican"
+      ],
+      "max_price": 30,
+      "location": "mall",
+      "vegetarian": true
+    },
+    "predefined_clarification_answers": {
+      "cuisine": "Either Thai or Mexican is fine.",
+      "max_price": "No more than $30 per person.",
+      "location": "Near the mall.",
+      "vegetarian": "Yes, I need vegetarian options.",
+      "dinner": "It doesn't need to be open for dinner.",
+      "_unsupported": "I don't have a preference on that.",
+      "_multi_question": "Sorry, one thing at a time - what did you want to know first?"
+    },
+    "gold_dialogue_state": {
+      "at_turn": 7,
+      "active": {
+        "cuisine": [
+          "Thai",
+          "Mexican"
+        ],
+        "max_price": 30,
+        "location": "mall",
+        "vegetarian": true
+      },
+      "superseded": [],
+      "proposed_not_accepted": [],
+      "unresolved": []
+    },
+    "gold_relation_links": [],
+    "gold_decision": {
+      "should_ask": false,
+      "necessary_question": null,
+      "any_other_question_is_unnecessary": true
+    },
+    "flags_for_team": [],
+    "computed_by_validator": {
+      "success_set": [
+        "R13",
+        "R17"
+      ],
+      "valid_without_clarification": [
+        "R13",
+        "R17"
+      ]
+    }
+  }
+}

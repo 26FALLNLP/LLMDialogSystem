@@ -1,0 +1,168 @@
+{
+  "scenario_id": "XX-AMB-05",
+  "author": "XX",
+  "text_source": "draft (Claude). Regenerate with the team's shared tool if Claude is one of the tested models. Ambiguity wording revised for nlp-ambiguity-v2.",
+  "model_visible": {
+    "dialogue_prefix": [
+      {
+        "turn": 1,
+        "speaker": "user",
+        "text": "I'm getting dinner with my friend near the mall tonight."
+      },
+      {
+        "turn": 2,
+        "speaker": "assistant",
+        "text": "Fun! What kind of food?"
+      },
+      {
+        "turn": 3,
+        "speaker": "user",
+        "text": "Mexican. We had $20 and $30 per person in mind."
+      },
+      {
+        "turn": 4,
+        "speaker": "assistant",
+        "text": "Okay, thanks for the details."
+      },
+      {
+        "turn": 5,
+        "speaker": "user",
+        "text": "We need somewhere open for dinner."
+      },
+      {
+        "turn": 6,
+        "speaker": "assistant",
+        "text": "Of course."
+      },
+      {
+        "turn": 7,
+        "speaker": "user",
+        "text": "Let's just go with that budget. What do you suggest?"
+      }
+    ],
+    "restaurant_database": "restaurants.json"
+  },
+  "evaluation_only": {
+    "scenario_type": "ambiguous_reference",
+    "template_family_id": "XX-AMB-05",
+    "variant": "single",
+    "contrast_note": "Price ambiguity where a $20 option (El Comal, R13) satisfies both readings -> no question needed.",
+    "turn_plan": [
+      {
+        "turn": 1,
+        "speaker": "user",
+        "act": "user states location=mall, dinner=true"
+      },
+      {
+        "turn": 2,
+        "speaker": "assistant",
+        "act": "assistant asks cuisine"
+      },
+      {
+        "turn": 3,
+        "speaker": "user",
+        "act": "user states cuisine=Mexican and mentions two possible budgets without choosing one"
+      },
+      {
+        "turn": 4,
+        "speaker": "assistant",
+        "act": "assistant acknowledges"
+      },
+      {
+        "turn": 5,
+        "speaker": "user",
+        "act": "user restates dinner=true"
+      },
+      {
+        "turn": 6,
+        "speaker": "assistant",
+        "act": "assistant acknowledges"
+      },
+      {
+        "turn": 7,
+        "speaker": "user",
+        "act": "user: 'that budget' = $20 or $30 (UNRESOLVED; hidden: $30)"
+      }
+    ],
+    "hidden_user_goal": {
+      "cuisine": "Mexican",
+      "max_price": 30,
+      "location": "mall",
+      "dinner": true
+    },
+    "predefined_clarification_answers": {
+      "cuisine": "Mexican, please.",
+      "max_price": "No more than $30 per person.",
+      "location": "Near the mall.",
+      "vegetarian": "No dietary restrictions.",
+      "dinner": "It's for dinner.",
+      "_unsupported": "I don't have a preference on that.",
+      "_multi_question": "Sorry, one thing at a time - what did you want to know first?"
+    },
+    "gold_dialogue_state": {
+      "at_turn": 7,
+      "active": {
+        "cuisine": "Mexican",
+        "location": "mall",
+        "dinner": true
+      },
+      "superseded": [],
+      "proposed_not_accepted": [],
+      "unresolved": [
+        {
+          "slot": "max_price",
+          "turn": 7,
+          "expression": "that budget",
+          "interpretations": [
+            {
+              "max_price": 20
+            },
+            {
+              "max_price": 30
+            }
+          ]
+        }
+      ]
+    },
+    "gold_relation_links": [],
+    "gold_decision": {
+      "should_ask": false,
+      "necessary_question": null,
+      "any_other_question_is_unnecessary": true
+    },
+    "flags_for_team": [
+      "Both budget readings have shared candidate R13, so directly recommending R13 is valid."
+    ],
+    "computed_by_validator": {
+      "success_set": [
+        "R12",
+        "R13"
+      ],
+      "interpretation_sets": [
+        {
+          "interpretation": {
+            "max_price": 20
+          },
+          "candidates": [
+            "R13"
+          ]
+        },
+        {
+          "interpretation": {
+            "max_price": 30
+          },
+          "candidates": [
+            "R12",
+            "R13"
+          ]
+        }
+      ],
+      "shared_candidates": [
+        "R13"
+      ],
+      "valid_without_clarification": [
+        "R13"
+      ]
+    }
+  }
+}

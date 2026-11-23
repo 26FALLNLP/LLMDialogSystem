@@ -1,0 +1,130 @@
+{
+  "scenario_id": "XX-CLR-03A",
+  "author": "XX",
+  "text_source": "draft (Claude). Regenerate with the team's shared tool if Claude is one of the tested models.",
+  "model_visible": {
+    "dialogue_prefix": [
+      {
+        "turn": 1,
+        "speaker": "user",
+        "text": "I want to grab lunch near the station today."
+      },
+      {
+        "turn": 2,
+        "speaker": "assistant",
+        "text": "Happy to help! Any cuisine in mind?"
+      },
+      {
+        "turn": 3,
+        "speaker": "user",
+        "text": "Chinese sounds good."
+      },
+      {
+        "turn": 4,
+        "speaker": "assistant",
+        "text": "Great. What's your budget per person?"
+      },
+      {
+        "turn": 5,
+        "speaker": "user",
+        "text": "Up to $25."
+      },
+      {
+        "turn": 6,
+        "speaker": "assistant",
+        "text": "Okay: Chinese near the station, $25 or less."
+      },
+      {
+        "turn": 7,
+        "speaker": "user",
+        "text": "Perfect, what's your pick?"
+      }
+    ],
+    "restaurant_database": "restaurants.json"
+  },
+  "evaluation_only": {
+    "scenario_type": "clear",
+    "template_family_id": "XX-CLR-03",
+    "variant": "A",
+    "contrast_note": "Lunch vs dinner in turn 1. Dumpling King (R32) is valid only for lunch; tests that an early constraint is still applied six turns later.",
+    "turn_plan": [
+      {
+        "turn": 1,
+        "speaker": "user",
+        "act": "user states location=station; lunch -> no dinner constraint"
+      },
+      {
+        "turn": 2,
+        "speaker": "assistant",
+        "act": "assistant asks cuisine"
+      },
+      {
+        "turn": 3,
+        "speaker": "user",
+        "act": "user states cuisine=Chinese"
+      },
+      {
+        "turn": 4,
+        "speaker": "assistant",
+        "act": "assistant asks budget"
+      },
+      {
+        "turn": 5,
+        "speaker": "user",
+        "act": "user states max_price=25"
+      },
+      {
+        "turn": 6,
+        "speaker": "assistant",
+        "act": "assistant summarises"
+      },
+      {
+        "turn": 7,
+        "speaker": "user",
+        "act": "user requests recommendation"
+      }
+    ],
+    "hidden_user_goal": {
+      "cuisine": "Chinese",
+      "max_price": 25,
+      "location": "station"
+    },
+    "predefined_clarification_answers": {
+      "cuisine": "Chinese, please.",
+      "max_price": "No more than $25 per person.",
+      "location": "Near the station.",
+      "vegetarian": "No dietary restrictions.",
+      "dinner": "It doesn't need to be open for dinner.",
+      "_unsupported": "I don't have a preference on that.",
+      "_multi_question": "Sorry, one thing at a time - what did you want to know first?"
+    },
+    "gold_dialogue_state": {
+      "at_turn": 7,
+      "active": {
+        "cuisine": "Chinese",
+        "max_price": 25,
+        "location": "station"
+      },
+      "superseded": [],
+      "proposed_not_accepted": [],
+      "unresolved": []
+    },
+    "gold_relation_links": [],
+    "gold_decision": {
+      "should_ask": false,
+      "necessary_question": null,
+      "any_other_question_is_unnecessary": true
+    },
+    "flags_for_team": [],
+    "computed_by_validator": {
+      "success_set": [
+        "R31",
+        "R32"
+      ],
+      "valid_without_clarification": [
+        "R31",
+        "R32"
+      ]
+    }
+  }
+}
