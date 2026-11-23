@@ -57,6 +57,8 @@ Answer Service 支持两种初始化方式。原始数据走 `AnswerService(tabl
 
 `XX-AMB-01A` 的 `location` 回复是 `Near the station.`。`gold_decision` 中的 `location@t7` 用于离线判断追问目标是否正确。回答表以场景作者写入的槽位为键。包中也有 `_multi_question` 的整句兜底文本。沿用本文的逐项交付设计时，复合动作按每项槽位分别查表，整句兜底留作备选实验协议。
 
+`nlp-quota-v3` 的 `XX-AMB-12`、`XX-AMB-13` 两组各有 A–D 四个版本，同时保留菜系和地点歧义。两个槽位分别查表，例如菜系答 `Japanese, please.`，地点答 `Near the station.`。每条回复只确认对应条件，模型按剩余预算继续决策。
+
 ## 回复规则
 
 | 情况 | 行为 |
