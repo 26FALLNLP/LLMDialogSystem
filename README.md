@@ -1,6 +1,6 @@
 # LLMDialogSystem
 
-This project studies when a language model should ask a clarifying question before recommending a restaurant. It includes a dialogue pipeline, a scripted user that answers from a fixed table, and an offline scorer. The dataset contains 36 scenarios and a catalog of 40 fictional restaurants.
+This project studies when a language model should ask a clarifying question before recommending a restaurant. It includes a dialogue pipeline, a scripted user that answers from a fixed table, and an offline scorer. The current dataset contains 48 scenarios and a catalog of 40 fictional restaurants.
 
 ## Quick start
 
@@ -52,7 +52,7 @@ Use a filename stem from [data/scenarios](data/scenarios) as the scenario ID. Th
 
 ### Compare question budgets of 0, 1, and 2
 
-Run all 36 scenarios once at each budget with the same Claude model. Each comparison gets its own output directory under `runs/`.
+Run all 48 scenarios once at each budget with the same Claude model. Each comparison gets its own output directory under `runs/`.
 
 ```sh
 mkdir -p runs
@@ -88,6 +88,25 @@ for group in summary["groups"]:
 PY
 ```
 
-`scores.jsonl` contains one score per run. In `summary.json`, each entry under `groups` reports recommendation success and the number of questions actually asked for one budget. If a batch exits with errors, check its `termination_counts` in the summary. The scorer counts failed runs in the denominator, so keep all 36 records from each batch.
+`scores.jsonl` contains one score per run. In `summary.json`, each entry under `groups` reports recommendation success and the number of questions actually asked for one budget. If a batch exits with errors, check its `termination_counts` in the summary. The scorer counts failed runs in the denominator, so keep all 48 records from each batch.
+
+## Clarification budget dataset
+
+The `nlp-quota-v3` revision is a synthetic diagnostic benchmark with a fixed restaurant catalog and balanced hidden targets. Histories within each ambiguity group are identical, and the hidden targets have disjoint eligible restaurant sets. The composition is specified before model evaluation in [data/dataset-manifest.json](data/dataset-manifest.json).
+
+| Scenario group | Count | Information needed |
+| --- | --- | --- |
+| Clear or shared-candidate controls | 8 | Direct recommendation |
+| XX-AMB-01A/C through XX-AMB-04A/C | 8 | Choose one of two interpretations |
+| XX-AMB-06 through XX-AMB-11, variants A–D | 24 | Choose one of four cuisines |
+| XX-AMB-12 and XX-AMB-13, variants A–D | 8 | Confirm cuisine and location independently |
+
+With uniformly balanced hidden targets and optimal independent-slot questions, the idealized expected success counts are 20/48 at budget 0, 44/48 at budget 1, and 48/48 at budget 2. These are design expectations. Measured model results are saved with each experiment batch. This targeted composition is intended to expose the value of additional clarification opportunities.
+
+In the two-question cases, both cuisine and location are unresolved. A cuisine reply gives only the cuisine, and a location reply gives only the location. The scorer updates the remaining candidate interpretations after each answered question and judges a second useful question against that updated state.
+
+The model receives only the visible conversation, catalog, and run parameters. Hidden goals, variant labels, pair IDs, and answer tables are held by the evaluation and answer modules. Keep all variants of a template family in the same development or test split.
+
+The original 36-scenario snapshot is available in `data/archive/nlp-v1/`, and the previous 40-scenario revision is in `data/archive/nlp-ambiguity-v2/`. Add `--data-dir` with the matching archive path when scoring historical logs. New runs use the revised `data/scenarios/` by default, and their data hashes distinguish them from the archived runs.
 
 See the design docs for the [Dialogue Pipeline](docs/dialogue-pipeline.md), [Answer Service](docs/answer-service.md), and [Scoring Service](docs/scoring-service.md).
