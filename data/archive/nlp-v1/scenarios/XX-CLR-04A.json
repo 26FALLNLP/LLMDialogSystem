@@ -1,0 +1,120 @@
+{
+  "scenario_id": "XX-CLR-04A",
+  "author": "XX",
+  "text_source": "draft (Claude). Regenerate with the team's shared tool if Claude is one of the tested models.",
+  "model_visible": {
+    "dialogue_prefix": [
+      {
+        "turn": 1,
+        "speaker": "user",
+        "text": "I'm looking for a Korean lunch spot by the mall."
+      },
+      {
+        "turn": 2,
+        "speaker": "assistant",
+        "text": "Sounds good! Any dietary restrictions?"
+      },
+      {
+        "turn": 3,
+        "speaker": "user",
+        "text": "I'm vegetarian."
+      },
+      {
+        "turn": 4,
+        "speaker": "assistant",
+        "text": "Got it. And your budget?"
+      },
+      {
+        "turn": 5,
+        "speaker": "user",
+        "text": "$20 max per person."
+      },
+      {
+        "turn": 6,
+        "speaker": "user",
+        "text": "What do you suggest?"
+      }
+    ],
+    "restaurant_database": "restaurants.json"
+  },
+  "evaluation_only": {
+    "scenario_type": "clear",
+    "template_family_id": "XX-CLR-04",
+    "variant": "A",
+    "contrast_note": "Budget 20 vs 30 changes the valid set; both fully specified, so no question is needed.",
+    "turn_plan": [
+      {
+        "turn": 1,
+        "speaker": "user",
+        "act": "user states cuisine=Korean, location=mall; lunch"
+      },
+      {
+        "turn": 2,
+        "speaker": "assistant",
+        "act": "assistant asks diet"
+      },
+      {
+        "turn": 3,
+        "speaker": "user",
+        "act": "user states vegetarian=true"
+      },
+      {
+        "turn": 4,
+        "speaker": "assistant",
+        "act": "assistant asks budget"
+      },
+      {
+        "turn": 5,
+        "speaker": "user",
+        "act": "user states max_price=20"
+      },
+      {
+        "turn": 6,
+        "speaker": "user",
+        "act": "user requests recommendation"
+      }
+    ],
+    "hidden_user_goal": {
+      "cuisine": "Korean",
+      "max_price": 20,
+      "location": "mall",
+      "vegetarian": true
+    },
+    "predefined_clarification_answers": {
+      "cuisine": "Korean, please.",
+      "max_price": "No more than $20 per person.",
+      "location": "Near the mall.",
+      "vegetarian": "Yes, I need vegetarian options.",
+      "dinner": "It doesn't need to be open for dinner.",
+      "_unsupported": "I don't have a preference on that.",
+      "_multi_question": "Sorry, one thing at a time - what did you want to know first?"
+    },
+    "gold_dialogue_state": {
+      "at_turn": 6,
+      "active": {
+        "cuisine": "Korean",
+        "max_price": 20,
+        "location": "mall",
+        "vegetarian": true
+      },
+      "superseded": [],
+      "proposed_not_accepted": [],
+      "unresolved": []
+    },
+    "gold_relation_links": [],
+    "gold_decision": {
+      "should_ask": false,
+      "necessary_question": null,
+      "any_other_question_is_unnecessary": true
+    },
+    "flags_for_team": [],
+    "computed_by_validator": {
+      "success_set": [
+        "R27"
+      ],
+      "valid_without_clarification": [
+        "R27"
+      ]
+    }
+  }
+}

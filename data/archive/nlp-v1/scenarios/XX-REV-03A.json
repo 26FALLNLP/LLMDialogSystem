@@ -1,0 +1,155 @@
+{
+  "scenario_id": "XX-REV-03A",
+  "author": "XX",
+  "text_source": "draft (Claude). Regenerate with the team's shared tool if Claude is one of the tested models.",
+  "model_visible": {
+    "dialogue_prefix": [
+      {
+        "turn": 1,
+        "speaker": "user",
+        "text": "I'd like Indian food for dinner tonight."
+      },
+      {
+        "turn": 2,
+        "speaker": "assistant",
+        "text": "Lovely. Where will you be?"
+      },
+      {
+        "turn": 3,
+        "speaker": "user",
+        "text": "Near the station. I need vegetarian options too."
+      },
+      {
+        "turn": 4,
+        "speaker": "assistant",
+        "text": "Got it. Budget?"
+      },
+      {
+        "turn": 5,
+        "speaker": "user",
+        "text": "Up to $30."
+      },
+      {
+        "turn": 6,
+        "speaker": "user",
+        "text": "Actually, change that to near the mall."
+      },
+      {
+        "turn": 7,
+        "speaker": "assistant",
+        "text": "Updated!"
+      },
+      {
+        "turn": 8,
+        "speaker": "user",
+        "text": "What do you recommend?"
+      }
+    ],
+    "restaurant_database": "restaurants.json"
+  },
+  "evaluation_only": {
+    "scenario_type": "revision",
+    "template_family_id": "XX-REV-03",
+    "variant": "A",
+    "contrast_note": "Same position, different slot revised. Tests that a revision updates only its own slot and leaves the others intact.",
+    "turn_plan": [
+      {
+        "turn": 1,
+        "speaker": "user",
+        "act": "user states cuisine=Indian, dinner=true"
+      },
+      {
+        "turn": 2,
+        "speaker": "assistant",
+        "act": "assistant asks location"
+      },
+      {
+        "turn": 3,
+        "speaker": "user",
+        "act": "user states location=station, vegetarian=true"
+      },
+      {
+        "turn": 4,
+        "speaker": "assistant",
+        "act": "assistant asks budget"
+      },
+      {
+        "turn": 5,
+        "speaker": "user",
+        "act": "user states max_price=30"
+      },
+      {
+        "turn": 6,
+        "speaker": "user",
+        "act": "user REVISES location station -> mall"
+      },
+      {
+        "turn": 7,
+        "speaker": "assistant",
+        "act": "assistant acknowledges"
+      },
+      {
+        "turn": 8,
+        "speaker": "user",
+        "act": "user requests recommendation"
+      }
+    ],
+    "hidden_user_goal": {
+      "cuisine": "Indian",
+      "max_price": 30,
+      "location": "mall",
+      "vegetarian": true,
+      "dinner": true
+    },
+    "predefined_clarification_answers": {
+      "cuisine": "Indian, please.",
+      "max_price": "No more than $30 per person.",
+      "location": "Near the mall.",
+      "vegetarian": "Yes, I need vegetarian options.",
+      "dinner": "It's for dinner.",
+      "_unsupported": "I don't have a preference on that.",
+      "_multi_question": "Sorry, one thing at a time - what did you want to know first?"
+    },
+    "gold_dialogue_state": {
+      "at_turn": 8,
+      "active": {
+        "cuisine": "Indian",
+        "max_price": 30,
+        "location": "mall",
+        "vegetarian": true,
+        "dinner": true
+      },
+      "superseded": [
+        {
+          "slot": "location",
+          "value": "station",
+          "turn": 3
+        }
+      ],
+      "proposed_not_accepted": [],
+      "unresolved": []
+    },
+    "gold_relation_links": [
+      {
+        "source_turn": 6,
+        "target_turn": 3,
+        "relation": "revise",
+        "slot": "location"
+      }
+    ],
+    "gold_decision": {
+      "should_ask": false,
+      "necessary_question": null,
+      "any_other_question_is_unnecessary": true
+    },
+    "flags_for_team": [],
+    "computed_by_validator": {
+      "success_set": [
+        "R23"
+      ],
+      "valid_without_clarification": [
+        "R23"
+      ]
+    }
+  }
+}

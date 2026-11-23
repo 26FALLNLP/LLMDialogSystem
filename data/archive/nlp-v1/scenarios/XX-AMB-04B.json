@@ -1,0 +1,168 @@
+{
+  "scenario_id": "XX-AMB-04B",
+  "author": "XX",
+  "text_source": "draft (Claude). Regenerate with the team's shared tool if Claude is one of the tested models.",
+  "model_visible": {
+    "dialogue_prefix": [
+      {
+        "turn": 1,
+        "speaker": "user",
+        "text": "I work by the train station but I live by the mall."
+      },
+      {
+        "turn": 2,
+        "speaker": "assistant",
+        "text": "Handy! How can I help?"
+      },
+      {
+        "turn": 3,
+        "speaker": "user",
+        "text": "I want Mediterranean food with vegetarian options."
+      },
+      {
+        "turn": 4,
+        "speaker": "assistant",
+        "text": "Sounds good. What's your budget?"
+      },
+      {
+        "turn": 5,
+        "speaker": "user",
+        "text": "Up to $35. It's for lunch tomorrow."
+      },
+      {
+        "turn": 6,
+        "speaker": "assistant",
+        "text": "Okay."
+      },
+      {
+        "turn": 7,
+        "speaker": "user",
+        "text": "Find something close to where I'll be."
+      }
+    ],
+    "restaurant_database": "restaurants.json"
+  },
+  "evaluation_only": {
+    "scenario_type": "ambiguous_reference",
+    "template_family_id": "XX-AMB-04",
+    "variant": "B",
+    "contrast_note": "Dinner vs lunch. At dinner nothing is near both areas -> ask. At lunch Falafel Stop (R39) is near both -> recommend directly.",
+    "turn_plan": [
+      {
+        "turn": 1,
+        "speaker": "user",
+        "act": "user mentions two areas"
+      },
+      {
+        "turn": 2,
+        "speaker": "assistant",
+        "act": "assistant asks"
+      },
+      {
+        "turn": 3,
+        "speaker": "user",
+        "act": "user states cuisine=Mediterranean, vegetarian=true"
+      },
+      {
+        "turn": 4,
+        "speaker": "assistant",
+        "act": "assistant asks budget"
+      },
+      {
+        "turn": 5,
+        "speaker": "user",
+        "act": "user states max_price=35; lunch -> no dinner constraint"
+      },
+      {
+        "turn": 6,
+        "speaker": "assistant",
+        "act": "assistant acknowledges"
+      },
+      {
+        "turn": 7,
+        "speaker": "user",
+        "act": "user: work (station) or home (mall)? (UNRESOLVED; hidden: mall)"
+      }
+    ],
+    "hidden_user_goal": {
+      "cuisine": "Mediterranean",
+      "max_price": 35,
+      "location": "mall",
+      "vegetarian": true
+    },
+    "predefined_clarification_answers": {
+      "cuisine": "Mediterranean, please.",
+      "max_price": "No more than $35 per person.",
+      "location": "Near the mall - I'll be coming from home.",
+      "vegetarian": "Yes, I need vegetarian options.",
+      "dinner": "It doesn't need to be open for dinner.",
+      "_unsupported": "I don't have a preference on that.",
+      "_multi_question": "Sorry, one thing at a time - what did you want to know first?"
+    },
+    "gold_dialogue_state": {
+      "at_turn": 7,
+      "active": {
+        "cuisine": "Mediterranean",
+        "max_price": 35,
+        "vegetarian": true
+      },
+      "superseded": [],
+      "proposed_not_accepted": [],
+      "unresolved": [
+        {
+          "slot": "location",
+          "turn": 7,
+          "expression": "close to where I'll be",
+          "interpretations": [
+            {
+              "location": "station"
+            },
+            {
+              "location": "mall"
+            }
+          ]
+        }
+      ]
+    },
+    "gold_relation_links": [],
+    "gold_decision": {
+      "should_ask": false,
+      "necessary_question": null,
+      "any_other_question_is_unnecessary": true
+    },
+    "flags_for_team": [],
+    "computed_by_validator": {
+      "success_set": [
+        "R37",
+        "R39"
+      ],
+      "interpretation_sets": [
+        {
+          "interpretation": {
+            "location": "station"
+          },
+          "candidates": [
+            "R36",
+            "R38",
+            "R39"
+          ]
+        },
+        {
+          "interpretation": {
+            "location": "mall"
+          },
+          "candidates": [
+            "R37",
+            "R39"
+          ]
+        }
+      ],
+      "shared_candidates": [
+        "R39"
+      ],
+      "valid_without_clarification": [
+        "R39"
+      ]
+    }
+  }
+}
