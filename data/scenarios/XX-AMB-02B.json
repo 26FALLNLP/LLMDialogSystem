@@ -1,0 +1,167 @@
+{
+  "scenario_id": "XX-AMB-02B",
+  "author": "XX",
+  "text_source": "draft (Claude). Regenerate with the team's shared tool if Claude is one of the tested models. Ambiguity wording revised for nlp-ambiguity-v2.",
+  "model_visible": {
+    "dialogue_prefix": [
+      {
+        "turn": 1,
+        "speaker": "user",
+        "text": "Can you help me find a place for dinner tonight?"
+      },
+      {
+        "turn": 2,
+        "speaker": "assistant",
+        "text": "I can look near the mall or near the station."
+      },
+      {
+        "turn": 3,
+        "speaker": "user",
+        "text": "I'm craving Japanese."
+      },
+      {
+        "turn": 4,
+        "speaker": "assistant",
+        "text": "How much would you like to spend?"
+      },
+      {
+        "turn": 5,
+        "speaker": "user",
+        "text": "Up to $30 a person."
+      },
+      {
+        "turn": 6,
+        "speaker": "assistant",
+        "text": "Okay."
+      },
+      {
+        "turn": 7,
+        "speaker": "user",
+        "text": "Find me something near there."
+      }
+    ],
+    "restaurant_database": "restaurants.json"
+  },
+  "evaluation_only": {
+    "scenario_type": "ambiguous_reference",
+    "template_family_id": "XX-AMB-02",
+    "variant": "B",
+    "contrast_note": "Only the cuisine changes. Korean: different restaurants per area -> ask. Japanese: R03 near both -> no need to ask.",
+    "turn_plan": [
+      {
+        "turn": 1,
+        "speaker": "user",
+        "act": "user states dinner=true"
+      },
+      {
+        "turn": 2,
+        "speaker": "assistant",
+        "act": "assistant mentions two areas without selecting one"
+      },
+      {
+        "turn": 3,
+        "speaker": "user",
+        "act": "user states cuisine=Japanese"
+      },
+      {
+        "turn": 4,
+        "speaker": "assistant",
+        "act": "assistant asks budget"
+      },
+      {
+        "turn": 5,
+        "speaker": "user",
+        "act": "user states max_price=30"
+      },
+      {
+        "turn": 6,
+        "speaker": "assistant",
+        "act": "assistant acknowledges without restating constraints"
+      },
+      {
+        "turn": 7,
+        "speaker": "user",
+        "act": "user: 'near there' = station or mall (UNRESOLVED; hidden: mall)"
+      }
+    ],
+    "hidden_user_goal": {
+      "cuisine": "Japanese",
+      "max_price": 30,
+      "location": "mall",
+      "dinner": true
+    },
+    "predefined_clarification_answers": {
+      "cuisine": "Japanese, please.",
+      "max_price": "No more than $30 per person.",
+      "location": "Near the mall.",
+      "vegetarian": "No dietary restrictions.",
+      "dinner": "It's for dinner.",
+      "_unsupported": "I don't have a preference on that.",
+      "_multi_question": "Sorry, one thing at a time - what did you want to know first?"
+    },
+    "gold_dialogue_state": {
+      "at_turn": 7,
+      "active": {
+        "cuisine": "Japanese",
+        "max_price": 30,
+        "dinner": true
+      },
+      "superseded": [],
+      "proposed_not_accepted": [],
+      "unresolved": [
+        {
+          "slot": "location",
+          "turn": 7,
+          "expression": "near there",
+          "interpretations": [
+            {
+              "location": "station"
+            },
+            {
+              "location": "mall"
+            }
+          ]
+        }
+      ]
+    },
+    "gold_relation_links": [],
+    "gold_decision": {
+      "should_ask": false,
+      "necessary_question": null,
+      "any_other_question_is_unnecessary": true
+    },
+    "flags_for_team": [],
+    "computed_by_validator": {
+      "success_set": [
+        "R02",
+        "R03"
+      ],
+      "interpretation_sets": [
+        {
+          "interpretation": {
+            "location": "station"
+          },
+          "candidates": [
+            "R01",
+            "R03"
+          ]
+        },
+        {
+          "interpretation": {
+            "location": "mall"
+          },
+          "candidates": [
+            "R02",
+            "R03"
+          ]
+        }
+      ],
+      "shared_candidates": [
+        "R03"
+      ],
+      "valid_without_clarification": [
+        "R03"
+      ]
+    }
+  }
+}

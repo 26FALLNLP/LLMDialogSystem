@@ -1,0 +1,158 @@
+{
+  "scenario_id": "XX-SUG-05",
+  "author": "XX",
+  "text_source": "draft (Claude). Regenerate with the team's shared tool if Claude is one of the tested models.",
+  "model_visible": {
+    "dialogue_prefix": [
+      {
+        "turn": 1,
+        "speaker": "user",
+        "text": "Can you find me somewhere for dinner? I'm not picky about cuisine."
+      },
+      {
+        "turn": 2,
+        "speaker": "assistant",
+        "text": "Sure! What's your budget?"
+      },
+      {
+        "turn": 3,
+        "speaker": "user",
+        "text": "Up to $25 a person."
+      },
+      {
+        "turn": 4,
+        "speaker": "assistant",
+        "text": "How about Indian near the mall? There are good options there."
+      },
+      {
+        "turn": 5,
+        "speaker": "user",
+        "text": "The mall works, but not Indian."
+      },
+      {
+        "turn": 6,
+        "speaker": "assistant",
+        "text": "Got it."
+      },
+      {
+        "turn": 7,
+        "speaker": "user",
+        "text": "What would you pick?"
+      }
+    ],
+    "restaurant_database": "restaurants.json"
+  },
+  "evaluation_only": {
+    "scenario_type": "suggestion_acceptance",
+    "template_family_id": "XX-SUG-05",
+    "variant": "single",
+    "contrast_note": "Partial acceptance of a two-part suggestion. Saffron Leaf (R23, Indian) is the trap.",
+    "turn_plan": [
+      {
+        "turn": 1,
+        "speaker": "user",
+        "act": "user states dinner=true; no cuisine pref"
+      },
+      {
+        "turn": 2,
+        "speaker": "assistant",
+        "act": "assistant asks budget"
+      },
+      {
+        "turn": 3,
+        "speaker": "user",
+        "act": "user states max_price=25"
+      },
+      {
+        "turn": 4,
+        "speaker": "assistant",
+        "act": "assistant PROPOSES cuisine=Indian AND location=mall"
+      },
+      {
+        "turn": 5,
+        "speaker": "user",
+        "act": "user ACCEPTS location=mall, REJECTS Indian"
+      },
+      {
+        "turn": 6,
+        "speaker": "assistant",
+        "act": "assistant acknowledges"
+      },
+      {
+        "turn": 7,
+        "speaker": "user",
+        "act": "user requests recommendation"
+      }
+    ],
+    "hidden_user_goal": {
+      "exclude_cuisine": [
+        "Indian"
+      ],
+      "max_price": 25,
+      "location": "mall",
+      "dinner": true
+    },
+    "predefined_clarification_answers": {
+      "cuisine": "Anything except Indian.",
+      "max_price": "No more than $25 per person.",
+      "location": "Near the mall.",
+      "vegetarian": "No dietary restrictions.",
+      "dinner": "It's for dinner.",
+      "_unsupported": "I don't have a preference on that.",
+      "_multi_question": "Sorry, one thing at a time - what did you want to know first?"
+    },
+    "gold_dialogue_state": {
+      "at_turn": 7,
+      "active": {
+        "exclude_cuisine": [
+          "Indian"
+        ],
+        "max_price": 25,
+        "location": "mall",
+        "dinner": true
+      },
+      "superseded": [],
+      "proposed_not_accepted": [
+        {
+          "slot": "cuisine",
+          "value": "Indian",
+          "turn": 4,
+          "status": "rejected"
+        }
+      ],
+      "unresolved": []
+    },
+    "gold_relation_links": [
+      {
+        "source_turn": 5,
+        "target_turn": 4,
+        "relation": "confirm",
+        "slot": "location"
+      }
+    ],
+    "gold_decision": {
+      "should_ask": false,
+      "necessary_question": null,
+      "any_other_question_is_unnecessary": true
+    },
+    "flags_for_team": [
+      "Uses exclude_cuisine (a negative constraint). Check the team schema allows it; if not, replace turn 5 with an explicit cuisine."
+    ],
+    "computed_by_validator": {
+      "success_set": [
+        "R02",
+        "R13",
+        "R31",
+        "R35",
+        "R37"
+      ],
+      "valid_without_clarification": [
+        "R02",
+        "R13",
+        "R31",
+        "R35",
+        "R37"
+      ]
+    }
+  }
+}
