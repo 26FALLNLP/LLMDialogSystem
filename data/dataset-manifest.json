@@ -1,0 +1,216 @@
+{
+  "dataset_id": "nlp-quota-v3",
+  "purpose": "Synthetic diagnostic benchmark designed to compare clarification budgets.",
+  "scenario_count": 48,
+  "catalog_count": 40,
+  "composition": {
+    "zero_question": 8,
+    "one_question": 32,
+    "two_question": 8
+  },
+  "idealized_expected_correct": {
+    "0": 20,
+    "1": 44,
+    "2": 48
+  },
+  "expectation_assumptions": "Uniform hidden goals, no hidden-label access, optimal independent-slot questions, and correct restaurant selection. These are design expectations, not measured model results.",
+  "data_version": "sha256:60c8eced44c57548e09c07c2e309f9d5310dfc4deec095ea70a80305e55cd3c9",
+  "database_version": "sha256:66727372507c88c9bb246748980bc5c2590c96f0a9cce276fc4c043de3c9f3aa",
+  "groups": [
+    {
+      "group_id": "XX-AMB-01B",
+      "scenario_ids": [
+        "XX-AMB-01B"
+      ],
+      "required_slots": []
+    },
+    {
+      "group_id": "XX-AMB-02B",
+      "scenario_ids": [
+        "XX-AMB-02B"
+      ],
+      "required_slots": []
+    },
+    {
+      "group_id": "XX-AMB-03B",
+      "scenario_ids": [
+        "XX-AMB-03B"
+      ],
+      "required_slots": []
+    },
+    {
+      "group_id": "XX-AMB-04B",
+      "scenario_ids": [
+        "XX-AMB-04B"
+      ],
+      "required_slots": []
+    },
+    {
+      "group_id": "XX-CLR-05",
+      "scenario_ids": [
+        "XX-CLR-05"
+      ],
+      "required_slots": []
+    },
+    {
+      "group_id": "XX-REV-01A",
+      "scenario_ids": [
+        "XX-REV-01A"
+      ],
+      "required_slots": []
+    },
+    {
+      "group_id": "XX-SUG-03A",
+      "scenario_ids": [
+        "XX-SUG-03A"
+      ],
+      "required_slots": []
+    },
+    {
+      "group_id": "XX-SUG-05",
+      "scenario_ids": [
+        "XX-SUG-05"
+      ],
+      "required_slots": []
+    },
+    {
+      "group_id": "XX-AMB-01-A-C",
+      "scenario_ids": [
+        "XX-AMB-01A",
+        "XX-AMB-01C"
+      ],
+      "required_slots": [
+        "location"
+      ]
+    },
+    {
+      "group_id": "XX-AMB-02-A-C",
+      "scenario_ids": [
+        "XX-AMB-02A",
+        "XX-AMB-02C"
+      ],
+      "required_slots": [
+        "location"
+      ]
+    },
+    {
+      "group_id": "XX-AMB-03-A-C",
+      "scenario_ids": [
+        "XX-AMB-03A",
+        "XX-AMB-03C"
+      ],
+      "required_slots": [
+        "cuisine"
+      ]
+    },
+    {
+      "group_id": "XX-AMB-04-A-C",
+      "scenario_ids": [
+        "XX-AMB-04A",
+        "XX-AMB-04C"
+      ],
+      "required_slots": [
+        "location"
+      ]
+    },
+    {
+      "group_id": "XX-AMB-06",
+      "scenario_ids": [
+        "XX-AMB-06A",
+        "XX-AMB-06B",
+        "XX-AMB-06C",
+        "XX-AMB-06D"
+      ],
+      "required_slots": [
+        "cuisine"
+      ]
+    },
+    {
+      "group_id": "XX-AMB-07",
+      "scenario_ids": [
+        "XX-AMB-07A",
+        "XX-AMB-07B",
+        "XX-AMB-07C",
+        "XX-AMB-07D"
+      ],
+      "required_slots": [
+        "cuisine"
+      ]
+    },
+    {
+      "group_id": "XX-AMB-08",
+      "scenario_ids": [
+        "XX-AMB-08A",
+        "XX-AMB-08B",
+        "XX-AMB-08C",
+        "XX-AMB-08D"
+      ],
+      "required_slots": [
+        "cuisine"
+      ]
+    },
+    {
+      "group_id": "XX-AMB-09",
+      "scenario_ids": [
+        "XX-AMB-09A",
+        "XX-AMB-09B",
+        "XX-AMB-09C",
+        "XX-AMB-09D"
+      ],
+      "required_slots": [
+        "cuisine"
+      ]
+    },
+    {
+      "group_id": "XX-AMB-10",
+      "scenario_ids": [
+        "XX-AMB-10A",
+        "XX-AMB-10B",
+        "XX-AMB-10C",
+        "XX-AMB-10D"
+      ],
+      "required_slots": [
+        "cuisine"
+      ]
+    },
+    {
+      "group_id": "XX-AMB-11",
+      "scenario_ids": [
+        "XX-AMB-11A",
+        "XX-AMB-11B",
+        "XX-AMB-11C",
+        "XX-AMB-11D"
+      ],
+      "required_slots": [
+        "cuisine"
+      ]
+    },
+    {
+      "group_id": "XX-AMB-12",
+      "scenario_ids": [
+        "XX-AMB-12A",
+        "XX-AMB-12B",
+        "XX-AMB-12C",
+        "XX-AMB-12D"
+      ],
+      "required_slots": [
+        "cuisine",
+        "location"
+      ]
+    },
+    {
+      "group_id": "XX-AMB-13",
+      "scenario_ids": [
+        "XX-AMB-13A",
+        "XX-AMB-13B",
+        "XX-AMB-13C",
+        "XX-AMB-13D"
+      ],
+      "required_slots": [
+        "cuisine",
+        "location"
+      ]
+    }
+  ],
+  "previous_data": "archive/nlp-ambiguity-v2"
+}
