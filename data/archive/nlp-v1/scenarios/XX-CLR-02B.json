@@ -1,0 +1,124 @@
+{
+  "scenario_id": "XX-CLR-02B",
+  "author": "XX",
+  "text_source": "draft (Claude). Regenerate with the team's shared tool if Claude is one of the tested models.",
+  "model_visible": {
+    "dialogue_prefix": [
+      {
+        "turn": 1,
+        "speaker": "user",
+        "text": "I'm meeting a friend at the mall for dinner. Can you suggest an Italian place?"
+      },
+      {
+        "turn": 2,
+        "speaker": "assistant",
+        "text": "Sure. Any budget or dietary needs I should know about?"
+      },
+      {
+        "turn": 3,
+        "speaker": "user",
+        "text": "My friend is vegetarian, so we need vegetarian options."
+      },
+      {
+        "turn": 4,
+        "speaker": "assistant",
+        "text": "Noted: vegetarian-friendly Italian near the mall."
+      },
+      {
+        "turn": 5,
+        "speaker": "user",
+        "text": "And let's keep it to $35 per person at most."
+      },
+      {
+        "turn": 6,
+        "speaker": "user",
+        "text": "Which one should we go to?"
+      }
+    ],
+    "restaurant_database": "restaurants.json"
+  },
+  "evaluation_only": {
+    "scenario_type": "clear",
+    "template_family_id": "XX-CLR-02",
+    "variant": "B",
+    "contrast_note": "Budget 30 vs 35: one valid restaurant vs two. B checks the system just picks one of several valid options instead of asking the user to choose.",
+    "turn_plan": [
+      {
+        "turn": 1,
+        "speaker": "user",
+        "act": "user states location=mall, dinner=true, cuisine=Italian"
+      },
+      {
+        "turn": 2,
+        "speaker": "assistant",
+        "act": "assistant asks budget/diet"
+      },
+      {
+        "turn": 3,
+        "speaker": "user",
+        "act": "user states vegetarian=true"
+      },
+      {
+        "turn": 4,
+        "speaker": "assistant",
+        "act": "assistant summarises"
+      },
+      {
+        "turn": 5,
+        "speaker": "user",
+        "act": "user states max_price=35"
+      },
+      {
+        "turn": 6,
+        "speaker": "user",
+        "act": "user requests recommendation"
+      }
+    ],
+    "hidden_user_goal": {
+      "cuisine": "Italian",
+      "max_price": 35,
+      "location": "mall",
+      "vegetarian": true,
+      "dinner": true
+    },
+    "predefined_clarification_answers": {
+      "cuisine": "Italian, please.",
+      "max_price": "No more than $35 per person.",
+      "location": "Near the mall.",
+      "vegetarian": "Yes, I need vegetarian options.",
+      "dinner": "It's for dinner.",
+      "_unsupported": "I don't have a preference on that.",
+      "_multi_question": "Sorry, one thing at a time - what did you want to know first?"
+    },
+    "gold_dialogue_state": {
+      "at_turn": 6,
+      "active": {
+        "cuisine": "Italian",
+        "max_price": 35,
+        "location": "mall",
+        "vegetarian": true,
+        "dinner": true
+      },
+      "superseded": [],
+      "proposed_not_accepted": [],
+      "unresolved": []
+    },
+    "gold_relation_links": [],
+    "gold_decision": {
+      "should_ask": false,
+      "necessary_question": null,
+      "any_other_question_is_unnecessary": true
+    },
+    "flags_for_team": [],
+    "computed_by_validator": {
+      "success_set": [
+        "R07",
+        "R09"
+      ],
+      "valid_without_clarification": [
+        "R07",
+        "R09"
+      ]
+    }
+  }
+}

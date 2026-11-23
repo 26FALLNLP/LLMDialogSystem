@@ -9,7 +9,7 @@ from .dialogue_types import Restaurant
 from .state_scoring import score_states
 
 
-SCORER_VERSION = "v1"
+SCORER_VERSION = "v2"
 CONSTRAINT_SLOTS = {"cuisine", "exclude_cuisine", "max_price", "location", "vegetarian", "dinner"}
 
 
@@ -63,19 +63,24 @@ def _question_target(question: dict) -> tuple[str, int | None]:
 class _Checkpoint:
     turn: int
     shared_candidates: set[str]
-    needed_target: tuple[str, int] | None
+    needed_targets: set[tuple[str, int]]
 
     @property
     def expected_action(self) -> str | None:
         if self.shared_candidates:
             return "RECOMMEND"
-        return "ASK" if self.needed_target else None
+        return "ASK" if self.needed_targets else None
 
     def matches(self, step: dict) -> bool:
         return _turn_number(step.get("context_turn_id")) == self.turn
 
 
-def _initial_checkpoint(gold: dict, database: Sequence[Restaurant]) -> _Checkpoint | None:
+def _initial_checkpoint(
+    gold: dict,
+    database: Sequence[Restaurant],
+    resolved: dict | None = None,
+    context_turn: int | None = None,
+) -> _Checkpoint | None:
     state = gold.get("gold_dialogue_state")
     if not state or (turn := _turn_number(state.get("at_turn"))) is None:
         return None
@@ -86,25 +91,33 @@ def _initial_checkpoint(gold: dict, database: Sequence[Restaurant]) -> _Checkpoi
     interpretations = [item.get("interpretations") for item in unresolved]
     if not all(interpretations):
         return None
+    resolved = resolved or {}
     combined_goals = (
         {**active, **{slot: value for option in options for slot, value in option.items()}}
         for options in product(*interpretations)
     )
     candidate_sets = [
         {restaurant["restaurant_id"] for restaurant in database if not constraint_violations(restaurant, goal)}
-        for goal in combined_goals
+        for goal in combined_goals if all(goal.get(slot) == value for slot, value in resolved.items())
     ]
+    if not candidate_sets:
+        return None
     shared = set.intersection(*candidate_sets)
     decision = gold.get("gold_decision") or {}
-    target = decision.get("necessary_question")
-    needed_target = None
-    if not shared and decision.get("should_ask") is True and isinstance(target, str):
-        slot, _, reference = target.partition("@")
-        target_turn = _turn_number(reference)
+    targets = decision.get("necessary_questions") if decision.get("score_followup_clarifications") else None
+    if targets is None:
+        targets = [decision.get("necessary_question")]
+    needed_targets = set()
+    if not shared and decision.get("should_ask") is True:
         answer_table = gold.get("predefined_clarification_answers") or {}
-        if target_turn is not None and answer_table.get(slot):
-            needed_target = (slot, target_turn)
-    return _Checkpoint(turn, shared, needed_target)
+        for target in targets:
+            if not isinstance(target, str):
+                continue
+            slot, _, reference = target.partition("@")
+            target_turn = _turn_number(reference)
+            if target_turn is not None and answer_table.get(slot) and slot not in resolved:
+                needed_targets.add((slot, target_turn))
+    return _Checkpoint(context_turn or turn, shared, needed_targets)
 
 
 def _judge_question(
@@ -121,17 +134,31 @@ def _judge_question(
         return "unjudged", "missing_checkpoint_annotation"
     if checkpoint.shared_candidates:
         return "unnecessary", "shared_candidate_exists"
-    if target == checkpoint.needed_target:
+    if target in checkpoint.needed_targets:
         return "useful", "clarifies_needed_target"
     return "unnecessary", "not_needed_target"
 
 
-def _score_questions(steps: list[dict], checkpoint: _Checkpoint | None) -> list[dict]:
+def _score_questions(
+    steps: list[dict], checkpoint: _Checkpoint | None, gold: dict, database: Sequence[Restaurant],
+) -> tuple[list[dict], _Checkpoint | None]:
     scores = []
     answered = set()
+    resolved = {}
+    followups = (gold.get("gold_decision") or {}).get("score_followup_clarifications") is True
+    unresolved_slots = {
+        item["slot"] for item in (gold.get("gold_dialogue_state") or {}).get("unresolved", [])
+    }
+    answer_table = gold.get("predefined_clarification_answers") or {}
+    final_checkpoint = None
     for step in steps:
         targets_in_step = set()
         step_checkpoint = checkpoint if checkpoint and checkpoint.matches(step) else None
+        if followups and checkpoint is not None:
+            step_checkpoint = _initial_checkpoint(
+                gold, database, resolved, _turn_number(step.get("context_turn_id")),
+            )
+        final_checkpoint = step_checkpoint
         for delivery in step["delivered_questions"]:
             question = delivery["question"]
             target = _question_target(question)
@@ -151,7 +178,14 @@ def _score_questions(steps: list[dict], checkpoint: _Checkpoint | None) -> list[
                 "judgment": judgment,
                 "reason": reason,
             })
-    return scores
+            slot = question["slot"]
+            if (
+                followups and reply_status == "answered" and slot in unresolved_slots
+                and delivery["reply"].get("text") == answer_table.get(slot)
+                and slot in gold["hidden_user_goal"]
+            ):
+                resolved[slot] = gold["hidden_user_goal"][slot]
+    return scores, final_checkpoint
 
 
 def _initial_action_matches(step: dict, checkpoint: _Checkpoint | None) -> bool | None:
@@ -167,7 +201,7 @@ def _initial_action_matches(step: dict, checkpoint: _Checkpoint | None) -> bool 
         delivered = step["delivered_questions"]
         return (
             len(delivered) == 1
-            and _question_target(delivered[0]["question"]) == checkpoint.needed_target
+            and _question_target(delivered[0]["question"]) in checkpoint.needed_targets
             and delivered[0]["reply"]["status"] == "answered"
         )
     return True
@@ -184,7 +218,7 @@ def _missed_clarification(
         return None, "budget_exhausted"
     if checkpoint is None or not checkpoint.matches(final_step) or checkpoint.expected_action is None:
         return None, "missing_checkpoint_annotation"
-    if checkpoint.needed_target is not None:
+    if checkpoint.needed_targets:
         return True, "needed_clarification_skipped"
     return False, "shared_candidate_available"
 
@@ -205,8 +239,8 @@ def score(run_record: dict, gold: dict, database: Sequence[Restaurant]) -> dict:
     goal = gold["hidden_user_goal"]
     violations = constraint_violations(restaurant, goal) if valid_recommendation else None
 
-    question_scores = _score_questions(steps, checkpoint)
-    missed, missed_reason = _missed_clarification(steps[-1], valid_recommendation, checkpoint)
+    question_scores, final_checkpoint = _score_questions(steps, checkpoint, gold, database)
+    missed, missed_reason = _missed_clarification(steps[-1], valid_recommendation, final_checkpoint)
     initial_shared = None
     if valid_recommendation and (steps[0].get("action") or {}).get("type") == "RECOMMEND":
         if checkpoint is not None and checkpoint.matches(steps[0]):

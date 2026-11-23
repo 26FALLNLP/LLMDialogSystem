@@ -1,7 +1,7 @@
 {
   "scenario_id": "XX-AMB-01A",
   "author": "XX",
-  "text_source": "draft (Claude). Regenerate with the team's shared tool if Claude is one of the tested models.",
+  "text_source": "draft (Claude). Regenerate with the team's shared tool if Claude is one of the tested models. Ambiguity wording revised for nlp-ambiguity-v2.",
   "model_visible": {
     "dialogue_prefix": [
       {
@@ -12,7 +12,7 @@
       {
         "turn": 2,
         "speaker": "assistant",
-        "text": "Nice! There are Japanese places near the station and near the mall."
+        "text": "There are Japanese places near the station and near the mall."
       },
       {
         "turn": 3,
@@ -22,7 +22,7 @@
       {
         "turn": 4,
         "speaker": "assistant",
-        "text": "Got it, I'll keep the budget in mind."
+        "text": "All right."
       },
       {
         "turn": 5,
@@ -32,7 +32,7 @@
       {
         "turn": 6,
         "speaker": "assistant",
-        "text": "Okay, lunch it is."
+        "text": "Okay."
       },
       {
         "turn": 7,
@@ -46,7 +46,7 @@
     "scenario_type": "ambiguous_reference",
     "template_family_id": "XX-AMB-01",
     "variant": "A",
-    "contrast_note": "Same 'near there'. At $25 no Japanese place is near both -> ask. At $30 Kumo Izakaya (R03) is near both -> recommend it without asking.",
+    "contrast_note": "Same 'near there'. At $25 no Japanese place is near both -> ask. At $30 Kumo Izakaya (R03) is near both -> recommend it without asking. A and C have identical model-visible history and catalog, with opposite hidden targets and disjoint success sets.",
     "turn_plan": [
       {
         "turn": 1,
@@ -153,6 +153,7 @@
       ],
       "shared_candidates": [],
       "valid_without_clarification": []
-    }
+    },
+    "ambiguity_pair_id": "XX-AMB-01-hidden-target"
   }
 }

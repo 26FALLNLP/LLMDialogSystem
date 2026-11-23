@@ -1,7 +1,7 @@
 {
   "scenario_id": "XX-AMB-02B",
   "author": "XX",
-  "text_source": "draft (Claude). Regenerate with the team's shared tool if Claude is one of the tested models.",
+  "text_source": "draft (Claude). Regenerate with the team's shared tool if Claude is one of the tested models. Ambiguity wording revised for nlp-ambiguity-v2.",
   "model_visible": {
     "dialogue_prefix": [
       {
@@ -12,7 +12,7 @@
       {
         "turn": 2,
         "speaker": "assistant",
-        "text": "Sure! I can look near the station or near the mall; both have plenty of options."
+        "text": "I can look near the mall or near the station."
       },
       {
         "turn": 3,
@@ -22,7 +22,7 @@
       {
         "turn": 4,
         "speaker": "assistant",
-        "text": "Great. Any budget?"
+        "text": "How much would you like to spend?"
       },
       {
         "turn": 5,
@@ -32,12 +32,12 @@
       {
         "turn": 6,
         "speaker": "assistant",
-        "text": "Okay, $30 max per person, open for dinner."
+        "text": "Okay."
       },
       {
         "turn": 7,
         "speaker": "user",
-        "text": "Great, find me something over there."
+        "text": "Find me something near there."
       }
     ],
     "restaurant_database": "restaurants.json"
@@ -56,7 +56,7 @@
       {
         "turn": 2,
         "speaker": "assistant",
-        "act": "assistant mentions two areas"
+        "act": "assistant mentions two areas without selecting one"
       },
       {
         "turn": 3,
@@ -76,12 +76,12 @@
       {
         "turn": 6,
         "speaker": "assistant",
-        "act": "assistant summarises"
+        "act": "assistant acknowledges without restating constraints"
       },
       {
         "turn": 7,
         "speaker": "user",
-        "act": "user: 'over there' = station or mall (UNRESOLVED; hidden: mall)"
+        "act": "user: 'near there' = station or mall (UNRESOLVED; hidden: mall)"
       }
     ],
     "hidden_user_goal": {
@@ -112,7 +112,7 @@
         {
           "slot": "location",
           "turn": 7,
-          "expression": "over there",
+          "expression": "near there",
           "interpretations": [
             {
               "location": "station"

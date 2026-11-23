@@ -1,0 +1,183 @@
+{
+  "scenario_id": "XX-AMB-06A",
+  "author": "project",
+  "text_source": "Synthetic nlp-quota-v3 diagnostic scenario, constructed from the existing restaurant catalog.",
+  "model_visible": {
+    "dialogue_prefix": [
+      {
+        "turn": 1,
+        "speaker": "user",
+        "text": "Our group mentioned Japanese, Italian, Chinese, and Mediterranean food when we discussed where to eat."
+      },
+      {
+        "turn": 2,
+        "speaker": "assistant",
+        "text": "All right."
+      },
+      {
+        "turn": 3,
+        "speaker": "user",
+        "text": "I'll be near the train station for lunch."
+      },
+      {
+        "turn": 4,
+        "speaker": "assistant",
+        "text": "How much would you like to spend?"
+      },
+      {
+        "turn": 5,
+        "speaker": "user",
+        "text": "Up to $25 per person."
+      },
+      {
+        "turn": 6,
+        "speaker": "assistant",
+        "text": "Okay."
+      },
+      {
+        "turn": 7,
+        "speaker": "user",
+        "text": "Please find a place serving the cuisine we mentioned."
+      }
+    ],
+    "restaurant_database": "restaurants.json"
+  },
+  "evaluation_only": {
+    "scenario_type": "ambiguous_reference",
+    "template_family_id": "XX-AMB-06",
+    "variant": "A",
+    "contrast_note": "All variants in this family have identical visible histories and uniformly enumerate the hidden targets.",
+    "turn_plan": [
+      {
+        "turn": 1,
+        "speaker": "user",
+        "act": "user mentions alternatives without selecting an intended value"
+      },
+      {
+        "turn": 2,
+        "speaker": "assistant",
+        "act": "assistant acknowledges without resolving the alternatives"
+      },
+      {
+        "turn": 3,
+        "speaker": "user",
+        "act": "user states meal, area, or dietary constraints"
+      },
+      {
+        "turn": 4,
+        "speaker": "assistant",
+        "act": "assistant asks for a spending limit"
+      },
+      {
+        "turn": 5,
+        "speaker": "user",
+        "act": "user states a per-person spending limit"
+      },
+      {
+        "turn": 6,
+        "speaker": "assistant",
+        "act": "assistant acknowledges"
+      },
+      {
+        "turn": 7,
+        "speaker": "user",
+        "act": "user refers to the alternatives without disambiguating the intended values"
+      }
+    ],
+    "hidden_user_goal": {
+      "location": "station",
+      "max_price": 25,
+      "cuisine": "Japanese"
+    },
+    "predefined_clarification_answers": {
+      "cuisine": "Japanese, please.",
+      "max_price": "No more than $25 per person.",
+      "location": "Near the station.",
+      "vegetarian": "No dietary restrictions.",
+      "dinner": "It doesn't need to be open for dinner.",
+      "_unsupported": "I don't have a preference on that.",
+      "_multi_question": "Please ask about one thing at a time."
+    },
+    "gold_dialogue_state": {
+      "at_turn": 7,
+      "active": {
+        "location": "station",
+        "max_price": 25
+      },
+      "superseded": [],
+      "proposed_not_accepted": [],
+      "unresolved": [
+        {
+          "slot": "cuisine",
+          "turn": 7,
+          "expression": "the cuisine we mentioned",
+          "interpretations": [
+            {
+              "cuisine": "Japanese"
+            },
+            {
+              "cuisine": "Italian"
+            },
+            {
+              "cuisine": "Chinese"
+            },
+            {
+              "cuisine": "Mediterranean"
+            }
+          ]
+        }
+      ]
+    },
+    "gold_relation_links": [],
+    "gold_decision": {
+      "should_ask": true,
+      "necessary_question": "cuisine@t7",
+      "any_other_question_is_unnecessary": true
+    },
+    "flags_for_team": [],
+    "computed_by_validator": {
+      "success_set": [
+        "R01"
+      ],
+      "interpretation_sets": [
+        {
+          "interpretation": {
+            "cuisine": "Japanese"
+          },
+          "candidates": [
+            "R01"
+          ]
+        },
+        {
+          "interpretation": {
+            "cuisine": "Italian"
+          },
+          "candidates": [
+            "R06",
+            "R08"
+          ]
+        },
+        {
+          "interpretation": {
+            "cuisine": "Chinese"
+          },
+          "candidates": [
+            "R31",
+            "R32"
+          ]
+        },
+        {
+          "interpretation": {
+            "cuisine": "Mediterranean"
+          },
+          "candidates": [
+            "R36",
+            "R39"
+          ]
+        }
+      ],
+      "shared_candidates": [],
+      "valid_without_clarification": []
+    }
+  }
+}

@@ -1,18 +1,18 @@
 {
   "scenario_id": "XX-AMB-03B",
   "author": "XX",
-  "text_source": "draft (Claude). Regenerate with the team's shared tool if Claude is one of the tested models.",
+  "text_source": "draft (Claude). Regenerate with the team's shared tool if Claude is one of the tested models. Ambiguity wording revised for nlp-ambiguity-v2.",
   "model_visible": {
     "dialogue_prefix": [
       {
         "turn": 1,
         "speaker": "user",
-        "text": "My coworkers keep recommending a Thai place and a Mexican place around here."
+        "text": "My coworkers mentioned Thai and Mexican when we were talking about lunch."
       },
       {
         "turn": 2,
         "speaker": "assistant",
-        "text": "Both are popular cuisines nearby! Would you like me to look into one of them?"
+        "text": "Okay."
       },
       {
         "turn": 3,
@@ -22,7 +22,7 @@
       {
         "turn": 4,
         "speaker": "assistant",
-        "text": "Got it: near the mall, with vegetarian options."
+        "text": "All right."
       },
       {
         "turn": 5,
@@ -32,7 +32,7 @@
       {
         "turn": 6,
         "speaker": "assistant",
-        "text": "Noted, $30 max."
+        "text": "Okay."
       },
       {
         "turn": 7,
@@ -51,12 +51,12 @@
       {
         "turn": 1,
         "speaker": "user",
-        "act": "user mentions two cuisines (neither chosen yet)"
+        "act": "user mentions two cuisines for lunch; neither selected"
       },
       {
         "turn": 2,
         "speaker": "assistant",
-        "act": "assistant offers"
+        "act": "assistant acknowledges without choosing a cuisine"
       },
       {
         "turn": 3,
@@ -66,7 +66,7 @@
       {
         "turn": 4,
         "speaker": "assistant",
-        "act": "assistant summarises"
+        "act": "assistant acknowledges without restating constraints"
       },
       {
         "turn": 5,

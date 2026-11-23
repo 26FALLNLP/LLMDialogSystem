@@ -1,18 +1,18 @@
 {
   "scenario_id": "XX-AMB-04B",
   "author": "XX",
-  "text_source": "draft (Claude). Regenerate with the team's shared tool if Claude is one of the tested models.",
+  "text_source": "draft (Claude). Regenerate with the team's shared tool if Claude is one of the tested models. Ambiguity wording revised for nlp-ambiguity-v2.",
   "model_visible": {
     "dialogue_prefix": [
       {
         "turn": 1,
         "speaker": "user",
-        "text": "I work by the train station but I live by the mall."
+        "text": "I've been looking at places near the train station and near the mall."
       },
       {
         "turn": 2,
         "speaker": "assistant",
-        "text": "Handy! How can I help?"
+        "text": "What kind of food would you like?"
       },
       {
         "turn": 3,
@@ -22,7 +22,7 @@
       {
         "turn": 4,
         "speaker": "assistant",
-        "text": "Sounds good. What's your budget?"
+        "text": "How much would you like to spend?"
       },
       {
         "turn": 5,
@@ -51,12 +51,12 @@
       {
         "turn": 1,
         "speaker": "user",
-        "act": "user mentions two areas"
+        "act": "user mentions two areas without choosing one"
       },
       {
         "turn": 2,
         "speaker": "assistant",
-        "act": "assistant asks"
+        "act": "assistant asks cuisine"
       },
       {
         "turn": 3,
@@ -81,7 +81,7 @@
       {
         "turn": 7,
         "speaker": "user",
-        "act": "user: work (station) or home (mall)? (UNRESOLVED; hidden: mall)"
+        "act": "user: 'close to where I'll be' = station or mall (UNRESOLVED; hidden: mall)"
       }
     ],
     "hidden_user_goal": {
@@ -93,7 +93,7 @@
     "predefined_clarification_answers": {
       "cuisine": "Mediterranean, please.",
       "max_price": "No more than $35 per person.",
-      "location": "Near the mall - I'll be coming from home.",
+      "location": "Near the mall.",
       "vegetarian": "Yes, I need vegetarian options.",
       "dinner": "It doesn't need to be open for dinner.",
       "_unsupported": "I don't have a preference on that.",

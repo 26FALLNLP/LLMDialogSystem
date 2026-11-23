@@ -1,0 +1,402 @@
+[
+  {
+    "restaurant_id": "R01",
+    "name": "Sakura Ramen",
+    "cuisine": "Japanese",
+    "price_per_person": 18,
+    "near_station": true,
+    "near_mall": false,
+    "vegetarian_options": false,
+    "open_for_dinner": true
+  },
+  {
+    "restaurant_id": "R02",
+    "name": "Hoshi Sushi Bar",
+    "cuisine": "Japanese",
+    "price_per_person": 24,
+    "near_station": false,
+    "near_mall": true,
+    "vegetarian_options": true,
+    "open_for_dinner": true
+  },
+  {
+    "restaurant_id": "R03",
+    "name": "Kumo Izakaya",
+    "cuisine": "Japanese",
+    "price_per_person": 29,
+    "near_station": true,
+    "near_mall": true,
+    "vegetarian_options": false,
+    "open_for_dinner": true
+  },
+  {
+    "restaurant_id": "R04",
+    "name": "Tsuki Bento",
+    "cuisine": "Japanese",
+    "price_per_person": 14,
+    "near_station": false,
+    "near_mall": false,
+    "vegetarian_options": true,
+    "open_for_dinner": false
+  },
+  {
+    "restaurant_id": "R05",
+    "name": "Ginza Omakase",
+    "cuisine": "Japanese",
+    "price_per_person": 58,
+    "near_station": true,
+    "near_mall": false,
+    "vegetarian_options": false,
+    "open_for_dinner": true
+  },
+  {
+    "restaurant_id": "R06",
+    "name": "Trattoria Lucca",
+    "cuisine": "Italian",
+    "price_per_person": 22,
+    "near_station": true,
+    "near_mall": false,
+    "vegetarian_options": true,
+    "open_for_dinner": true
+  },
+  {
+    "restaurant_id": "R07",
+    "name": "Nonna's Kitchen",
+    "cuisine": "Italian",
+    "price_per_person": 27,
+    "near_station": false,
+    "near_mall": true,
+    "vegetarian_options": true,
+    "open_for_dinner": true
+  },
+  {
+    "restaurant_id": "R08",
+    "name": "Forno Pizza",
+    "cuisine": "Italian",
+    "price_per_person": 16,
+    "near_station": true,
+    "near_mall": true,
+    "vegetarian_options": true,
+    "open_for_dinner": false
+  },
+  {
+    "restaurant_id": "R09",
+    "name": "Osteria Verde",
+    "cuisine": "Italian",
+    "price_per_person": 34,
+    "near_station": false,
+    "near_mall": true,
+    "vegetarian_options": true,
+    "open_for_dinner": true
+  },
+  {
+    "restaurant_id": "R10",
+    "name": "Il Mulino Nero",
+    "cuisine": "Italian",
+    "price_per_person": 45,
+    "near_station": false,
+    "near_mall": false,
+    "vegetarian_options": false,
+    "open_for_dinner": true
+  },
+  {
+    "restaurant_id": "R11",
+    "name": "Taco Loco",
+    "cuisine": "Mexican",
+    "price_per_person": 12,
+    "near_station": true,
+    "near_mall": false,
+    "vegetarian_options": true,
+    "open_for_dinner": true
+  },
+  {
+    "restaurant_id": "R12",
+    "name": "Casa Azul",
+    "cuisine": "Mexican",
+    "price_per_person": 26,
+    "near_station": false,
+    "near_mall": true,
+    "vegetarian_options": false,
+    "open_for_dinner": true
+  },
+  {
+    "restaurant_id": "R13",
+    "name": "El Comal",
+    "cuisine": "Mexican",
+    "price_per_person": 19,
+    "near_station": true,
+    "near_mall": true,
+    "vegetarian_options": true,
+    "open_for_dinner": true
+  },
+  {
+    "restaurant_id": "R14",
+    "name": "Agave Cantina",
+    "cuisine": "Mexican",
+    "price_per_person": 38,
+    "near_station": false,
+    "near_mall": true,
+    "vegetarian_options": false,
+    "open_for_dinner": true
+  },
+  {
+    "restaurant_id": "R15",
+    "name": "Burrito Express",
+    "cuisine": "Mexican",
+    "price_per_person": 10,
+    "near_station": false,
+    "near_mall": false,
+    "vegetarian_options": true,
+    "open_for_dinner": false
+  },
+  {
+    "restaurant_id": "R16",
+    "name": "Bangkok Street",
+    "cuisine": "Thai",
+    "price_per_person": 17,
+    "near_station": true,
+    "near_mall": false,
+    "vegetarian_options": true,
+    "open_for_dinner": true
+  },
+  {
+    "restaurant_id": "R17",
+    "name": "Lotus Thai",
+    "cuisine": "Thai",
+    "price_per_person": 23,
+    "near_station": false,
+    "near_mall": true,
+    "vegetarian_options": true,
+    "open_for_dinner": false
+  },
+  {
+    "restaurant_id": "R18",
+    "name": "Siam Garden",
+    "cuisine": "Thai",
+    "price_per_person": 31,
+    "near_station": false,
+    "near_mall": true,
+    "vegetarian_options": true,
+    "open_for_dinner": true
+  },
+  {
+    "restaurant_id": "R19",
+    "name": "Chili Basil",
+    "cuisine": "Thai",
+    "price_per_person": 21,
+    "near_station": false,
+    "near_mall": false,
+    "vegetarian_options": false,
+    "open_for_dinner": true
+  },
+  {
+    "restaurant_id": "R20",
+    "name": "Royal Orchid",
+    "cuisine": "Thai",
+    "price_per_person": 48,
+    "near_station": true,
+    "near_mall": true,
+    "vegetarian_options": true,
+    "open_for_dinner": true
+  },
+  {
+    "restaurant_id": "R21",
+    "name": "Masala House",
+    "cuisine": "Indian",
+    "price_per_person": 20,
+    "near_station": true,
+    "near_mall": false,
+    "vegetarian_options": true,
+    "open_for_dinner": true
+  },
+  {
+    "restaurant_id": "R22",
+    "name": "Tandoor Grill",
+    "cuisine": "Indian",
+    "price_per_person": 28,
+    "near_station": false,
+    "near_mall": true,
+    "vegetarian_options": false,
+    "open_for_dinner": true
+  },
+  {
+    "restaurant_id": "R23",
+    "name": "Saffron Leaf",
+    "cuisine": "Indian",
+    "price_per_person": 25,
+    "near_station": true,
+    "near_mall": true,
+    "vegetarian_options": true,
+    "open_for_dinner": true
+  },
+  {
+    "restaurant_id": "R24",
+    "name": "Dosa Corner",
+    "cuisine": "Indian",
+    "price_per_person": 13,
+    "near_station": false,
+    "near_mall": false,
+    "vegetarian_options": true,
+    "open_for_dinner": false
+  },
+  {
+    "restaurant_id": "R25",
+    "name": "Maharaja Palace",
+    "cuisine": "Indian",
+    "price_per_person": 52,
+    "near_station": false,
+    "near_mall": true,
+    "vegetarian_options": true,
+    "open_for_dinner": true
+  },
+  {
+    "restaurant_id": "R26",
+    "name": "Seoul BBQ",
+    "cuisine": "Korean",
+    "price_per_person": 36,
+    "near_station": true,
+    "near_mall": false,
+    "vegetarian_options": false,
+    "open_for_dinner": true
+  },
+  {
+    "restaurant_id": "R27",
+    "name": "Bibim Bowl",
+    "cuisine": "Korean",
+    "price_per_person": 15,
+    "near_station": false,
+    "near_mall": true,
+    "vegetarian_options": true,
+    "open_for_dinner": false
+  },
+  {
+    "restaurant_id": "R28",
+    "name": "Kimchi Pot",
+    "cuisine": "Korean",
+    "price_per_person": 22,
+    "near_station": true,
+    "near_mall": false,
+    "vegetarian_options": false,
+    "open_for_dinner": true
+  },
+  {
+    "restaurant_id": "R29",
+    "name": "Hanok Table",
+    "cuisine": "Korean",
+    "price_per_person": 27,
+    "near_station": false,
+    "near_mall": true,
+    "vegetarian_options": true,
+    "open_for_dinner": true
+  },
+  {
+    "restaurant_id": "R30",
+    "name": "Gangnam Grill",
+    "cuisine": "Korean",
+    "price_per_person": 44,
+    "near_station": false,
+    "near_mall": false,
+    "vegetarian_options": false,
+    "open_for_dinner": true
+  },
+  {
+    "restaurant_id": "R31",
+    "name": "Golden Dragon",
+    "cuisine": "Chinese",
+    "price_per_person": 24,
+    "near_station": true,
+    "near_mall": true,
+    "vegetarian_options": true,
+    "open_for_dinner": true
+  },
+  {
+    "restaurant_id": "R32",
+    "name": "Dumpling King",
+    "cuisine": "Chinese",
+    "price_per_person": 13,
+    "near_station": true,
+    "near_mall": false,
+    "vegetarian_options": true,
+    "open_for_dinner": false
+  },
+  {
+    "restaurant_id": "R33",
+    "name": "Sichuan Spice",
+    "cuisine": "Chinese",
+    "price_per_person": 26,
+    "near_station": false,
+    "near_mall": true,
+    "vegetarian_options": false,
+    "open_for_dinner": true
+  },
+  {
+    "restaurant_id": "R34",
+    "name": "Jade Garden",
+    "cuisine": "Chinese",
+    "price_per_person": 39,
+    "near_station": false,
+    "near_mall": false,
+    "vegetarian_options": true,
+    "open_for_dinner": true
+  },
+  {
+    "restaurant_id": "R35",
+    "name": "Noodle Bar 88",
+    "cuisine": "Chinese",
+    "price_per_person": 16,
+    "near_station": false,
+    "near_mall": true,
+    "vegetarian_options": false,
+    "open_for_dinner": true
+  },
+  {
+    "restaurant_id": "R36",
+    "name": "Olive & Thyme",
+    "cuisine": "Mediterranean",
+    "price_per_person": 23,
+    "near_station": true,
+    "near_mall": false,
+    "vegetarian_options": true,
+    "open_for_dinner": true
+  },
+  {
+    "restaurant_id": "R37",
+    "name": "Pita Port",
+    "cuisine": "Mediterranean",
+    "price_per_person": 14,
+    "near_station": false,
+    "near_mall": true,
+    "vegetarian_options": true,
+    "open_for_dinner": true
+  },
+  {
+    "restaurant_id": "R38",
+    "name": "Aegean Table",
+    "cuisine": "Mediterranean",
+    "price_per_person": 33,
+    "near_station": true,
+    "near_mall": false,
+    "vegetarian_options": true,
+    "open_for_dinner": true
+  },
+  {
+    "restaurant_id": "R39",
+    "name": "Falafel Stop",
+    "cuisine": "Mediterranean",
+    "price_per_person": 11,
+    "near_station": true,
+    "near_mall": true,
+    "vegetarian_options": true,
+    "open_for_dinner": false
+  },
+  {
+    "restaurant_id": "R40",
+    "name": "Santorini Grill",
+    "cuisine": "Mediterranean",
+    "price_per_person": 47,
+    "near_station": false,
+    "near_mall": true,
+    "vegetarian_options": false,
+    "open_for_dinner": true
+  }
+]

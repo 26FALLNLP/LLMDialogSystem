@@ -1,0 +1,197 @@
+{
+  "scenario_id": "XX-AMB-12D",
+  "author": "project",
+  "text_source": "Synthetic nlp-quota-v3 diagnostic scenario, constructed from the existing restaurant catalog.",
+  "model_visible": {
+    "dialogue_prefix": [
+      {
+        "turn": 1,
+        "speaker": "user",
+        "text": "We discussed Japanese and Korean food, and places near the station and near the mall."
+      },
+      {
+        "turn": 2,
+        "speaker": "assistant",
+        "text": "All right."
+      },
+      {
+        "turn": 3,
+        "speaker": "user",
+        "text": "It is for dinner tonight."
+      },
+      {
+        "turn": 4,
+        "speaker": "assistant",
+        "text": "How much would you like to spend?"
+      },
+      {
+        "turn": 5,
+        "speaker": "user",
+        "text": "Up to $28 per person."
+      },
+      {
+        "turn": 6,
+        "speaker": "assistant",
+        "text": "Okay."
+      },
+      {
+        "turn": 7,
+        "speaker": "user",
+        "text": "Find a place with that cuisine, near there."
+      }
+    ],
+    "restaurant_database": "restaurants.json"
+  },
+  "evaluation_only": {
+    "scenario_type": "ambiguous_reference",
+    "template_family_id": "XX-AMB-12",
+    "variant": "D",
+    "contrast_note": "All variants in this family have identical visible histories and uniformly enumerate the hidden targets.",
+    "turn_plan": [
+      {
+        "turn": 1,
+        "speaker": "user",
+        "act": "user mentions alternatives without selecting an intended value"
+      },
+      {
+        "turn": 2,
+        "speaker": "assistant",
+        "act": "assistant acknowledges without resolving the alternatives"
+      },
+      {
+        "turn": 3,
+        "speaker": "user",
+        "act": "user states meal, area, or dietary constraints"
+      },
+      {
+        "turn": 4,
+        "speaker": "assistant",
+        "act": "assistant asks for a spending limit"
+      },
+      {
+        "turn": 5,
+        "speaker": "user",
+        "act": "user states a per-person spending limit"
+      },
+      {
+        "turn": 6,
+        "speaker": "assistant",
+        "act": "assistant acknowledges"
+      },
+      {
+        "turn": 7,
+        "speaker": "user",
+        "act": "user refers to the alternatives without disambiguating the intended values"
+      }
+    ],
+    "hidden_user_goal": {
+      "max_price": 28,
+      "dinner": true,
+      "cuisine": "Korean",
+      "location": "mall"
+    },
+    "predefined_clarification_answers": {
+      "cuisine": "Korean, please.",
+      "max_price": "No more than $28 per person.",
+      "location": "Near the mall.",
+      "vegetarian": "No dietary restrictions.",
+      "dinner": "It's for dinner.",
+      "_unsupported": "I don't have a preference on that.",
+      "_multi_question": "Please ask about one thing at a time."
+    },
+    "gold_dialogue_state": {
+      "at_turn": 7,
+      "active": {
+        "max_price": 28,
+        "dinner": true
+      },
+      "superseded": [],
+      "proposed_not_accepted": [],
+      "unresolved": [
+        {
+          "slot": "cuisine",
+          "turn": 7,
+          "expression": "that cuisine",
+          "interpretations": [
+            {
+              "cuisine": "Japanese"
+            },
+            {
+              "cuisine": "Korean"
+            }
+          ]
+        },
+        {
+          "slot": "location",
+          "turn": 7,
+          "expression": "near there",
+          "interpretations": [
+            {
+              "location": "station"
+            },
+            {
+              "location": "mall"
+            }
+          ]
+        }
+      ]
+    },
+    "gold_relation_links": [],
+    "gold_decision": {
+      "should_ask": true,
+      "necessary_question": null,
+      "any_other_question_is_unnecessary": true,
+      "necessary_questions": [
+        "cuisine@t7",
+        "location@t7"
+      ],
+      "score_followup_clarifications": true
+    },
+    "flags_for_team": [],
+    "computed_by_validator": {
+      "success_set": [
+        "R29"
+      ],
+      "interpretation_sets": [
+        {
+          "interpretation": {
+            "cuisine": "Japanese",
+            "location": "station"
+          },
+          "candidates": [
+            "R01"
+          ]
+        },
+        {
+          "interpretation": {
+            "cuisine": "Japanese",
+            "location": "mall"
+          },
+          "candidates": [
+            "R02"
+          ]
+        },
+        {
+          "interpretation": {
+            "cuisine": "Korean",
+            "location": "station"
+          },
+          "candidates": [
+            "R28"
+          ]
+        },
+        {
+          "interpretation": {
+            "cuisine": "Korean",
+            "location": "mall"
+          },
+          "candidates": [
+            "R29"
+          ]
+        }
+      ],
+      "shared_candidates": [],
+      "valid_without_clarification": []
+    }
+  }
+}

@@ -24,6 +24,8 @@ score(
 
 从每条场景的 `evaluation_only` 读取隐藏目标、标准关系、提问标签和 `gold_dialogue_state`。这版只有固定前缀末尾的一个标准状态。后续决策的状态准确率与逐问诊断需要相应的标准检查点；缺少时按覆盖率规则处理。已有 `computed_by_validator` 可用于核对初始候选与成功集合。
 
+`nlp-quota-v3` 的双条件场景额外设置 `gold_decision.necessary_questions` 和 `score_followup_clarifications: true`。评分器根据初始合理解释和实际送达的固定回答，逐轮筛选剩余解释，再计算候选交集。两个条件可以按任意顺序澄清。确认一个条件后仍无共同候选时，对另一个条件的追问记为有效。状态准确率继续使用有标准状态的检查点。
+
 这版可以复用包内 `data/validate.py` 的 `matches` 和 `candidates`。它使用 `price_per_person <= max_price`，把 `location` 映射到 `near_station` 或 `near_mall`，并支持素食、晚餐开放、菜系列表和排除菜系等约束。对照组 `XX-AMB-01A/B` 中，A 的成功餐厅集合为 `{R01}`，两种解释没有共同候选。B 的成功集合为 `{R01, R03}`，共同候选为 `{R03}`。两个版本的初始状态均保留「车站或商场」的歧义。
 
 ### 信息边界
@@ -115,7 +117,7 @@ S1 的状态可通过独立、只读的 probe 诊断。Probe 只看当轮可见�
 
 ## 使用现有数据运行评分
 
-先从项目根目录用 `python3 -m src --budget 1 --output runs/demo.jsonl` 生成 A/B 样例的运行日志。可用 `--strategy claude --all` 运行 36 条场景，然后将评分输入换成该批次的输出文件。Pipeline 在出现失败轨迹时返回状态码 1，仍会保存所有运行记录。
+先从项目根目录用 `python3 -m src --budget 1 --output runs/demo.jsonl` 生成 A/B 样例的运行日志。可用 `--strategy claude --all` 运行当前修订版的 48 条场景，然后将评分输入换成该批次的输出文件。Pipeline 在出现失败轨迹时返回状态码 1，仍会保存所有运行记录。
 
 ```sh
 python3 -m src.score_runs --input runs/demo.jsonl \
@@ -123,6 +125,6 @@ python3 -m src.score_runs --input runs/demo.jsonl \
   --summary runs/demo-summary.json
 ```
 
-评分器校验原始对话前缀和数据版本。每次提交评分时应提供原批次的所有场景。重复传入 `--input` 可以评分多批运行并按系统、预算和类型比较。逐条评分包含首次有效动作匹配、初始推荐是否为共同候选、追问判定、最终餐厅的约束违规项和用量。只有同一场景及重复编号的结果才可配对；区间以模板族为单位抽样，至少两个模板族时计算。
+评分器校验对应数据版本的对话前缀和文件哈希。对原始 36 条场景的日志评分时，添加 `--data-dir data/archive/nlp-v1`；对上一版 40 条场景的日志评分时，添加 `--data-dir data/archive/nlp-ambiguity-v2`。各数据版本分别调用评分器并使用对应数据。每次提交评分时应提供原批次的所有场景。重复传入 `--input` 可以评分多批运行并按系统、预算和类型比较。逐条评分包含首次有效动作匹配、初始推荐是否为共同候选、追问判定、最终餐厅的约束违规项和用量。只有同一场景及重复编号的结果才可配对；区间以模板族为单位抽样，至少两个模板族时计算。
 
 当前 `DemoStrategy` 快照只有菜系、预算和地点三个可评分字段。支持结构化状态的策略可以提交 `active`、`unresolved`、`superseded`、`proposed_not_accepted` 和可选的 `relation_links`。没有相应标签或状态快照时，结果保留 `null`，汇总同时报告覆盖率。

@@ -101,7 +101,7 @@ Dialogue Pipeline 为 S1–S4 执行同一套餐厅推荐流程。每次运行�
 
 ## 运行联调样例
 
-在项目根目录使用 Python 3.11 或更高版本运行。默认对 A、B 各给 1 次提问预算。数据文件保留了压缩包中的原始内容。
+在项目根目录使用 Python 3.11 或更高版本运行。默认对 A、B 各给 1 次提问预算。当前 `data/scenarios/` 使用 `nlp-quota-v3` 修订版，共 48 条场景，其中 8 条可直接推荐、32 条需要确认一个条件、8 条需要分别确认菜系和地点。原始 36 条保存在 `data/archive/nlp-v1/`，上一版 40 条保存在 `data/archive/nlp-ambiguity-v2/`。各组均衡枚举隐藏目标，组内可见历史相同。组成和数据哈希记录在 `data/dataset-manifest.json`。
 
 ```sh
 python3 -m src --budget 1 --output runs/amb-01.jsonl
