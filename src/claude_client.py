@@ -5,8 +5,10 @@ import json
 import math
 from dataclasses import dataclass
 
+from .budget import SpendGuard
 from .dialogue_types import ModelRequestError, Usage
 
+_FROM_CONFIG = object()  # default: the project spending cap in configs/budget.yaml
 
 DEFAULT_MODEL = "claude-opus-5-5"
 API_VERSION = "2026-10-21"
@@ -33,6 +35,7 @@ class ClaudeClient:
         *,
         max_tokens: int = 2048,
         timeout: float = 60,
+        spend_guard: "SpendGuard | None | object" = _FROM_CONFIG,
     ) -> None:
         if not isinstance(api_key, str) or not api_key or any(not 33 <= ord(char) <= 126 for char in api_key):
             raise ValueError("ANTHROPIC_API_KEY must be a nonempty API key without whitespace.")
@@ -46,6 +49,10 @@ class ClaudeClient:
         self.model = model.strip()
         self.max_tokens = max_tokens
         self.timeout = timeout
+        # Every call goes through the spending cap unless a test passes spend_guard=None
+        # explicitly (with a mocked network).
+        self.spend_guard = SpendGuard.from_config() if spend_guard is _FROM_CONFIG else spend_guard
+        self.budget_refused = False
 
     def complete(self, system_prompt: str, user_payload: dict, schema: dict) -> Completion:
         body = json.dumps({
@@ -55,11 +62,18 @@ class ClaudeClient:
             "messages": [{"role": "user", "content": json.dumps(user_payload, ensure_ascii=False)}],
             "output_config": {"effort": EFFORT, "format": {"type": "json_schema", "schema": schema}},
         }, ensure_ascii=False).encode("utf-8")
+        if self.spend_guard is not None:
+            try:
+                self.spend_guard.before_call(self.model, len(body), self.max_tokens)
+            except Exception:
+                self.budget_refused = True  # lets the runner stop the whole batch
+                raise
         unknown_usage = Usage(input_tokens=None, output_tokens=None, model_calls=1)
         connection = http.client.HTTPSConnection(_HOST, timeout=self.timeout)
         try:
             connection.request("POST", _MESSAGES_PATH, body=body, headers={
-                "Authorization": f"Bearer {self._api_key}",
+                # Anthropic API keys go in x-api-key; "Authorization: Bearer" is for OAuth tokens.
+                "x-api-key": self._api_key,
                 "anthropic-version": API_VERSION,
                 "Content-Type": "application/json",
             })
@@ -77,11 +91,15 @@ class ClaudeClient:
         try:
             envelope = json.loads(data)
         except (json.JSONDecodeError, UnicodeDecodeError):
-            raise ModelRequestError("Claude Messages API returned invalid JSON.", unknown_usage) from None
+            envelope = None
+        usage = _read_usage(envelope.get("usage") if isinstance(envelope, dict) else None)
+        if self.spend_guard is not None:  # a 200 reply is billed; unknown usage is logged at the worst case
+            self.spend_guard.record(self.model, usage.input_tokens, usage.output_tokens, len(body), self.max_tokens)
+        if envelope is None:
+            raise ModelRequestError("Claude Messages API returned invalid JSON.", unknown_usage)
         if not isinstance(envelope, dict):
             raise ModelRequestError("Claude Messages API returned an invalid response envelope.", unknown_usage)
 
-        usage = _read_usage(envelope.get("usage"))
         content = envelope.get("content")
         stop_reason = envelope.get("stop_reason")
         if not isinstance(content, list) or (stop_reason is not None and not isinstance(stop_reason, str)):

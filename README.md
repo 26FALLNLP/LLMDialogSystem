@@ -40,19 +40,19 @@ Run this block in Bash or Zsh. Paste your Anthropic API key at the prompt and pr
 
 ```sh
 python3 -m src --strategy claude --model claude-opus-5-5 \
-  --scenario XX-AMB-02A --budget 1 \
-  --output runs/claude-amb-02a-b1.jsonl
+  --scenario XX-AMB-06A --budget 1 \
+  --output runs/claude-amb-06a-b1.jsonl
 
-python3 -m src.score_runs --input runs/claude-amb-02a-b1.jsonl \
-  --output runs/claude-amb-02a-b1-scores.jsonl \
-  --summary runs/claude-amb-02a-b1-summary.json
+python3 -m src.score_runs --input runs/claude-amb-06a-b1.jsonl \
+  --output runs/claude-amb-06a-b1-scores.jsonl \
+  --summary runs/claude-amb-06a-b1-summary.json
 ```
 
-Use a filename stem from [data/scenarios](data/scenarios) as the scenario ID. The question budget is the maximum number of clarification questions the model can ask. If Claude asks, the scripted user replies from the scenario's fixed answer table. The runner prints the transcript and final recommendation and saves the detailed record to the output path. Running the example again replaces its previous output files.
+Use a filename stem from [data/scenarios](data/scenarios) as the scenario ID. **Runs use the dev split only** ([data/splits/split.json](data/splits/split.json)); a test-split scenario is refused unless you add `--final-test`, which is for the final evaluation only. The question budget is the maximum number of clarification questions the model can ask. If Claude asks, the scripted user replies from the scenario's fixed answer table. The runner prints the transcript and final recommendation and saves the detailed record to the output path. Running the example again replaces its previous output files.
 
 ### Compare question budgets of 0, 1, and 2
 
-Run all 48 scenarios once at each budget with the same Claude model. Each comparison gets its own output directory under `runs/`.
+Run every dev scenario once at each budget with the same Claude model (`--all` means the dev split, including the BB- drafts; add `--no-drafts` for main's scenarios only, and `--final-test` only for the final test-split run). Each comparison gets its own output directory under `runs/`.
 
 ```sh
 mkdir -p runs
@@ -88,7 +88,7 @@ for group in summary["groups"]:
 PY
 ```
 
-`scores.jsonl` contains one score per run. In `summary.json`, each entry under `groups` reports recommendation success and the number of questions actually asked for one budget. If a batch exits with errors, check its `termination_counts` in the summary. The scorer counts failed runs in the denominator, so keep all 48 records from each batch.
+`scores.jsonl` contains one score per run. In `summary.json`, each entry under `groups` reports recommendation success and the number of questions actually asked for one budget. If a batch exits with errors, check its `termination_counts` in the summary. The scorer counts failed runs in the denominator, so keep every record from each batch.
 
 ## Clarification budget dataset
 
@@ -110,3 +110,47 @@ The model receives only the visible conversation, catalog, and run parameters. H
 The original 36-scenario snapshot is available in `data/archive/nlp-v1/`, and the previous 40-scenario revision is in `data/archive/nlp-ambiguity-v2/`. Add `--data-dir` with the matching archive path when scoring historical logs. New runs use the revised `data/scenarios/` by default, and their data hashes distinguish them from the archived runs.
 
 See the design docs for the [Dialogue Pipeline](docs/dialogue-pipeline.md), [Answer Service](docs/answer-service.md), and [Scoring Service](docs/scoring-service.md).
+
+## Additions on `bhavishya/finish-project`
+
+### What is new
+
+- **Scripted-user leak fixed.** The scripted user answers a slot only if the question text really asks about it (e.g. *where / area / station / mall* for location). Before, a question labelled `location` got the hidden answer even if it was just "ok?". Anything else gets the fixed `_unsupported` reply.
+- **API key header.** The client sends the key in `x-api-key`, as the Anthropic API docs describe.
+- **Prompt variants.** `--prompt-variant rule_given` (default, the original prompt) or `plain` (same task and format, without the ask and suggestion rules) for S1, S2 and S5.
+- **Draft scenarios.** 206 more scenarios in `data/drafts/bhavishya/`, in the same format as `data/scenarios/`, under review. See [data/drafts/bhavishya/README.md](data/drafts/bhavishya/README.md).
+- **Dev/test split.** `data/splits/split.json` (made by `python -m src.make_split`, family level, stratified by type, seed 6120). `--all` runs the dev split; the test split needs `--final-test`.
+- **Systems S2-S5** in `src/systems/` (S1 is the existing Claude strategy). Prompts are text files in `src/systems/prompts/`.
+- **Validator.** `data/validate.py` checks scenario files against the catalog and against main's group format.
+- **Experiment scripts.** `scripts/run_experiments.py` (dry run by default) and `scripts/make_results.py`, with results under `results/`.
+- **API cost guard.** `configs/budget.yaml` holds one spending cap, `max_usd`, currently **0**, which disables every API call ("API calls are disabled (budget cap is $0). Change configs/budget.yaml to enable."). With a raised cap, each call is checked against it before it is sent, and real spend is added to `results/spend_log.json`.
+- **Reports.** [docs/cost-estimates.md](docs/cost-estimates.md) (Opus vs Sonnet vs Haiku) and [docs/hedged-suggestions.md](docs/hedged-suggestions.md) (open labelling decision). Rebuild with `python3 scripts/make_reports.py`.
+
+### Run each system
+
+All systems use the same model, catalog, budgets, scripted user, ASK/RECOMMEND actions and logging.
+
+| `--strategy` | System | What it does | Model calls per step |
+|---|---|---|---|
+| `s1` (= `claude`) | S1 history | Full chat + catalog -> ASK or RECOMMEND | 1 |
+| `s2` | S2 summary | Writes a plain-text summary, then decides like S1 | 2 |
+| `s3` | S3 memory + links (proposed) | After every turn the model updates a structured memory (requirements with status, plus revise/confirm/clarify links). Plain code applies the links, builds the constraints, filters the catalog under every meaning and applies the rule | 1 per new turn |
+| `s4` | S4 memory, no links | Own pipeline: same memory but no relation links at all; state comes from the statuses | 1 per new turn |
+| `s5` | S5 memory + links, model asks (optional) | S3's memory, but the model decides like S1 | 1 per new turn + 1 |
+
+```sh
+python3 -m src --strategy s3 --model claude-opus-5-5 --scenario XX-AMB-06A --budget 1 \
+  --output runs/s3-amb-06a-b1.jsonl
+python3 scripts/run_experiments.py          # estimates only; add --yes-run-api to run the dev split
+```
+
+Real runs need `max_usd` above 0 in `configs/budget.yaml` and `ANTHROPIC_API_KEY` in the environment.
+
+S2-S5 save a state snapshot at every step (S3-S5 also keep one per processed turn), so the existing scorer reports state accuracy for S3-S5. S2's snapshot is its text summary, so S2 has no state accuracy.
+
+### Still needs human review
+
+- The 206 draft scenarios (`data/drafts/bhavishya/review_sheet.md`). Their wording was written by Claude and must be regenerated with Qwen before final testing.
+- The dev/test split, before anyone runs `--final-test`.
+- The S3/S4 extraction prompts in `src/systems/prompts/`.
+- No experiment has been run on this branch. The cost estimates are printed by `scripts/run_experiments.py`.

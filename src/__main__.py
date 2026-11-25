@@ -6,29 +6,53 @@ import os
 from pathlib import Path
 
 from .claude_client import API_VERSION, DEFAULT_MODEL, EFFORT, ClaudeClient
-from .claude_strategy import PROMPT_VERSION, ClaudeStrategy
-from .data import DATA_DIR, load_dataset
+from .budget import BudgetError, require_api_enabled
+from .claude_strategy import PROMPT_VARIANTS
+from .systems import MAX_TOKENS, SYSTEMS, build_strategy
+from .data import load_dataset
 from .demo_strategy import DemoStrategy
 from .dialogue_pipeline import run_dialogue
+from .splits import SplitError, select_scenarios
+
+DEMO_SCENARIOS = ("XX-AMB-01A", "XX-AMB-01B")  # both in the dev split
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     scenarios = parser.add_mutually_exclusive_group()
     scenarios.add_argument("--scenario", action="append", help="Scenario ID. May be supplied more than once.")
-    scenarios.add_argument("--all", action="store_true", help="Run every local scenario.")
+    scenarios.add_argument("--all", action="store_true",
+                           help="Run every DEV scenario (every TEST scenario with --final-test).")
+    parser.add_argument("--final-test", action="store_true",
+                        help="Allow TEST-split scenarios. Use only for the final evaluation.")
+    parser.add_argument("--no-drafts", action="store_true",
+                        help="With --all, leave out the BB- draft scenarios (main's dataset only).")
     parser.add_argument("--budget", type=int, choices=(0, 1, 2), default=1)
-    parser.add_argument("--strategy", choices=("demo", "claude"), default="demo")
+    parser.add_argument("--strategy", choices=("demo", "claude", *SYSTEMS), default="demo",
+                        help="demo (offline rule demo), s1/claude (history), s2 (summary), s3 (memory + "
+                             "links + rule), s4 (memory, no links + rule), s5 (memory + links, model asks).")
     parser.add_argument("--model", help="Override the Claude model ID.")
+    parser.add_argument("--prompt-variant", choices=sorted(PROMPT_VARIANTS), default="rule_given",
+                        help="rule_given: prompt spells out when to ask (original). "
+                             "plain: same task and format, without the ask/suggestion rules.")
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
 
     if args.strategy == "demo" and args.model is not None:
         parser.error("--model requires --strategy claude.")
+    if args.strategy == "demo" and args.prompt_variant != "rule_given":
+        parser.error("--prompt-variant requires --strategy claude.")
 
     client = None
     strategy_config = None
-    if args.strategy == "claude":
+    system = "s1" if args.strategy == "claude" else args.strategy
+    if args.strategy != "demo" and args.prompt_variant != "rule_given" and system in ("s3", "s4"):
+        parser.error("--prompt-variant applies to s1, s2 and s5 (s3/s4 decide by the coded rule).")
+    if args.strategy != "demo":
+        try:
+            require_api_enabled()  # the $ cap in configs/budget.yaml; 0 = no API calls at all
+        except BudgetError as exc:
+            parser.exit(2, f"{exc}\n")
         api_key = os.environ.get("ANTHROPIC_API_KEY", "").strip()
         if not api_key:
             parser.error("Set ANTHROPIC_API_KEY in your local environment to run Claude.")
@@ -37,40 +61,52 @@ def main() -> int:
         if not model:
             parser.error("The Claude model ID must not be blank.")
         try:
-            client = ClaudeClient(api_key, model)
+            client = ClaudeClient(api_key, model, max_tokens=MAX_TOKENS[system])
         except ValueError as exc:
             parser.error(str(exc))
+        probe = build_strategy(system, client, args.prompt_variant)
         strategy_config = {
             "provider": "anthropic",
             "model": client.model,
             "api_version": API_VERSION,
-            "prompt_version": PROMPT_VERSION,
+            "system": system,
+            "prompt_version": getattr(probe, "prompt_version", PROMPT_VARIANTS[args.prompt_variant][0]),
+            "prompt_variant": args.prompt_variant,
             "max_output_tokens": client.max_tokens,
             "effort": EFFORT,
         }
 
-    if args.all:
-        scenario_ids = sorted(path.stem for path in (DATA_DIR / "scenarios").glob("*.json"))
-    else:
-        scenario_ids = list(dict.fromkeys(args.scenario or ["XX-AMB-01A", "XX-AMB-01B"]))
+    try:
+        scenario_ids = select_scenarios(args.scenario or (None if args.all else list(DEMO_SCENARIOS)),
+                                        run_all=args.all, final_test=args.final_test,
+                                        include_drafts=not args.no_drafts)
+    except SplitError as exc:
+        parser.exit(2, f"{exc}\n")
     try:
         dataset = load_dataset(scenario_ids)
     except (OSError, ValueError, KeyError) as exc:
         parser.exit(2, f"Could not load the scenario data: {exc}\n")
 
-    records = [
-        run_dialogue(
+    records = []
+    for scenario_id in scenario_ids:
+        record = run_dialogue(
             dataset.scenarios[scenario_id],
-            ClaudeStrategy(client) if client is not None else DemoStrategy(),
+            # A fresh strategy per scenario, so turn-by-turn memories never mix.
+            build_strategy(system, client, args.prompt_variant) if client is not None else DemoStrategy(),
             dataset.answer_service,
             args.budget,
             strategy_config=strategy_config,
         )
-        for scenario_id in scenario_ids
-    ]
+        if client is not None and client.budget_refused:
+            # The spending cap refused a call: drop this incomplete run and stop the batch.
+            print(f"Stopped before {scenario_id}: the spending cap in configs/budget.yaml was reached. "
+                  f"{len(records)} of {len(scenario_ids)} scenarios finished.")
+            break
+        records.append(record)
     default_output = Path("runs/amb-01.jsonl")
     if client is not None:
-        default_output = Path("runs/all-claude.jsonl" if args.all else "runs/amb-01-claude.jsonl")
+        name = "claude" if system == "s1" else system
+        default_output = Path(f"runs/all-{name}.jsonl" if args.all else f"runs/amb-01-{name}.jsonl")
     output_path = args.output or default_output
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(
@@ -90,6 +126,8 @@ def main() -> int:
         print(f"  Termination: {record['termination_reason']}\n")
 
     print(f"JSONL: {output_path}")
+    if client is not None and client.budget_refused:
+        return 3  # stopped by the spending cap; the batch is incomplete
     return int(any(record["termination_reason"] != "completed" for record in records))
 
 

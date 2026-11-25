@@ -1,0 +1,205 @@
+{
+ "scenario_id": "BB-LONG-05B",
+ "author": "BB",
+ "text_source": "draft by Claude; wording to be regenerated with Qwen before testing",
+ "model_visible": {
+  "dialogue_prefix": [
+   {
+    "turn": 1,
+    "speaker": "user",
+    "text": "I'm up for Chinese or Thai food, either is fine."
+   },
+   {
+    "turn": 2,
+    "speaker": "assistant",
+    "text": "There are options near the station and near the mall."
+   },
+   {
+    "turn": 3,
+    "speaker": "user",
+    "text": "Nice. Unrelated, but I'm also trying to pick a birthday gift for my mom."
+   },
+   {
+    "turn": 4,
+    "speaker": "assistant",
+    "text": "Flowers or a good book are always safe choices!"
+   },
+   {
+    "turn": 5,
+    "speaker": "user",
+    "text": "Good idea. Anyway, my budget is $25 per person."
+   },
+   {
+    "turn": 6,
+    "speaker": "assistant",
+    "text": "Got it."
+   },
+   {
+    "turn": 7,
+    "speaker": "user",
+    "text": "It's for dinner."
+   },
+   {
+    "turn": 8,
+    "speaker": "assistant",
+    "text": "Okay, noted."
+   },
+   {
+    "turn": 9,
+    "speaker": "user",
+    "text": "Can you find me something in that area you mentioned at the start?"
+   }
+  ],
+  "restaurant_database": "restaurants.json"
+ },
+ "evaluation_only": {
+  "scenario_type": "ambiguous_reference",
+  "template_family_id": "BB-LONG-05",
+  "variant": "B",
+  "contrast_note": "Reference reaches back to turn 2. A: station -> R16 Bangkok Street ($17); mall -> R35 Noodle Bar 88 ($16) -> ask. B: budget $25 -> R31 Golden Dragon ($24) valid for both -> recommend.",
+  "turn_plan": [
+   {
+    "turn": 1,
+    "speaker": "user",
+    "act": "user states cuisine=['Chinese', 'Thai']"
+   },
+   {
+    "turn": 2,
+    "speaker": "assistant",
+    "act": "KEY DETAIL: assistant mentions both areas (station first, mall second)"
+   },
+   {
+    "turn": 3,
+    "speaker": "user",
+    "act": "user: off-topic"
+   },
+   {
+    "turn": 4,
+    "speaker": "assistant",
+    "act": "assistant: off-topic reply"
+   },
+   {
+    "turn": 5,
+    "speaker": "user",
+    "act": "user states max_price=25"
+   },
+   {
+    "turn": 6,
+    "speaker": "assistant",
+    "act": "assistant acknowledges"
+   },
+   {
+    "turn": 7,
+    "speaker": "user",
+    "act": "user states meal=dinner"
+   },
+   {
+    "turn": 8,
+    "speaker": "assistant",
+    "act": "assistant acknowledges"
+   },
+   {
+    "turn": 9,
+    "speaker": "user",
+    "act": "user: 'that area you mentioned at the start' = station or mall (UNRESOLVED; hidden: station)"
+   }
+  ],
+  "hidden_user_goal": {
+   "cuisine": [
+    "Chinese",
+    "Thai"
+   ],
+   "max_price": 25,
+   "dinner": true,
+   "location": "station"
+  },
+  "predefined_clarification_answers": {
+   "cuisine": "Either Chinese or Thai is fine.",
+   "max_price": "No more than $25 per person.",
+   "location": "Near the station.",
+   "vegetarian": "No dietary restrictions.",
+   "dinner": "Yes, it needs to be open for dinner.",
+   "_unsupported": "I don't have a preference on that.",
+   "_multi_question": "Sorry, one thing at a time - what did you want to know first?"
+  },
+  "gold_dialogue_state": {
+   "at_turn": 9,
+   "active": {
+    "cuisine": [
+     "Chinese",
+     "Thai"
+    ],
+    "max_price": 25,
+    "dinner": true
+   },
+   "superseded": [],
+   "proposed_not_accepted": [],
+   "unresolved": [
+    {
+     "slot": "location",
+     "turn": 9,
+     "expression": "that area you mentioned at the start",
+     "interpretations": [
+      {
+       "location": "station"
+      },
+      {
+       "location": "mall"
+      }
+     ]
+    }
+   ]
+  },
+  "gold_relation_links": [],
+  "gold_decision": {
+   "should_ask": false,
+   "necessary_question": null,
+   "any_other_question_is_unnecessary": true
+  },
+  "flags_for_team": [],
+  "computed_by_validator": {
+   "success_set": [
+    "R16",
+    "R31"
+   ],
+   "interpretation_sets": [
+    {
+     "interpretation": {
+      "location": "station"
+     },
+     "candidates": [
+      "R16",
+      "R31"
+     ]
+    },
+    {
+     "interpretation": {
+      "location": "mall"
+     },
+     "candidates": [
+      "R31",
+      "R35"
+     ]
+    }
+   ],
+   "shared_candidates": [
+    "R31"
+   ],
+   "valid_without_clarification": [
+    "R31"
+   ]
+  },
+  "draft_info": {
+   "draft_part": "4f",
+   "ambiguity_kind": "location_deixis",
+   "mention_order": [
+    "station",
+    "mall"
+   ],
+   "single_change": "budget",
+   "key_detail_turn": 2,
+   "converted_from": "BB-LONG-05B",
+   "original_hidden_goal": true
+  }
+ }
+}

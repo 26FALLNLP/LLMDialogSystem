@@ -1,11 +1,39 @@
 """Serve deterministic answers from scenario-specific lookup tables."""
 
+import re
 from collections.abc import Collection, Mapping, Sequence
 from dataclasses import dataclass
 from types import MappingProxyType
 from typing import Literal, TypeGuard
 
 from .dialogue_types import Question
+
+# Words that show a question is really about a slot. A question whose text has
+# none of its slot's cues gets the fixed fallback reply, so a system cannot get
+# the hidden answer by labelling an empty question (e.g. "ok?") with the slot.
+_CUISINE_NAMES = ("thai", "mexican", "japanese", "italian", "indian", "korean", "chinese",
+                  "mediterranean", "sushi", "ramen", "pizza", "taco", "curry", "noodle")
+SLOT_CUES: Mapping[str, tuple[str, ...]] = MappingProxyType({
+    "location": ("where", "area", "location", "near", "station", "mall", "side", "part of town",
+                 "neighborhood", "neighbourhood", "close to", "around", "place", "spot", "located"),
+    "cuisine": ("cuisine", "food", "eat", "dish", "kind of", "type of", "style") + _CUISINE_NAMES,
+    "max_price": ("budget", "price", "spend", "cost", "$", "afford", "expensive", "cheap",
+                  "how much", "per person", "dollar"),
+    "vegetarian": ("vegetarian", "veggie", "meat", "dietary", "diet", "vegan", "restriction"),
+    "dinner": ("dinner", "lunch", "meal", "evening", "tonight", "time", "when", "open"),
+})
+
+
+def asks_about(slot: str, text: str) -> bool:
+    """True if the question text contains a cue word for the slot."""
+    cues = SLOT_CUES.get(slot)
+    if not cues or not isinstance(text, str):
+        return False
+    lowered = text.lower()
+    return any(
+        (cue in lowered) if not cue[0].isalpha() else re.search(rf"\b{re.escape(cue)}", lowered)
+        for cue in cues
+    )
 
 
 @dataclass(frozen=True, slots=True)
@@ -103,7 +131,7 @@ class AnswerService:
             (question.slot, question.reference_turn_id) if table.reference_scoped else question.slot
         )
         reply = table.replies.get(key)
-        if reply is None:
+        if reply is None or not asks_about(question.slot, question.text):
             return AnswerReply(text=table.fallback_text, status="fallback")
         return AnswerReply(text=reply, status="answered")
 

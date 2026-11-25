@@ -1,0 +1,170 @@
+{
+ "scenario_id": "BB-CUI-01A-H2",
+ "author": "BB",
+ "text_source": "draft by Claude; wording to be regenerated with Qwen before testing",
+ "model_visible": {
+  "dialogue_prefix": [
+   {
+    "turn": 1,
+    "speaker": "user",
+    "text": "Two of my friends each recommended a place around here: one Japanese, one Mediterranean."
+   },
+   {
+    "turn": 2,
+    "speaker": "assistant",
+    "text": "Both sound like good options! Want me to look into them?"
+   },
+   {
+    "turn": 3,
+    "speaker": "user",
+    "text": "I'd like somewhere near the station."
+   },
+   {
+    "turn": 4,
+    "speaker": "assistant",
+    "text": "Got it, near the station."
+   },
+   {
+    "turn": 5,
+    "speaker": "user",
+    "text": "No more than $18 a person. It's for lunch."
+   },
+   {
+    "turn": 6,
+    "speaker": "assistant",
+    "text": "Noted."
+   },
+   {
+    "turn": 7,
+    "speaker": "user",
+    "text": "Let's go with Maya's recommendation."
+   }
+  ],
+  "restaurant_database": "restaurants.json"
+ },
+ "evaluation_only": {
+  "scenario_type": "ambiguous_reference",
+  "template_family_id": "BB-CUI-01",
+  "variant": "A-H2",
+  "contrast_note": "A: Japanese -> R01 Sakura Ramen ($18); Mediterranean -> R39 Falafel Stop ($11); no restaurant serves both -> ask. B: user accepts either cuisine (one turn changed; a single restaurant cannot serve two cuisines, so this is the only one-change way to remove the need to ask). All -H variants share this chat and enumerate the hidden targets (main's nlp-quota-v3 format).",
+  "turn_plan": [
+   {
+    "turn": 1,
+    "speaker": "user",
+    "act": "user mentions two cuisines (Japanese first, Mediterranean second); neither chosen; no link to who said which"
+   },
+   {
+    "turn": 2,
+    "speaker": "assistant",
+    "act": "assistant offers"
+   },
+   {
+    "turn": 3,
+    "speaker": "user",
+    "act": "user states location=station"
+   },
+   {
+    "turn": 4,
+    "speaker": "assistant",
+    "act": "assistant acknowledges"
+   },
+   {
+    "turn": 5,
+    "speaker": "user",
+    "act": "user states max_price=18, meal=lunch"
+   },
+   {
+    "turn": 6,
+    "speaker": "assistant",
+    "act": "assistant acknowledges"
+   },
+   {
+    "turn": 7,
+    "speaker": "user",
+    "act": "user: 'Maya's recommendation' = Japanese or Mediterranean (UNRESOLVED; hidden: Japanese)"
+   }
+  ],
+  "hidden_user_goal": {
+   "max_price": 18,
+   "location": "station",
+   "cuisine": "Mediterranean"
+  },
+  "predefined_clarification_answers": {
+   "cuisine": "Mediterranean, please.",
+   "max_price": "No more than $18 per person.",
+   "location": "Near the station.",
+   "vegetarian": "No dietary restrictions.",
+   "dinner": "It doesn't need to be open for dinner.",
+   "_unsupported": "I don't have a preference on that.",
+   "_multi_question": "Sorry, one thing at a time - what did you want to know first?"
+  },
+  "gold_dialogue_state": {
+   "at_turn": 7,
+   "active": {
+    "max_price": 18,
+    "location": "station"
+   },
+   "superseded": [],
+   "proposed_not_accepted": [],
+   "unresolved": [
+    {
+     "slot": "cuisine",
+     "turn": 7,
+     "expression": "Maya's recommendation",
+     "interpretations": [
+      {
+       "cuisine": "Japanese"
+      },
+      {
+       "cuisine": "Mediterranean"
+      }
+     ]
+    }
+   ]
+  },
+  "gold_relation_links": [],
+  "gold_decision": {
+   "should_ask": true,
+   "necessary_question": "cuisine@t7",
+   "any_other_question_is_unnecessary": true
+  },
+  "flags_for_team": [],
+  "ambiguity_pair_id": "BB-CUI-01A-hidden-target",
+  "computed_by_validator": {
+   "success_set": [
+    "R39"
+   ],
+   "interpretation_sets": [
+    {
+     "interpretation": {
+      "cuisine": "Japanese"
+     },
+     "candidates": [
+      "R01"
+     ]
+    },
+    {
+     "interpretation": {
+      "cuisine": "Mediterranean"
+     },
+     "candidates": [
+      "R39"
+     ]
+    }
+   ],
+   "shared_candidates": [],
+   "valid_without_clarification": []
+  },
+  "draft_info": {
+   "draft_part": "4a",
+   "ambiguity_kind": "cuisine_reference",
+   "mention_order": [
+    "Japanese",
+    "Mediterranean"
+   ],
+   "single_change": "accept_either",
+   "converted_from": "BB-CUI-01A",
+   "original_hidden_goal": false
+  }
+ }
+}

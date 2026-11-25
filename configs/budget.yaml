@@ -1,0 +1,5 @@
+# Hard spending cap for ALL Claude API calls made by this project, in US dollars.
+# 0 means API calls are disabled: every script refuses to call the API, even with --yes-run-api.
+# Real spend is recorded in results/spend_log.json; a call that could push the total
+# over this cap is refused before it is sent.
+max_usd: 0
