@@ -14,7 +14,7 @@
     "2": 206
   },
   "expectation_assumptions": "Same rule as data/dataset-manifest.json: uniform hidden goals, optimal independent-slot questions. Design expectations, not measured results.",
-  "data_version": "sha256:fcd22bb620677ab8d8f734d02a8fb7abc2e9a034cdeb69e534bd5ca88cd262fd",
+  "data_version": "sha256:590f559aa9ad91976f131be0e25d2450564eed63cfca05b0e1ad9ccec98ef5fd",
   "database_version": "sha256:66727372507c88c9bb246748980bc5c2590c96f0a9cce276fc4c043de3c9f3aa",
   "groups": [
     {

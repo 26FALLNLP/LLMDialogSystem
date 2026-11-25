@@ -654,7 +654,7 @@ Composition: {'zero_question': 70, 'one_question': 108, 'two_question': 28}. Dro
 
 | # | Speaker | Text | Planned act |
 |---|---|---|---|
-| 1 | user | Can you help me find a place to eat?  | user states no cuisine preference |
+| 1 | user | Can you help me find a place to eat? | user states no cuisine preference |
 | 2 | assistant | Happy to help. I can see places by the mall and by the station. | assistant mentions both areas (mall first, station second); not a user choice |
 | 3 | user | My budget is $16 per person. | user states max_price=16 |
 | 4 | assistant | Thanks, that helps. | assistant acknowledges |
@@ -718,7 +718,7 @@ Composition: {'zero_question': 70, 'one_question': 108, 'two_question': 28}. Dro
 
 | # | Speaker | Text | Planned act |
 |---|---|---|---|
-| 1 | user | Can you help me find a place to eat?  | user states no cuisine preference |
+| 1 | user | Can you help me find a place to eat? | user states no cuisine preference |
 | 2 | assistant | Happy to help. I can see places by the mall and by the station. | assistant mentions both areas (mall first, station second); not a user choice |
 | 3 | user | My budget is $16 per person. | user states max_price=16 |
 | 4 | assistant | Thanks, that helps. | assistant acknowledges |

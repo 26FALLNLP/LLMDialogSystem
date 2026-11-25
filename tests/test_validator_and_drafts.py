@@ -108,6 +108,11 @@ class DraftDatasetTests(unittest.TestCase):
             self.assertIn("Qwen", r["text_source"])
             self.assertNotIn(sid, main_ids)
 
+    def test_draft_chat_text_has_no_stray_spaces(self):
+        for sid, r in self.records.items():
+            for t in r["model_visible"]["dialogue_prefix"]:
+                self.assertEqual(t["text"], " ".join(t["text"].split()), f"{sid} turn {t['turn']}")
+
     def test_ok_question_does_not_leak_in_drafts(self):
         from src.dialogue_types import Question
         ids = sorted(self.records)

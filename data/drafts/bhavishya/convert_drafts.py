@@ -104,9 +104,12 @@ def convert(src):
                     "necessary_questions": decision["necessary_questions"], "score_followup_clarifications": True}
     else:
         decision = {k: decision[k] for k in ("should_ask", "necessary_question", "any_other_question_is_unnecessary")}
+    visible = dict(src["model_visible"])
+    # Tidy whitespace only (no wording change): no leading/trailing or double spaces.
+    visible["dialogue_prefix"] = [dict(t, text=" ".join(t["text"].split())) for t in visible["dialogue_prefix"]]
     base = {
         "scenario_id": None, "author": "BB", "text_source": TEXT_SOURCE,
-        "model_visible": src["model_visible"],
+        "model_visible": visible,
         "evaluation_only": None,
     }
     if not decision["should_ask"]:
