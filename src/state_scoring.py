@@ -7,6 +7,9 @@ SLOTS = ("cuisine", "exclude_cuisine", "max_price", "location", "vegetarian", "d
 _DEMO_SLOTS = ("cuisine", "max_price", "location")
 _HISTORY = ("unresolved", "superseded", "proposed_not_accepted")
 _SECTIONS = ("active", *_HISTORY)
+# Status words that mean the same thing for an unaccepted proposal. The gold data
+# uses both "not accepted" and "rejected" (XX-SUG-05); systems write "not accepted".
+_STATUS_SYNONYMS = {"rejected": "not accepted"}
 
 
 def _turn_number(turn: object) -> int | None:
@@ -69,6 +72,7 @@ def _state_view(state: Mapping) -> dict:
                 detail = (turn, _value(slot, item["value"]))
             else:
                 status = item["status"].strip().casefold()
+                status = _STATUS_SYNONYMS.get(status, status)
                 detail = (turn, _value(slot, item["value"]), status)
             view[section].setdefault(slot, []).append(detail)
         for slot, entries in view[section].items():
