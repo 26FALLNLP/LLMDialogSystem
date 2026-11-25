@@ -1,0 +1,172 @@
+{
+ "scenario_id": "BB-LOC-09A-SW-H2",
+ "author": "BB",
+ "text_source": "draft by Claude; wording to be regenerated with Qwen before testing",
+ "model_visible": {
+  "dialogue_prefix": [
+   {
+    "turn": 1,
+    "speaker": "user",
+    "text": "I'm in the mood for Italian food."
+   },
+   {
+    "turn": 2,
+    "speaker": "assistant",
+    "text": "Sure! There are good options near the mall and near the station."
+   },
+   {
+    "turn": 3,
+    "speaker": "user",
+    "text": "My budget is $30 per person."
+   },
+   {
+    "turn": 4,
+    "speaker": "assistant",
+    "text": "Got it, I'll keep the budget in mind."
+   },
+   {
+    "turn": 5,
+    "speaker": "user",
+    "text": "It's for dinner."
+   },
+   {
+    "turn": 6,
+    "speaker": "assistant",
+    "text": "Okay, noted."
+   },
+   {
+    "turn": 7,
+    "speaker": "user",
+    "text": "I'd like something around there."
+   }
+  ],
+  "restaurant_database": "restaurants.json"
+ },
+ "evaluation_only": {
+  "scenario_type": "ambiguous_reference",
+  "template_family_id": "BB-LOC-09",
+  "variant": "A_swap-H2",
+  "contrast_note": "A: station -> R06 Trattoria Lucca ($22); mall -> R07 Nonna's Kitchen ($27); nothing near both -> ask. B: lunch instead of dinner makes R08 Forno Pizza ($16) valid for both -> recommend it. All -H variants share this chat and enumerate the hidden targets (main's nlp-quota-v3 format).",
+  "turn_plan": [
+   {
+    "turn": 1,
+    "speaker": "user",
+    "act": "user states cuisine=Italian"
+   },
+   {
+    "turn": 2,
+    "speaker": "assistant",
+    "act": "assistant mentions both areas (mall first, station second); not a user choice"
+   },
+   {
+    "turn": 3,
+    "speaker": "user",
+    "act": "user states max_price=30"
+   },
+   {
+    "turn": 4,
+    "speaker": "assistant",
+    "act": "assistant acknowledges"
+   },
+   {
+    "turn": 5,
+    "speaker": "user",
+    "act": "user states meal=dinner (dinner=true)"
+   },
+   {
+    "turn": 6,
+    "speaker": "assistant",
+    "act": "assistant acknowledges"
+   },
+   {
+    "turn": 7,
+    "speaker": "user",
+    "act": "user: 'I'd like something around there.' = station or mall (UNRESOLVED; hidden: mall)"
+   }
+  ],
+  "hidden_user_goal": {
+   "cuisine": "Italian",
+   "max_price": 30,
+   "dinner": true,
+   "location": "station"
+  },
+  "predefined_clarification_answers": {
+   "cuisine": "Italian, please.",
+   "max_price": "No more than $30 per person.",
+   "location": "Near the station.",
+   "vegetarian": "No dietary restrictions.",
+   "dinner": "Yes, it needs to be open for dinner.",
+   "_unsupported": "I don't have a preference on that.",
+   "_multi_question": "Sorry, one thing at a time - what did you want to know first?"
+  },
+  "gold_dialogue_state": {
+   "at_turn": 7,
+   "active": {
+    "cuisine": "Italian",
+    "max_price": 30,
+    "dinner": true
+   },
+   "superseded": [],
+   "proposed_not_accepted": [],
+   "unresolved": [
+    {
+     "slot": "location",
+     "turn": 7,
+     "expression": "I'd like something around there.",
+     "interpretations": [
+      {
+       "location": "mall"
+      },
+      {
+       "location": "station"
+      }
+     ]
+    }
+   ]
+  },
+  "gold_relation_links": [],
+  "gold_decision": {
+   "should_ask": true,
+   "necessary_question": "location@t7",
+   "any_other_question_is_unnecessary": true
+  },
+  "flags_for_team": [],
+  "ambiguity_pair_id": "BB-LOC-09A-SW-hidden-target",
+  "computed_by_validator": {
+   "success_set": [
+    "R06"
+   ],
+   "interpretation_sets": [
+    {
+     "interpretation": {
+      "location": "mall"
+     },
+     "candidates": [
+      "R07"
+     ]
+    },
+    {
+     "interpretation": {
+      "location": "station"
+     },
+     "candidates": [
+      "R06"
+     ]
+    }
+   ],
+   "shared_candidates": [],
+   "valid_without_clarification": []
+  },
+  "draft_info": {
+   "draft_part": "4c",
+   "ambiguity_kind": "location_deixis",
+   "mention_order": [
+    "mall",
+    "station"
+   ],
+   "single_change": "lunch",
+   "converted_from": "BB-LOC-09A-SW",
+   "original_hidden_goal": false
+  }
+ }
+}

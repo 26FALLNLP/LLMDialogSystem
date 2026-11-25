@@ -1,0 +1,176 @@
+{
+ "scenario_id": "BB-ORD-01A-H1",
+ "author": "BB",
+ "text_source": "draft by Claude; wording to be regenerated with Qwen before testing",
+ "model_visible": {
+  "dialogue_prefix": [
+   {
+    "turn": 1,
+    "speaker": "user",
+    "text": "I'm up for Japanese or Korean food, either is fine."
+   },
+   {
+    "turn": 2,
+    "speaker": "assistant",
+    "text": "Sure! There are good options near the mall and near the station."
+   },
+   {
+    "turn": 3,
+    "speaker": "user",
+    "text": "My budget is $20 per person."
+   },
+   {
+    "turn": 4,
+    "speaker": "assistant",
+    "text": "Okay. With that budget, the station side and the mall side both still have choices."
+   },
+   {
+    "turn": 5,
+    "speaker": "user",
+    "text": "It's for lunch."
+   },
+   {
+    "turn": 6,
+    "speaker": "assistant",
+    "text": "Okay, noted."
+   },
+   {
+    "turn": 7,
+    "speaker": "user",
+    "text": "Let's go with the second place you mentioned."
+   }
+  ],
+  "restaurant_database": "restaurants.json"
+ },
+ "evaluation_only": {
+  "scenario_type": "ambiguous_reference",
+  "template_family_id": "BB-ORD-01",
+  "variant": "A-H1",
+  "contrast_note": "A: station -> R01 Sakura Ramen ($18); mall -> R27 Bibim Bowl ($15); nothing near both -> ask. B: budget $30 makes R03 Kumo Izakaya ($29) valid for both -> recommend it. All -H variants share this chat and enumerate the hidden targets (main's nlp-quota-v3 format).",
+  "turn_plan": [
+   {
+    "turn": 1,
+    "speaker": "user",
+    "act": "user states cuisine=['Japanese', 'Korean']"
+   },
+   {
+    "turn": 2,
+    "speaker": "assistant",
+    "act": "assistant mentions both areas (mall first, station second); not a user choice"
+   },
+   {
+    "turn": 3,
+    "speaker": "user",
+    "act": "user states max_price=20"
+   },
+   {
+    "turn": 4,
+    "speaker": "assistant",
+    "act": "assistant re-lists the areas in the opposite order (station first, mall second)"
+   },
+   {
+    "turn": 5,
+    "speaker": "user",
+    "act": "user states meal=lunch (no dinner constraint)"
+   },
+   {
+    "turn": 6,
+    "speaker": "assistant",
+    "act": "assistant acknowledges"
+   },
+   {
+    "turn": 7,
+    "speaker": "user",
+    "act": "user: 'second place' = station (second in turn 2) or mall (second in turn 4) (UNRESOLVED; hidden: mall)"
+   }
+  ],
+  "hidden_user_goal": {
+   "cuisine": [
+    "Japanese",
+    "Korean"
+   ],
+   "max_price": 20,
+   "location": "mall"
+  },
+  "predefined_clarification_answers": {
+   "cuisine": "Either Japanese or Korean is fine.",
+   "max_price": "No more than $20 per person.",
+   "location": "Near the mall.",
+   "vegetarian": "No dietary restrictions.",
+   "dinner": "It doesn't need to be open for dinner.",
+   "_unsupported": "I don't have a preference on that.",
+   "_multi_question": "Sorry, one thing at a time - what did you want to know first?"
+  },
+  "gold_dialogue_state": {
+   "at_turn": 7,
+   "active": {
+    "cuisine": [
+     "Japanese",
+     "Korean"
+    ],
+    "max_price": 20
+   },
+   "superseded": [],
+   "proposed_not_accepted": [],
+   "unresolved": [
+    {
+     "slot": "location",
+     "turn": 7,
+     "expression": "Let's go with the second place you mentioned.",
+     "interpretations": [
+      {
+       "location": "mall"
+      },
+      {
+       "location": "station"
+      }
+     ]
+    }
+   ]
+  },
+  "gold_relation_links": [],
+  "gold_decision": {
+   "should_ask": true,
+   "necessary_question": "location@t7",
+   "any_other_question_is_unnecessary": true
+  },
+  "flags_for_team": [],
+  "ambiguity_pair_id": "BB-ORD-01A-hidden-target",
+  "computed_by_validator": {
+   "success_set": [
+    "R27"
+   ],
+   "interpretation_sets": [
+    {
+     "interpretation": {
+      "location": "mall"
+     },
+     "candidates": [
+      "R27"
+     ]
+    },
+    {
+     "interpretation": {
+      "location": "station"
+     },
+     "candidates": [
+      "R01"
+     ]
+    }
+   ],
+   "shared_candidates": [],
+   "valid_without_clarification": []
+  },
+  "draft_info": {
+   "draft_part": "4a",
+   "ambiguity_kind": "ordinal_reference",
+   "mention_order": [
+    "mall",
+    "station"
+   ],
+   "single_change": "budget",
+   "converted_from": "BB-ORD-01A",
+   "original_hidden_goal": true
+  }
+ }
+}

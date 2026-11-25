@@ -1,0 +1,180 @@
+{
+ "scenario_id": "BB-LOC-02A-SW-H1",
+ "author": "BB",
+ "text_source": "draft by Claude; wording to be regenerated with Qwen before testing",
+ "model_visible": {
+  "dialogue_prefix": [
+   {
+    "turn": 1,
+    "speaker": "user",
+    "text": "I'm up for Korean or Thai food, either is fine."
+   },
+   {
+    "turn": 2,
+    "speaker": "assistant",
+    "text": "Sure! There are good options near the station and near the mall."
+   },
+   {
+    "turn": 3,
+    "speaker": "user",
+    "text": "My budget is $30 per person."
+   },
+   {
+    "turn": 4,
+    "speaker": "assistant",
+    "text": "Got it, I'll keep the budget in mind."
+   },
+   {
+    "turn": 5,
+    "speaker": "user",
+    "text": "It's for lunch."
+   },
+   {
+    "turn": 6,
+    "speaker": "assistant",
+    "text": "Okay, noted."
+   },
+   {
+    "turn": 7,
+    "speaker": "user",
+    "text": "Let's look over that side."
+   }
+  ],
+  "restaurant_database": "restaurants.json"
+ },
+ "evaluation_only": {
+  "scenario_type": "ambiguous_reference",
+  "template_family_id": "BB-LOC-02",
+  "variant": "A_swap-H1",
+  "contrast_note": "A: station -> R16 Bangkok Street ($17), R28 Kimchi Pot ($22); mall -> R17 Lotus Thai ($23), R27 Bibim Bowl ($15), R29 Hanok Table ($27); nothing near both -> ask. B: budget $50 makes R20 Royal Orchid ($48) valid for both -> recommend it. All -H variants share this chat and enumerate the hidden targets (main's nlp-quota-v3 format).",
+  "turn_plan": [
+   {
+    "turn": 1,
+    "speaker": "user",
+    "act": "user states cuisine=['Korean', 'Thai']"
+   },
+   {
+    "turn": 2,
+    "speaker": "assistant",
+    "act": "assistant mentions both areas (station first, mall second); not a user choice"
+   },
+   {
+    "turn": 3,
+    "speaker": "user",
+    "act": "user states max_price=30"
+   },
+   {
+    "turn": 4,
+    "speaker": "assistant",
+    "act": "assistant acknowledges"
+   },
+   {
+    "turn": 5,
+    "speaker": "user",
+    "act": "user states meal=lunch (no dinner constraint)"
+   },
+   {
+    "turn": 6,
+    "speaker": "assistant",
+    "act": "assistant acknowledges"
+   },
+   {
+    "turn": 7,
+    "speaker": "user",
+    "act": "user: 'Let's look over that side.' = station or mall (UNRESOLVED; hidden: mall)"
+   }
+  ],
+  "hidden_user_goal": {
+   "cuisine": [
+    "Korean",
+    "Thai"
+   ],
+   "max_price": 30,
+   "location": "station"
+  },
+  "predefined_clarification_answers": {
+   "cuisine": "Either Korean or Thai is fine.",
+   "max_price": "No more than $30 per person.",
+   "location": "Near the station.",
+   "vegetarian": "No dietary restrictions.",
+   "dinner": "It doesn't need to be open for dinner.",
+   "_unsupported": "I don't have a preference on that.",
+   "_multi_question": "Sorry, one thing at a time - what did you want to know first?"
+  },
+  "gold_dialogue_state": {
+   "at_turn": 7,
+   "active": {
+    "cuisine": [
+     "Korean",
+     "Thai"
+    ],
+    "max_price": 30
+   },
+   "superseded": [],
+   "proposed_not_accepted": [],
+   "unresolved": [
+    {
+     "slot": "location",
+     "turn": 7,
+     "expression": "Let's look over that side.",
+     "interpretations": [
+      {
+       "location": "station"
+      },
+      {
+       "location": "mall"
+      }
+     ]
+    }
+   ]
+  },
+  "gold_relation_links": [],
+  "gold_decision": {
+   "should_ask": true,
+   "necessary_question": "location@t7",
+   "any_other_question_is_unnecessary": true
+  },
+  "flags_for_team": [],
+  "ambiguity_pair_id": "BB-LOC-02A-SW-hidden-target",
+  "computed_by_validator": {
+   "success_set": [
+    "R16",
+    "R28"
+   ],
+   "interpretation_sets": [
+    {
+     "interpretation": {
+      "location": "station"
+     },
+     "candidates": [
+      "R16",
+      "R28"
+     ]
+    },
+    {
+     "interpretation": {
+      "location": "mall"
+     },
+     "candidates": [
+      "R17",
+      "R27",
+      "R29"
+     ]
+    }
+   ],
+   "shared_candidates": [],
+   "valid_without_clarification": []
+  },
+  "draft_info": {
+   "draft_part": "4c",
+   "ambiguity_kind": "location_deixis",
+   "mention_order": [
+    "station",
+    "mall"
+   ],
+   "single_change": "budget",
+   "converted_from": "BB-LOC-02A-SW",
+   "original_hidden_goal": false
+  }
+ }
+}

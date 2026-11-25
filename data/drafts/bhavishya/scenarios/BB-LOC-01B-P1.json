@@ -1,0 +1,186 @@
+{
+ "scenario_id": "BB-LOC-01B-P1",
+ "author": "BB",
+ "text_source": "draft by Claude; wording to be regenerated with Qwen before testing",
+ "model_visible": {
+  "dialogue_prefix": [
+   {
+    "turn": 1,
+    "speaker": "user",
+    "text": "Can you help me find a place to eat? Italian or Japanese would both be fine."
+   },
+   {
+    "turn": 2,
+    "speaker": "assistant",
+    "text": "Happy to help. I can see places by the station and by the mall."
+   },
+   {
+    "turn": 3,
+    "speaker": "user",
+    "text": "My budget is $35 per person."
+   },
+   {
+    "turn": 4,
+    "speaker": "assistant",
+    "text": "Thanks, that helps."
+   },
+   {
+    "turn": 5,
+    "speaker": "user",
+    "text": "It's for lunch. I also need vegetarian options."
+   },
+   {
+    "turn": 6,
+    "speaker": "assistant",
+    "text": "Understood."
+   },
+   {
+    "turn": 7,
+    "speaker": "user",
+    "text": "Something around that area, please."
+   }
+  ],
+  "restaurant_database": "restaurants.json"
+ },
+ "evaluation_only": {
+  "scenario_type": "ambiguous_reference",
+  "template_family_id": "BB-LOC-01",
+  "variant": "B_para1",
+  "contrast_note": "A: station -> R06 Trattoria Lucca ($22); mall -> R02 Hoshi Sushi Bar ($24), R07 Nonna's Kitchen ($27), R09 Osteria Verde ($34); nothing near both -> ask. B: lunch instead of dinner makes R08 Forno Pizza ($16) valid for both -> recommend it.",
+  "turn_plan": [
+   {
+    "turn": 1,
+    "speaker": "user",
+    "act": "user states cuisine=['Italian', 'Japanese']"
+   },
+   {
+    "turn": 2,
+    "speaker": "assistant",
+    "act": "assistant mentions both areas (station first, mall second); not a user choice"
+   },
+   {
+    "turn": 3,
+    "speaker": "user",
+    "act": "user states max_price=35"
+   },
+   {
+    "turn": 4,
+    "speaker": "assistant",
+    "act": "assistant acknowledges"
+   },
+   {
+    "turn": 5,
+    "speaker": "user",
+    "act": "user states meal=lunch (no dinner constraint), vegetarian=true"
+   },
+   {
+    "turn": 6,
+    "speaker": "assistant",
+    "act": "assistant acknowledges"
+   },
+   {
+    "turn": 7,
+    "speaker": "user",
+    "act": "user: 'Something around that area, please.' = station or mall (UNRESOLVED; hidden: station)"
+   }
+  ],
+  "hidden_user_goal": {
+   "cuisine": [
+    "Italian",
+    "Japanese"
+   ],
+   "max_price": 35,
+   "vegetarian": true,
+   "location": "station"
+  },
+  "predefined_clarification_answers": {
+   "cuisine": "Either Italian or Japanese is fine.",
+   "max_price": "No more than $35 per person.",
+   "location": "Near the station.",
+   "vegetarian": "Yes, I need vegetarian options.",
+   "dinner": "It doesn't need to be open for dinner.",
+   "_unsupported": "I don't have a preference on that.",
+   "_multi_question": "Sorry, one thing at a time - what did you want to know first?"
+  },
+  "gold_dialogue_state": {
+   "at_turn": 7,
+   "active": {
+    "cuisine": [
+     "Italian",
+     "Japanese"
+    ],
+    "max_price": 35,
+    "vegetarian": true
+   },
+   "superseded": [],
+   "proposed_not_accepted": [],
+   "unresolved": [
+    {
+     "slot": "location",
+     "turn": 7,
+     "expression": "Something around that area, please.",
+     "interpretations": [
+      {
+       "location": "station"
+      },
+      {
+       "location": "mall"
+      }
+     ]
+    }
+   ]
+  },
+  "gold_relation_links": [],
+  "gold_decision": {
+   "should_ask": false,
+   "necessary_question": null,
+   "any_other_question_is_unnecessary": true
+  },
+  "flags_for_team": [],
+  "computed_by_validator": {
+   "success_set": [
+    "R06",
+    "R08"
+   ],
+   "interpretation_sets": [
+    {
+     "interpretation": {
+      "location": "station"
+     },
+     "candidates": [
+      "R06",
+      "R08"
+     ]
+    },
+    {
+     "interpretation": {
+      "location": "mall"
+     },
+     "candidates": [
+      "R02",
+      "R07",
+      "R08",
+      "R09"
+     ]
+    }
+   ],
+   "shared_candidates": [
+    "R08"
+   ],
+   "valid_without_clarification": [
+    "R08"
+   ]
+  },
+  "draft_info": {
+   "draft_part": "4e",
+   "ambiguity_kind": "location_deixis",
+   "mention_order": [
+    "station",
+    "mall"
+   ],
+   "single_change": "lunch",
+   "converted_from": "BB-LOC-01B-P1",
+   "original_hidden_goal": true
+  }
+ }
+}

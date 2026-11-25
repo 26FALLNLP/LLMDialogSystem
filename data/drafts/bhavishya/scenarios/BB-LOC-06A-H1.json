@@ -1,0 +1,172 @@
+{
+ "scenario_id": "BB-LOC-06A-H1",
+ "author": "BB",
+ "text_source": "draft by Claude; wording to be regenerated with Qwen before testing",
+ "model_visible": {
+  "dialogue_prefix": [
+   {
+    "turn": 1,
+    "speaker": "user",
+    "text": "I'm in the mood for Japanese food."
+   },
+   {
+    "turn": 2,
+    "speaker": "assistant",
+    "text": "Sure! There are good options near the mall and near the station."
+   },
+   {
+    "turn": 3,
+    "speaker": "user",
+    "text": "My budget is $25 per person."
+   },
+   {
+    "turn": 4,
+    "speaker": "assistant",
+    "text": "Got it, I'll keep the budget in mind."
+   },
+   {
+    "turn": 5,
+    "speaker": "user",
+    "text": "It's for dinner."
+   },
+   {
+    "turn": 6,
+    "speaker": "assistant",
+    "text": "Okay, noted."
+   },
+   {
+    "turn": 7,
+    "speaker": "user",
+    "text": "Let's go with that area. What's good there?"
+   }
+  ],
+  "restaurant_database": "restaurants.json"
+ },
+ "evaluation_only": {
+  "scenario_type": "ambiguous_reference",
+  "template_family_id": "BB-LOC-06",
+  "variant": "A-H1",
+  "contrast_note": "A: station -> R01 Sakura Ramen ($18); mall -> R02 Hoshi Sushi Bar ($24); nothing near both -> ask. B: budget $30 makes R03 Kumo Izakaya ($29) valid for both -> recommend it. All -H variants share this chat and enumerate the hidden targets (main's nlp-quota-v3 format).",
+  "turn_plan": [
+   {
+    "turn": 1,
+    "speaker": "user",
+    "act": "user states cuisine=Japanese"
+   },
+   {
+    "turn": 2,
+    "speaker": "assistant",
+    "act": "assistant mentions both areas (mall first, station second); not a user choice"
+   },
+   {
+    "turn": 3,
+    "speaker": "user",
+    "act": "user states max_price=25"
+   },
+   {
+    "turn": 4,
+    "speaker": "assistant",
+    "act": "assistant acknowledges"
+   },
+   {
+    "turn": 5,
+    "speaker": "user",
+    "act": "user states meal=dinner (dinner=true)"
+   },
+   {
+    "turn": 6,
+    "speaker": "assistant",
+    "act": "assistant acknowledges"
+   },
+   {
+    "turn": 7,
+    "speaker": "user",
+    "act": "user: 'Let's go with that area. What's good there?' = station or mall (UNRESOLVED; hidden: mall)"
+   }
+  ],
+  "hidden_user_goal": {
+   "cuisine": "Japanese",
+   "max_price": 25,
+   "dinner": true,
+   "location": "mall"
+  },
+  "predefined_clarification_answers": {
+   "cuisine": "Japanese, please.",
+   "max_price": "No more than $25 per person.",
+   "location": "Near the mall.",
+   "vegetarian": "No dietary restrictions.",
+   "dinner": "Yes, it needs to be open for dinner.",
+   "_unsupported": "I don't have a preference on that.",
+   "_multi_question": "Sorry, one thing at a time - what did you want to know first?"
+  },
+  "gold_dialogue_state": {
+   "at_turn": 7,
+   "active": {
+    "cuisine": "Japanese",
+    "max_price": 25,
+    "dinner": true
+   },
+   "superseded": [],
+   "proposed_not_accepted": [],
+   "unresolved": [
+    {
+     "slot": "location",
+     "turn": 7,
+     "expression": "Let's go with that area. What's good there?",
+     "interpretations": [
+      {
+       "location": "mall"
+      },
+      {
+       "location": "station"
+      }
+     ]
+    }
+   ]
+  },
+  "gold_relation_links": [],
+  "gold_decision": {
+   "should_ask": true,
+   "necessary_question": "location@t7",
+   "any_other_question_is_unnecessary": true
+  },
+  "flags_for_team": [],
+  "ambiguity_pair_id": "BB-LOC-06A-hidden-target",
+  "computed_by_validator": {
+   "success_set": [
+    "R02"
+   ],
+   "interpretation_sets": [
+    {
+     "interpretation": {
+      "location": "mall"
+     },
+     "candidates": [
+      "R02"
+     ]
+    },
+    {
+     "interpretation": {
+      "location": "station"
+     },
+     "candidates": [
+      "R01"
+     ]
+    }
+   ],
+   "shared_candidates": [],
+   "valid_without_clarification": []
+  },
+  "draft_info": {
+   "draft_part": "4a",
+   "ambiguity_kind": "location_deixis",
+   "mention_order": [
+    "mall",
+    "station"
+   ],
+   "single_change": "budget",
+   "converted_from": "BB-LOC-06A",
+   "original_hidden_goal": true
+  }
+ }
+}

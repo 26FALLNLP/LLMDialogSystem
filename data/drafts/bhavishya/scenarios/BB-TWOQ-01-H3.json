@@ -1,0 +1,212 @@
+{
+ "scenario_id": "BB-TWOQ-01-H3",
+ "author": "BB",
+ "text_source": "draft by Claude; wording to be regenerated with Qwen before testing",
+ "model_visible": {
+  "dialogue_prefix": [
+   {
+    "turn": 1,
+    "speaker": "user",
+    "text": "My friend is choosing where we get lunch."
+   },
+   {
+    "turn": 2,
+    "speaker": "assistant",
+    "text": "Fun! What is she considering?"
+   },
+   {
+    "turn": 3,
+    "speaker": "user",
+    "text": "She's deciding between Chinese and Korean, either near the station or near the mall."
+   },
+   {
+    "turn": 4,
+    "speaker": "assistant",
+    "text": "Got it. Any budget?"
+   },
+   {
+    "turn": 5,
+    "speaker": "user",
+    "text": "Up to $22 each."
+   },
+   {
+    "turn": 6,
+    "speaker": "assistant",
+    "text": "Noted."
+   },
+   {
+    "turn": 7,
+    "speaker": "user",
+    "text": "She just texted me her choice. Can you find a place that matches it?"
+   }
+  ],
+  "restaurant_database": "restaurants.json"
+ },
+ "evaluation_only": {
+  "scenario_type": "ambiguous_reference",
+  "template_family_id": "BB-TWOQ-01",
+  "variant": "single-H3",
+  "contrast_note": "Two things unclear. Chinese+station -> R32 Dumpling King ($13); Chinese+mall -> R35 Noodle Bar 88 ($16); Korean+station -> R28 Kimchi Pot ($22); Korean+mall -> R27 Bibim Bowl ($15). Knowing only the cuisine still leaves station vs mall with no shared restaurant; knowing only the area still leaves two cuisines -> exactly 2 questions needed. All -H variants share this chat and enumerate the hidden targets (main's nlp-quota-v3 format).",
+  "turn_plan": [
+   {
+    "turn": 1,
+    "speaker": "user",
+    "act": "user: friend decides; lunch, no dinner constraint"
+   },
+   {
+    "turn": 2,
+    "speaker": "assistant",
+    "act": "assistant asks"
+   },
+   {
+    "turn": 3,
+    "speaker": "user",
+    "act": "user lists two cuisines (Chinese, Korean) and two areas (station, mall); none chosen"
+   },
+   {
+    "turn": 4,
+    "speaker": "assistant",
+    "act": "assistant asks budget"
+   },
+   {
+    "turn": 5,
+    "speaker": "user",
+    "act": "user states max_price=22"
+   },
+   {
+    "turn": 6,
+    "speaker": "assistant",
+    "act": "assistant acknowledges"
+   },
+   {
+    "turn": 7,
+    "speaker": "user",
+    "act": "user: 'her choice' = cuisine AND area unknown (UNRESOLVED x2; hidden: Chinese + station)"
+   }
+  ],
+  "hidden_user_goal": {
+   "max_price": 22,
+   "cuisine": "Korean",
+   "location": "station"
+  },
+  "predefined_clarification_answers": {
+   "cuisine": "Korean, please.",
+   "max_price": "No more than $22 per person.",
+   "location": "Near the station.",
+   "vegetarian": "No dietary restrictions.",
+   "dinner": "It doesn't need to be open for dinner.",
+   "_unsupported": "I don't have a preference on that.",
+   "_multi_question": "Sorry, one thing at a time - what did you want to know first?"
+  },
+  "gold_dialogue_state": {
+   "at_turn": 7,
+   "active": {
+    "max_price": 22
+   },
+   "superseded": [],
+   "proposed_not_accepted": [],
+   "unresolved": [
+    {
+     "slot": "cuisine",
+     "turn": 7,
+     "expression": "her choice",
+     "interpretations": [
+      {
+       "cuisine": "Chinese"
+      },
+      {
+       "cuisine": "Korean"
+      }
+     ]
+    },
+    {
+     "slot": "location",
+     "turn": 7,
+     "expression": "her choice",
+     "interpretations": [
+      {
+       "location": "station"
+      },
+      {
+       "location": "mall"
+      }
+     ]
+    }
+   ]
+  },
+  "gold_relation_links": [],
+  "gold_decision": {
+   "should_ask": true,
+   "necessary_question": null,
+   "any_other_question_is_unnecessary": true,
+   "necessary_questions": [
+    "cuisine@t7",
+    "location@t7"
+   ],
+   "score_followup_clarifications": true
+  },
+  "flags_for_team": [],
+  "ambiguity_pair_id": "BB-TWOQ-01-hidden-target",
+  "computed_by_validator": {
+   "success_set": [
+    "R28"
+   ],
+   "interpretation_sets": [
+    {
+     "interpretation": {
+      "cuisine": "Chinese",
+      "location": "station"
+     },
+     "candidates": [
+      "R32"
+     ]
+    },
+    {
+     "interpretation": {
+      "cuisine": "Chinese",
+      "location": "mall"
+     },
+     "candidates": [
+      "R35"
+     ]
+    },
+    {
+     "interpretation": {
+      "cuisine": "Korean",
+      "location": "station"
+     },
+     "candidates": [
+      "R28"
+     ]
+    },
+    {
+     "interpretation": {
+      "cuisine": "Korean",
+      "location": "mall"
+     },
+     "candidates": [
+      "R27"
+     ]
+    }
+   ],
+   "shared_candidates": [],
+   "valid_without_clarification": []
+  },
+  "draft_info": {
+   "draft_part": "4b",
+   "ambiguity_kind": "two_unresolved",
+   "mention_order": {
+    "cuisine": [
+     "Chinese",
+     "Korean"
+    ],
+    "location": [
+     "station",
+     "mall"
+    ]
+   },
+   "converted_from": "BB-TWOQ-01",
+   "original_hidden_goal": false
+  }
+ }
+}
