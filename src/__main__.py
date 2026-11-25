@@ -6,6 +6,7 @@ import os
 from pathlib import Path
 
 from .claude_client import API_VERSION, DEFAULT_MODEL, EFFORT, ClaudeClient
+from .budget import BudgetError, require_api_enabled
 from .claude_strategy import PROMPT_VARIANTS
 from .systems import MAX_TOKENS, SYSTEMS, build_strategy
 from .data import load_dataset
@@ -48,6 +49,10 @@ def main() -> int:
     if args.strategy != "demo" and args.prompt_variant != "rule_given" and system in ("s3", "s4"):
         parser.error("--prompt-variant applies to s1, s2 and s5 (s3/s4 decide by the coded rule).")
     if args.strategy != "demo":
+        try:
+            require_api_enabled()  # the $ cap in configs/budget.yaml; 0 = no API calls at all
+        except BudgetError as exc:
+            parser.exit(2, f"{exc}\n")
         api_key = os.environ.get("ANTHROPIC_API_KEY", "").strip()
         if not api_key:
             parser.error("Set ANTHROPIC_API_KEY in your local environment to run Claude.")
@@ -82,8 +87,9 @@ def main() -> int:
     except (OSError, ValueError, KeyError) as exc:
         parser.exit(2, f"Could not load the scenario data: {exc}\n")
 
-    records = [
-        run_dialogue(
+    records = []
+    for scenario_id in scenario_ids:
+        record = run_dialogue(
             dataset.scenarios[scenario_id],
             # A fresh strategy per scenario, so turn-by-turn memories never mix.
             build_strategy(system, client, args.prompt_variant) if client is not None else DemoStrategy(),
@@ -91,8 +97,12 @@ def main() -> int:
             args.budget,
             strategy_config=strategy_config,
         )
-        for scenario_id in scenario_ids
-    ]
+        if client is not None and client.budget_refused:
+            # The spending cap refused a call: drop this incomplete run and stop the batch.
+            print(f"Stopped before {scenario_id}: the spending cap in configs/budget.yaml was reached. "
+                  f"{len(records)} of {len(scenario_ids)} scenarios finished.")
+            break
+        records.append(record)
     default_output = Path("runs/amb-01.jsonl")
     if client is not None:
         name = "claude" if system == "s1" else system
@@ -116,6 +126,8 @@ def main() -> int:
         print(f"  Termination: {record['termination_reason']}\n")
 
     print(f"JSONL: {output_path}")
+    if client is not None and client.budget_refused:
+        return 3  # stopped by the spending cap; the batch is incomplete
     return int(any(record["termination_reason"] != "completed" for record in records))
 
 

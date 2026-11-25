@@ -31,6 +31,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
+from src.budget import PRICES, BudgetError, SpendGuard, require_api_enabled  # noqa: E402
 from src.claude_client import DEFAULT_MODEL  # noqa: E402
 from src.claude_strategy import ACTION_SCHEMA, PROMPT_VARIANTS  # noqa: E402
 from src.data import load_dataset  # noqa: E402
@@ -45,7 +46,6 @@ QA_TURN_CHARS = 120                 # one question + one answer added to the con
 OUTPUT_TOKENS = {                   # per call: (central, high)
     "decision": (400, 1500), "summary": (300, 1000), "extraction": (800, 2500),
 }
-PRICES = {"claude-opus-5-5": (4.00, 20.00), "claude-sonnet-5-5": (2.00, 10.00), "claude-haiku-5-5": (0.10, 0.50)}
 BUDGETS = (0, 1, 2)
 CORE_SYSTEMS = ("s1", "s2", "s3", "s4")
 
@@ -85,12 +85,12 @@ def scenario_calls(system, scenario, budget, variant="rule_given"):
     return calls
 
 
-def estimate(scenario_ids, systems, reps, variant="rule_given"):
+def estimate(scenario_ids, systems, reps, variant="rule_given", budgets=BUDGETS):
     dataset = load_dataset(sorted(scenario_ids))
     per_system = {}
     for system in systems:
         n_calls, inp, out_c, out_h = 0, 0, 0, 0
-        for budget in BUDGETS:
+        for budget in budgets:
             for sid in scenario_ids:
                 for kind, t in scenario_calls(system, dataset.scenarios[sid], budget, variant):
                     n_calls += reps
@@ -172,9 +172,22 @@ def main(argv=None):
     if not args.yes_run_api:
         print("\nDRY RUN - no API call made. Re-run with --yes-run-api after approval.")
         return estimates
+    try:
+        require_api_enabled()  # configs/budget.yaml; $0 = no API calls, even with --yes-run-api
+    except BudgetError as exc:
+        print(exc)
+        return None
+    guard = SpendGuard.from_config()
+    planned = cost(estimates["final TEST run" if args.final_test else "DEV run"]["total"], args.model, "central")
+    print(f"Spending cap ${guard.cap_usd:.2f}, already spent ${guard.spent():.2f}, this run ~${planned} "
+          "(each call is checked against the cap before it is sent).")
     run_dir.mkdir(parents=True, exist_ok=True)
     for c in cmds:
-        subprocess.run(c, cwd=ROOT, check=False)   # failed runs are still written and scored as failures
+        code = subprocess.run(c, cwd=ROOT, check=False).returncode   # failed runs are still written
+        if code == 3:
+            print("Stopped: the spending cap was reached. Partial batches are not scored. "
+                  "Raise max_usd in configs/budget.yaml and re-run to continue.")
+            return estimates
     subprocess.run(score, cwd=ROOT, check=True)
     subprocess.run(report, cwd=ROOT, check=True)
     print(f"Results in {run_dir}")

@@ -10,7 +10,7 @@ class ClaudeClientTests(unittest.TestCase):
     def test_malformed_key_is_rejected_without_exposing_it(self):
         for key in ("", "test-key\r\nHeader: value", "test-key ", "\ttest-key"):
             with self.assertRaisesRegex(ValueError, "ANTHROPIC_API_KEY") as error:
-                ClaudeClient(key)
+                ClaudeClient(key, spend_guard=None)
             self.assertNotIn("test-key", str(error.exception))
 
     def test_structured_request_and_cached_usage(self):
@@ -32,7 +32,7 @@ class ClaudeClientTests(unittest.TestCase):
                     "cache_creation_input_tokens": 8, "cache_read_input_tokens": 7,
                 },
             }).encode()
-            completion = ClaudeClient("test-key").complete("system prompt", payload, schema)
+            completion = ClaudeClient("test-key", spend_guard=None).complete("system prompt", payload, schema)
 
         make_connection.assert_called_once_with("api.anthropic.com", timeout=60)
         connection.request.assert_called_once()
@@ -65,7 +65,7 @@ class ClaudeClientTests(unittest.TestCase):
                     response.status = status
                     response.read.return_value = b"private diagnostic including test-key"
                     with self.assertRaisesRegex(ModelRequestError, f"HTTP {status}") as error:
-                        ClaudeClient("test-key").complete("prompt", {}, {})
+                        ClaudeClient("test-key", spend_guard=None).complete("prompt", {}, {})
                     self.assertNotIn("test-key", str(error.exception))
                     self.assertEqual(error.exception.usage, Usage(None, None, 1))
                     make_connection.assert_called_once()
@@ -78,7 +78,7 @@ class ClaudeClientTests(unittest.TestCase):
             response = make_connection.return_value.getresponse.return_value
             response.status = 200
             response.read.return_value = b'{"content": [], "stop_reason": "max_tokens", "usage": {"input_tokens": 8, "output_tokens": 13}}'
-            completion = ClaudeClient("test-key").complete("prompt", {}, {})
+            completion = ClaudeClient("test-key", spend_guard=None).complete("prompt", {}, {})
         self.assertEqual(completion.text, "")
         self.assertEqual(completion.stop_reason, "max_tokens")
         self.assertEqual(completion.usage, Usage(8, 13, 1))
@@ -88,7 +88,7 @@ class ClaudeClientTests(unittest.TestCase):
             connection = make_connection.return_value
             connection.request.side_effect = TimeoutError("private diagnostic including test-key")
             with self.assertRaisesRegex(ModelRequestError, "timed out") as error:
-                ClaudeClient("test-key").complete("prompt", {}, {})
+                ClaudeClient("test-key", spend_guard=None).complete("prompt", {}, {})
             self.assertNotIn("test-key", str(error.exception))
             self.assertEqual(error.exception.usage, Usage(None, None, 1))
             connection.request.assert_called_once()
@@ -100,5 +100,5 @@ class ClaudeClientTests(unittest.TestCase):
             response.status = 200
             response.read.return_value = b'{"content": null, "usage": {"input_tokens": 8, "output_tokens": 13}}'
             with self.assertRaisesRegex(ModelRequestError, "invalid response envelope") as error:
-                ClaudeClient("test-key").complete("prompt", {}, {})
+                ClaudeClient("test-key", spend_guard=None).complete("prompt", {}, {})
         self.assertEqual(error.exception.usage, Usage(8, 13, 1))
