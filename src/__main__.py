@@ -7,16 +7,24 @@ from pathlib import Path
 
 from .claude_client import API_VERSION, DEFAULT_MODEL, EFFORT, ClaudeClient
 from .claude_strategy import PROMPT_VARIANTS, ClaudeStrategy
-from .data import DATA_DIR, load_dataset
+from .data import load_dataset
 from .demo_strategy import DemoStrategy
 from .dialogue_pipeline import run_dialogue
+from .splits import SplitError, select_scenarios
+
+DEMO_SCENARIOS = ("XX-AMB-01A", "XX-AMB-01B")  # both in the dev split
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     scenarios = parser.add_mutually_exclusive_group()
     scenarios.add_argument("--scenario", action="append", help="Scenario ID. May be supplied more than once.")
-    scenarios.add_argument("--all", action="store_true", help="Run every local scenario.")
+    scenarios.add_argument("--all", action="store_true",
+                           help="Run every DEV scenario (every TEST scenario with --final-test).")
+    parser.add_argument("--final-test", action="store_true",
+                        help="Allow TEST-split scenarios. Use only for the final evaluation.")
+    parser.add_argument("--no-drafts", action="store_true",
+                        help="With --all, leave out the BB- draft scenarios (main's dataset only).")
     parser.add_argument("--budget", type=int, choices=(0, 1, 2), default=1)
     parser.add_argument("--strategy", choices=("demo", "claude"), default="demo")
     parser.add_argument("--model", help="Override the Claude model ID.")
@@ -55,10 +63,12 @@ def main() -> int:
             "effort": EFFORT,
         }
 
-    if args.all:
-        scenario_ids = sorted(path.stem for path in (DATA_DIR / "scenarios").glob("*.json"))
-    else:
-        scenario_ids = list(dict.fromkeys(args.scenario or ["XX-AMB-01A", "XX-AMB-01B"]))
+    try:
+        scenario_ids = select_scenarios(args.scenario or (None if args.all else list(DEMO_SCENARIOS)),
+                                        run_all=args.all, final_test=args.final_test,
+                                        include_drafts=not args.no_drafts)
+    except SplitError as exc:
+        parser.exit(2, f"{exc}\n")
     try:
         dataset = load_dataset(scenario_ids)
     except (OSError, ValueError, KeyError) as exc:
