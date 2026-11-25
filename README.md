@@ -123,6 +123,8 @@ See the design docs for the [Dialogue Pipeline](docs/dialogue-pipeline.md), [Ans
 - **Systems S2-S5** in `src/systems/` (S1 is the existing Claude strategy). Prompts are text files in `src/systems/prompts/`.
 - **Validator.** `data/validate.py` checks scenario files against the catalog and against main's group format.
 - **Experiment scripts.** `scripts/run_experiments.py` (dry run by default) and `scripts/make_results.py`, with results under `results/`.
+- **API cost guard.** `configs/budget.yaml` holds one spending cap, `max_usd`, currently **0**, which disables every API call ("API calls are disabled (budget cap is $0). Change configs/budget.yaml to enable."). With a raised cap, each call is checked against it before it is sent, and real spend is added to `results/spend_log.json`.
+- **Reports.** [docs/cost-estimates.md](docs/cost-estimates.md) (Opus vs Sonnet vs Haiku) and [docs/hedged-suggestions.md](docs/hedged-suggestions.md) (open labelling decision). Rebuild with `python3 scripts/make_reports.py`.
 
 ### Run each system
 
@@ -141,6 +143,8 @@ python3 -m src --strategy s3 --model claude-opus-5-5 --scenario XX-AMB-06A --bud
   --output runs/s3-amb-06a-b1.jsonl
 python3 scripts/run_experiments.py          # estimates only; add --yes-run-api to run the dev split
 ```
+
+Real runs need `max_usd` above 0 in `configs/budget.yaml` and `ANTHROPIC_API_KEY` in the environment.
 
 S2-S5 save a state snapshot at every step (S3-S5 also keep one per processed turn), so the existing scorer reports state accuracy for S3-S5. S2's snapshot is its text summary, so S2 has no state accuracy.
 
