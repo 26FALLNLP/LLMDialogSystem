@@ -7,7 +7,7 @@ from collections.abc import Sequence
 from dataclasses import asdict
 from pathlib import Path
 
-from .data import DATA_DIR, load_dataset
+from .data import DATA_DIR, load_dataset, scenario_path
 from .score_summary import summarize
 from .scoring_service import score
 
@@ -39,7 +39,7 @@ def score_records(records: Sequence[dict], data_dir: Path = DATA_DIR) -> list[di
             )
         gold_by_id = {}
         for scenario_id in scenario_ids:
-            path = data_dir / "scenarios" / f"{scenario_id}.json"
+            path = scenario_path(scenario_id, data_dir)
             gold_by_id[scenario_id] = {
                 **json.loads(path.read_bytes())["evaluation_only"],
                 "scenario_id": scenario_id,
