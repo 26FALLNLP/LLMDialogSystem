@@ -6,7 +6,8 @@ import os
 from pathlib import Path
 
 from .claude_client import API_VERSION, DEFAULT_MODEL, EFFORT, ClaudeClient
-from .claude_strategy import PROMPT_VARIANTS, ClaudeStrategy
+from .claude_strategy import PROMPT_VARIANTS
+from .systems import MAX_TOKENS, SYSTEMS, build_strategy
 from .data import load_dataset
 from .demo_strategy import DemoStrategy
 from .dialogue_pipeline import run_dialogue
@@ -26,7 +27,9 @@ def main() -> int:
     parser.add_argument("--no-drafts", action="store_true",
                         help="With --all, leave out the BB- draft scenarios (main's dataset only).")
     parser.add_argument("--budget", type=int, choices=(0, 1, 2), default=1)
-    parser.add_argument("--strategy", choices=("demo", "claude"), default="demo")
+    parser.add_argument("--strategy", choices=("demo", "claude", *SYSTEMS), default="demo",
+                        help="demo (offline rule demo), s1/claude (history), s2 (summary), s3 (memory + "
+                             "links + rule), s4 (memory, no links + rule), s5 (memory + links, model asks).")
     parser.add_argument("--model", help="Override the Claude model ID.")
     parser.add_argument("--prompt-variant", choices=sorted(PROMPT_VARIANTS), default="rule_given",
                         help="rule_given: prompt spells out when to ask (original). "
@@ -41,7 +44,10 @@ def main() -> int:
 
     client = None
     strategy_config = None
-    if args.strategy == "claude":
+    system = "s1" if args.strategy == "claude" else args.strategy
+    if args.strategy != "demo" and args.prompt_variant != "rule_given" and system in ("s3", "s4"):
+        parser.error("--prompt-variant applies to s1, s2 and s5 (s3/s4 decide by the coded rule).")
+    if args.strategy != "demo":
         api_key = os.environ.get("ANTHROPIC_API_KEY", "").strip()
         if not api_key:
             parser.error("Set ANTHROPIC_API_KEY in your local environment to run Claude.")
@@ -50,14 +56,16 @@ def main() -> int:
         if not model:
             parser.error("The Claude model ID must not be blank.")
         try:
-            client = ClaudeClient(api_key, model)
+            client = ClaudeClient(api_key, model, max_tokens=MAX_TOKENS[system])
         except ValueError as exc:
             parser.error(str(exc))
+        probe = build_strategy(system, client, args.prompt_variant)
         strategy_config = {
             "provider": "anthropic",
             "model": client.model,
             "api_version": API_VERSION,
-            "prompt_version": PROMPT_VARIANTS[args.prompt_variant][0],
+            "system": system,
+            "prompt_version": getattr(probe, "prompt_version", PROMPT_VARIANTS[args.prompt_variant][0]),
             "prompt_variant": args.prompt_variant,
             "max_output_tokens": client.max_tokens,
             "effort": EFFORT,
@@ -77,7 +85,8 @@ def main() -> int:
     records = [
         run_dialogue(
             dataset.scenarios[scenario_id],
-            ClaudeStrategy(client, args.prompt_variant) if client is not None else DemoStrategy(),
+            # A fresh strategy per scenario, so turn-by-turn memories never mix.
+            build_strategy(system, client, args.prompt_variant) if client is not None else DemoStrategy(),
             dataset.answer_service,
             args.budget,
             strategy_config=strategy_config,
@@ -86,7 +95,8 @@ def main() -> int:
     ]
     default_output = Path("runs/amb-01.jsonl")
     if client is not None:
-        default_output = Path("runs/all-claude.jsonl" if args.all else "runs/amb-01-claude.jsonl")
+        name = "claude" if system == "s1" else system
+        default_output = Path(f"runs/all-{name}.jsonl" if args.all else f"runs/amb-01-{name}.jsonl")
     output_path = args.output or default_output
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(
